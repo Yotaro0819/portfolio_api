@@ -8,9 +8,29 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Response;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+
+    public function checkAuth(Request $request)
+{
+    try {
+        $jwt = $request->cookie('jwt');  // CookieからJWTを取得
+
+        if (!$jwt) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // JWTを設定してユーザーを認証
+        $user = JWTAuth::setToken($jwt)->authenticate();
+
+        return response()->json(['user' => $user]);
+    } catch (JWTException $e) {
+        return response()->json(['error' => 'Unauthenticated'], 401);
+    }
+}
+
     public function register(Request $request)
     {
         $fields = $request->validate([
@@ -60,14 +80,14 @@ class AuthController extends Controller
     return Response::json(['error' => 'Unauthorized'], 401);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         $cookie = Cookie::forget('jwt');
-
-
         return response([
             'message' => 'success',
         ])->withCookie($cookie);
     }
+
+
 
 }

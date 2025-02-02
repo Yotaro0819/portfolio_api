@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::middleware([AuthenticateJWT::class])->group(function () {
+Route::middleware(['auth:api', AuthenticateJWT::class])->group(function () {
     Route::apiResource('posts', PostController::class);
+    Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
