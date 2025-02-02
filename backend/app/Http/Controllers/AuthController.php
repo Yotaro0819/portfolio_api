@@ -18,9 +18,9 @@ class AuthController extends Controller
     try {
         $jwt = $request->cookie('jwt');  // CookieからJWTを取得
 
-        if (!$jwt) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        // if (!$jwt) {
+        //     return response()->json(['error' => 'Unauthorized'], 401);
+        // }
 
         // JWTを設定してユーザーを認証
         $user = JWTAuth::setToken($jwt)->authenticate();
@@ -70,12 +70,17 @@ class AuthController extends Controller
 
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
+        $userName = $user->name;
         $token = JWTAuth::fromUser($user);
 
         return Response::json([
             'message' => 'Logged in successfully',
-        ])->cookie('jwt', $token, 60, null, null, false, true); // httpOnly CookieにJWTを格納
+            'user' => ['name' => $userName],
+        ])
+        ->cookie('jwt', $token, 60, null, null, false, true);// httpOnly CookieにJWTを格納
     }
+
+    
 
     return Response::json(['error' => 'Unauthorized'], 401);
     }

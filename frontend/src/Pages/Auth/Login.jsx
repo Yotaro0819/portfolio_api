@@ -5,7 +5,7 @@ import { AppContext } from "../../Context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setShowNav } = useContext(AppContext);
+  const { setUser } = useContext(AppContext);
 
 
   const [formData, setFormData] = useState({
@@ -14,15 +14,6 @@ const Login = () => {
   });
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    // ログインページではナビバーを非表示
-    setShowNav(false);
-
-    return () => {
-      // クリーンアップ時に元に戻す
-      setShowNav(true);
-    };
-  }, [setShowNav]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -39,13 +30,16 @@ const Login = () => {
 
     if (data.errors || !res.ok) {
       setErrors(data.errors);
-    } else {
-      setShowNav(true);
-      setTimeout(() => {
-        navigate("/");
-      },0);
+    }else {
+      setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user))
+
+      navigate('/');
     }
+
   }
+  
+
 
   return (
     <>

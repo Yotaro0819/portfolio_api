@@ -14,7 +14,7 @@ header {
   color: rgb(165, 165, 165);
   display: flex;
   flex-direction: column; /* 縦方向にアイテムを並べる */
-  padding: 20px;
+  padding: 40px 20px 20px 20px;
   box-sizing: border-box;
 }
 
