@@ -15,12 +15,12 @@ const Create = () => {
     data.append('body',formData.body);
     try {
       const res = await axios.post('/api/posts', data, {
-        withCredentials: true, // credentialsオプションではなくwithCredentials
+        withCredentials: true,
       });
       
-      console.log(res.data); // レスポンスデータをログに出力（確認用）
+      console.log(res.data);
     } catch (error) {
-      console.error('Error creating post:', error); // エラーハンドリング
+      console.error('Error creating post:', error);
     }
   }
   return (
