@@ -35,7 +35,7 @@ const Create = () => {
       const res = await fetch('http://localhost:8000/api/posts', {
         method: 'POST',
         headers: {
-          // Content-Type は fetch が自動で設定するので不要
+          "Content-type": "multipart/form-data"
         },
         body: data, // FormData をそのまま送る
         credentials: 'include', // クッキー送信

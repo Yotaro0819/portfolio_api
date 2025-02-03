@@ -36,7 +36,7 @@ public function store(Request $request)
         $fields = $request->validate([
             'title' => 'required|max:255',
             'body'  => 'required',
-            'image' => 'nullable',
+            'image' => 'required',
             'price' => 'required|numeric|min:0',
         ]);
 
@@ -59,11 +59,17 @@ public function store(Request $request)
 }
 
 
+    /**
+     * Display the specified resource.
+     */
     public function show(Post $post)
     {
         return $post;
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, Post $post)
 {
     try {
@@ -72,7 +78,7 @@ public function store(Request $request)
         // カスタムメッセージを追加
         return response()->json([
             'error' => 'You do not have permission to modify this post',
-            'message' => $e->getMessage(),
+            'message' => $e->getMessage(), // オリジナルのメッセージ
         ], 403);
     }
 
