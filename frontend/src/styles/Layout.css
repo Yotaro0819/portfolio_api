@@ -1,11 +1,11 @@
 /* App.css */
 body {
-  display:flex;
+  display: flex;
   margin: 0;
   font-family: Arial, sans-serif;
-  height: 100vh;
+  min-height: 100vh;  /* 画面全体の高さを確保 */
   width: 100vw;
-
+  box-sizing: border-box; /* paddingとborderをサイズに含める */
 }
 
 header {
@@ -43,9 +43,15 @@ header h1 {
 main {
   flex: 1; /* メインコンテンツ領域が残りの幅を占める */
   background-color: #444; /* メインエリアの背景色 */
-  color: rgb(167, 167, 167);
+  color: white;
   margin: 0;
   box-sizing: border-box;
   overflow-y: auto; /* 縦スクロールが必要な場合に対応 */
 
+}
+
+input:-webkit-autofill {
+  background-color: #1f2937 !important;
+  color: white !important;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
 }

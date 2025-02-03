@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <>
-    <h1 className="text-black text-xl title">Latest post </h1>
+    <h1 className="text-white text-xl title">Latest post </h1>
     </>
   );
 }

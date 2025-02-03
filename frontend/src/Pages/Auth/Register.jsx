@@ -4,7 +4,7 @@ import { AppContext } from '../../Context/AppContext';
 
 const Register = () => {
   const navigate = useNavigate();
-  const {setToken, setShowNav} = useContext(AppContext);
+  const {setShowNav} = useContext(AppContext);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -30,6 +30,9 @@ const Register = () => {
 
     const res = await fetch('/api/register', {
       method: 'post',
+      headers: {
+        "Content-type": "application/json",
+      },
       body: JSON.stringify(formData),
     });
 
@@ -40,8 +43,6 @@ const Register = () => {
       setErrors(data.errors);
       // console.log(data.errors);
     } else {
-    localStorage.setItem('token', data.token);
-    setToken(data.token);
     navigate("/");
     }
     console.log(errors);

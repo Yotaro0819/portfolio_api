@@ -33,7 +33,6 @@ public function store(Request $request)
     }
 
     try {
-        // バリデーション
         $fields = $request->validate([
             'title' => 'required|max:255',
             'body'  => 'required',
@@ -41,13 +40,13 @@ public function store(Request $request)
             'price' => 'required|numeric|min:0',
         ]);
 
-        // 画像の処理
+        // 画像の保存
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('posts', 'public');
             $fields['image'] = $imagePath;
         }
 
-        // ユーザーIDを自動的に取得
+        // デコードしたuserからid取得
         $post = Post::create(array_merge($fields, ['user_id' => $user->id]));
 
         return response()->json($post, 201);
@@ -60,17 +59,11 @@ public function store(Request $request)
 }
 
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post)
     {
         return $post;
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Post $post)
 {
     try {
@@ -79,7 +72,7 @@ public function store(Request $request)
         // カスタムメッセージを追加
         return response()->json([
             'error' => 'You do not have permission to modify this post',
-            'message' => $e->getMessage(), // オリジナルのメッセージ
+            'message' => $e->getMessage(),
         ], 403);
     }
 

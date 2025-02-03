@@ -26,6 +26,13 @@ const Login = () => {
       body: JSON.stringify(formData),
     });
 
+    if (!res.ok) {
+    const errorData = await res.text(); 
+    setErrors({ general: "ログインに失敗しました。再度試してください。" });
+    console.error("Login error:", errorData);
+    return;
+  }
+
     const data = await res.json();
 
     if (data.errors || !res.ok) {
@@ -47,13 +54,14 @@ const Login = () => {
       <form onSubmit={handleLogin} className="w-1/2 mx-auto space-y-6">
         <div>
           <input
-            className="border rounded w-full px-2"
+            className="border rounded w-full px-2 bg-gray-800"
             type="text"
             placeholder="email"
             value={formData.email}
             onChange={(e) => {
               setFormData({ ...formData, email: e.target.value });
             }}
+            // autoComplete="new-password"
           />
           {errors.email ? (
             <p className="text-red-500">{errors.email[0]}</p>
@@ -63,13 +71,14 @@ const Login = () => {
         </div>
         <div>
           <input
-            className="border rounded w-full px-2"
+            className="border rounded w-full px-2 bg-gray-800"
             type="password"
             placeholder="Password"
             value={formData.password}
             onChange={(e) => {
               setFormData({ ...formData, password: e.target.value });
             }}
+            // autoComplete="new-password"
           />
           {errors.password ? (
             <p className="text-red-500">{errors.password[0]}</p>
