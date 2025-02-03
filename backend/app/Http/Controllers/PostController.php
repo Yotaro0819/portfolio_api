@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PostController extends Controller
 {
@@ -19,28 +20,45 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        try {
-            $fields = $request->validate([
-                'title' => 'required|max:255',
-                'body'  => 'required',
-                'image' => 'nullable',
-            ]);
 
-            $userId = $request->user()->id;
+public function store(Request $request)
+{
+    // JWT トークンが送信されていることを確認
+    // これによってjwtトークンのペイロードをデコードしてuserを取得する。
+    $user = JWTAuth::parseToken()->authenticate();
 
-            $post = Post::create(array_merge($fields, ['user_id' => $userId]));
-
-            return response()->json($post, 201); // 正常時は201ステータスコード
-        } catch (\Exception $e) {
-            // エラーメッセージを含むレスポンスを返す
-            return response()->json([
-                'error' => 'Failed to create post',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+    // ユーザーが認証されていなければ 401 エラーを返す
+    if (!$user) {
+        return response()->json(['error' => 'Unauthorized'], 401);
     }
+
+    try {
+        // バリデーション
+        $fields = $request->validate([
+            'title' => 'required|max:255',
+            'body'  => 'required',
+            'image' => 'nullable',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        // 画像の処理
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('posts', 'public');
+            $fields['image'] = $imagePath;
+        }
+
+        // ユーザーIDを自動的に取得
+        $post = Post::create(array_merge($fields, ['user_id' => $user->id]));
+
+        return response()->json($post, 201);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to create post',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
     /**
      * Display the specified resource.
@@ -69,7 +87,7 @@ class PostController extends Controller
     $fields = $request->validate([
         'title' => 'required|max:255',
         'body'  => 'required',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
     if ($request->hasFile('image')) {

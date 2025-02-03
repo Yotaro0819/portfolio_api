@@ -80,7 +80,7 @@ class AuthController extends Controller
         ->cookie('jwt', $token, 60, null, null, false, true);// httpOnly CookieにJWTを格納
     }
 
-    
+
 
     return Response::json(['error' => 'Unauthorized'], 401);
     }
