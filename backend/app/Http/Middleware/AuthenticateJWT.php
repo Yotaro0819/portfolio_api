@@ -28,6 +28,8 @@ class AuthenticateJWT extends Middleware
             Log::info('Authorization Header: ' . $request->header('Authorization'));
 
         }
+
+
         return $next($request);
     }
 }
