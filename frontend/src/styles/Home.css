@@ -1,0 +1,33 @@
+.box {
+  width: 75%;
+  margin: 0 100px ;
+}
+
+.card {
+
+  height: 800px;
+  border-radius:15px;
+  padding:20px;
+  margin: 0 0 100px 0;
+}
+
+.body {
+  height: 60px;
+}
+
+.date {
+  margin: 0 0 0 250px;
+}
+
+.fa-heart {
+  display:flex;
+  font-size:20px; 
+  color:rgb(255, 80, 80);
+  margin-left:20px;
+  align-items:center;
+}
+.img {
+  width: auto;
+  height: 600px;
+  margin: 0 auto;
+}

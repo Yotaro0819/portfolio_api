@@ -56,7 +56,8 @@ class AuthController extends Controller
             'message' => 'Registration successful',
             'token' => $token
         ])->withCookie($cookieXsrftoken)
-          ->withCookie($cookieSession);
+          ->withCookie($cookieSession)
+          ->cookie('jwt', $token, 60, null, null, false, true);;
     }
 
     public function login(Request $request)
@@ -79,8 +80,6 @@ class AuthController extends Controller
         ])
         ->cookie('jwt', $token, 60, null, null, false, true);// httpOnly CookieにJWTを格納
     }
-
-
 
     return Response::json(['error' => 'Unauthorized'], 401);
     }

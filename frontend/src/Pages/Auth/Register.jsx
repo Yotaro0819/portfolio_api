@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../Context/AppContext';
+import '../../styles/Layout.css';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ const Register = () => {
     <form onSubmit={handleRegister} className="w-1/2 mx-auto space-y-6">
       <div>
         <input type="text" placeholder="Name" 
-        className="border rounded w-full px-2"
+        className="border rounded w-full px-2  bg-gray-800"
         value={formData.name}
         onChange={(e) => { setFormData({...formData, name: e.target.value})}}/>
         {/* {errors.name && <p className="text-red-500">{errors.name[0]}</p>} */}
@@ -66,7 +67,7 @@ const Register = () => {
 
       <div>
         <input type="text" 
-        className="border rounded w-full px-2"
+        className="border rounded w-full px-2  bg-gray-800"
         placeholder="email"
         value={formData.email}
         onChange={(e) => { setFormData({...formData, email: e.target.value})}} />
@@ -75,7 +76,7 @@ const Register = () => {
 
       <div>
         <input type="password" 
-        className="border rounded w-full px-2"
+        className="border rounded w-full px-2 bg-gray-800"
         placeholder="Password"
         value={formData.password}
         onChange={(e) => { setFormData({...formData, password: e.target.value})}}  />
@@ -85,7 +86,7 @@ const Register = () => {
 
       <div>
         <input type="password" 
-        className="border rounded w-full px-2"
+        className="border rounded w-full px-2 bg-gray-800"
         placeholder="Confirm Password"
         value={formData.password_confirmation}
         onChange={(e) => { setFormData({...formData, password_confirmation: e.target.value})}} 

@@ -10,7 +10,7 @@ const PriceInput = ({ value, onChange }) => {
   };
 
   return (
-    <div className="price-input">
+    <div className="price-input text-center">
 
       <p className="p-2 btn inline">¥
         <input

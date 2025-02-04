@@ -30,7 +30,7 @@ export default function Layout() {
         setUser(null);
         setShowNav(false)
         localStorage.removeItem('user');
-        localStorage.removeItem('token');
+
         navigate('/');
       }
     } catch (error) {

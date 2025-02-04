@@ -15,6 +15,12 @@ class PostController extends Controller
     public function index()
     {
         return Post::all();
+
+        $posts->each(function ($post) {
+            $post->image = asset('storage/'. $post->image);
+        });
+
+        return response()->json($posts);
     }
 
     /**

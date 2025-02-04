@@ -14,8 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(AuthenticateJWT::class);
         $middleware->append(CorsMiddleware::class);
+        $middleware->append(AuthenticateJWT::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

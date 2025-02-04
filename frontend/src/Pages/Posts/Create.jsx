@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../../styles/Create.css';
+import PriceInput from '../../Component/PriceInput.jsx';
 
 const Create = () => {
   const [formData, setFormData] = useState({
@@ -12,14 +13,14 @@ const Create = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    // if (file) {
-    //   const objectUrl = URL.createObjectURL(file);
-    //   setImagePreview(objectUrl); // プレビュー用のURLを設定
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setImagePreview(objectUrl); // プレビュー用のURLを設定
       setFormData({ ...formData, image: file }); // 実際のファイルをformDataに保存
-    // } else {
-    //   setImagePreview(null);
-    //   setFormData({ ...formData, image: null });
-    // }
+    } else {
+      setImagePreview(null);
+      setFormData({ ...formData, image: null });
+    }
   };
 
   async function handleCreate(e) {
@@ -39,10 +40,15 @@ for (let pair of data.entries()) {
 }
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/posts', {
+      // axiosだとうまくいかない。　form-dataは普通にfetchでやる方が良さげ？
+      const res = await fetch('/api/posts', {
         method: 'POST',
-        body: data, // FormData をそのまま送る
-        credentials: 'include', // クッキー送信
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        body: data,
+        credentials: 'include',
+        mode: 'cors'
       });
 
       if (!res.ok) {
@@ -106,7 +112,7 @@ for (let pair of data.entries()) {
                 }} />
             </div>
 
-            <div className="prices">
+            {/* <div className="prices">
               <p className="p-2 btn inline">¥
                 <input 
                   type="number"
@@ -117,7 +123,13 @@ for (let pair of data.entries()) {
                     setFormData({ ...formData, price: e.target.value })
                   }} />
               </p>
-            </div>
+            </div> */}
+            <PriceInput
+              value={formData.price}
+              onChange={(value) => {
+                setFormData({ ...formData, price: value });
+              }}
+            />
 
             <button className="bg-cyan rounded">Create</button>
           </form>
