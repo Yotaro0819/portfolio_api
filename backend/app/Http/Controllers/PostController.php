@@ -6,6 +6,7 @@ use App\Http\Middleware\AuthenticateJWT;
 use App\Models\Post;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -14,13 +15,15 @@ class PostController extends Controller
 {
     public function index()
     {
-        return Post::all();
+        $posts = Post::all();
 
         $posts->each(function ($post) {
             $post->image = asset('storage/'. $post->image);
         });
 
-        return response()->json($posts);
+        return response()->json([
+            'posts' => $posts
+        ]);
     }
 
     /**

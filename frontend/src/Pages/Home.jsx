@@ -9,6 +9,7 @@ export default function Home() {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [authUser, setAuthUser] = useState(null);
 
   console.log(allPosts);
 
@@ -24,14 +25,12 @@ export default function Home() {
         }
 
         const data = await res.json();
+        console.log(data);
 
-        const updatedPosts = data.map(post => {
-          post.image = `http://127.0.0.1:8000/storage/${post.image}`;
-          return post;
-        });
-
-        setAllPosts(updatedPosts);
+        setAllPosts(data.posts);
+        setAuthUser(data.authUser);
         setLoading(false);
+
       } catch (error) {
         setError(error);
         setLoading(false);
@@ -40,9 +39,6 @@ export default function Home() {
     fetchPosts();
     setShowNav(true);
   },[]);
-
-  
-  
 
   return (
     <>
@@ -94,14 +90,16 @@ export default function Home() {
         <div className="bg-red-500 right">
           <div className="userInfo bg-black">
             <div className="avatar flex items-center">
+              <Link to={`/profile/${user.user_id}`}>
             {user.image ? 
             <img src="#" alt="avatar"></img>
             :
             <i className="fa-solid fa-user inline"></i>
             }
+            </Link>
             </div>
             <div className="ml-2">
-              <h3 className="username inline mt-2">UserName</h3>
+              <h3 className="username inline mt-2">{user.name}</h3>
                 <div>
                 <Link to="/follower" className="mr-4">Follower</Link>
                 <Link to="/following">Following</Link>

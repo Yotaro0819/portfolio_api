@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthenticateJWT;
 use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Http\Request;
@@ -15,6 +16,8 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::apiResource('posts', PostController::class);
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
+    Route::get('/fetch-follows', [ProfileController::class, 'fetchFollows']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);

@@ -18,14 +18,32 @@ class AuthController extends Controller
     try {
         $jwt = $request->cookie('jwt');  // CookieからJWTを取得
 
-        // if (!$jwt) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
+        if (!$jwt) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
         // JWTを設定してユーザーを認証
-        $user = JWTAuth::setToken($jwt)->authenticate();
+        // $user = JWTAuth::setToken($jwt)->authenticate();
 
-        return response()->json(['user' => $user]);
+        $userId = JWTAuth::parseToken()->authenticate()->id;
+
+// そのIDを使ってユーザー情報を取得
+        $authUser = User::find($userId);
+
+        // $user->load([
+        //     'followers:name,avatar',
+        //     'following:name,avatar'
+        // ]);
+
+        return response()->json([
+            // 'user' => [
+            //     'name' => $user->name,
+            //     'avatar' => $user->avatar,
+            //     'followers' => $user->followers,
+            //     'following' => $user->following
+            // ]
+            'authUser' => $authUser,
+        ]);
     } catch (JWTException $e) {
         return response()->json(['error' => 'Unauthenticated'], 401);
     }
@@ -46,7 +64,8 @@ class AuthController extends Controller
         ]);
 
         // JWTトークンを発行
-        $token = JWTAuth::fromUser($user);
+        $accessToken = JWTAuth::fromUser($user);
+        $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
 
         // 不要なセッションクッキーを削除
         $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
@@ -54,10 +73,11 @@ class AuthController extends Controller
 
         return response([
             'message' => 'Registration successful',
-            'token' => $token
+            'token' => $accessToken
         ])->withCookie($cookieXsrftoken)
           ->withCookie($cookieSession)
-          ->cookie('jwt', $token, 60, null, null, false, true);;
+          ->cookie('jwt', $accessToken, 60, null, null, false, true)
+          ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
     }
 
     public function login(Request $request)
@@ -72,13 +92,16 @@ class AuthController extends Controller
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
         $userName = $user->name;
-        $token = JWTAuth::fromUser($user);
+        $userId   = $user->id;
+        $accessToken = JWTAuth::fromUser($user);
+        $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
 
         return Response::json([
             'message' => 'Logged in successfully',
-            'user' => ['name' => $userName],
+            'user' => ['name' => $userName, 'user_id' => $userId],
         ])
-        ->cookie('jwt', $token, 60, null, null, false, true);// httpOnly CookieにJWTを格納
+        ->cookie('jwt', $accessToken, 60, null, null, false, true)
+        ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true);
     }
 
     return Response::json(['error' => 'Unauthorized'], 401);
@@ -86,10 +109,33 @@ class AuthController extends Controller
 
     public function logout()
     {
-        $cookie = Cookie::forget('jwt');
+        $cookieAccess = Cookie::forget('jwt');
+        $cookieRefresh = Cookie::forget('refreshJwt');
+
         return response([
             'message' => 'success',
-        ])->withCookie($cookie);
+        ])
+        ->withCookie($cookieAccess)
+        ->withCookie($cookieRefresh);
+    }
+
+    public function refreshToken(Request $request)
+    {
+        try {
+            $refreshToken = $request->cookie('refreshJwt');
+
+            if(!$refreshToken) {
+                return response()->json(['error' => 'unauthorized'], 401);
+            }
+
+            $newAccessToken = JWTAuth::setToken($refreshToken)->refresh();
+
+            return response()->json([
+                'message' => 'Token refreshed'
+            ])->cookie('jwt', $newAccessToken, 15, null,null, false, true);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Invalid refresh token'], 403);
+        }
     }
 
 

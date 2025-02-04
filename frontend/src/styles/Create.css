@@ -36,7 +36,7 @@ textarea::placeholder {
 }
 
 .post {
-  width: 600px;
+  width: 90%;
   height: 900px;
   border-radius: 15px;  
   padding:20px;
@@ -44,7 +44,7 @@ textarea::placeholder {
 }
 
 .form {
-  width: 550px;
+  width: 95%;
   margin: 0 auto;
 }
 

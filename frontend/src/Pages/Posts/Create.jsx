@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import '../../styles/Create.css';
 import PriceInput from '../../Component/PriceInput.jsx';
-
+import axiosInstance from '../../api/axios.js';
 const Create = () => {
   const [formData, setFormData] = useState({
     title: "",
     body: "",
     price: "",
-    image: ""
+    image: null
   });
   const [imagePreview, setImagePreview] = useState(null); // 画像プレビュー用
 
@@ -39,23 +39,19 @@ for (let pair of data.entries()) {
   console.log(pair[0] + ': ' + pair[1]);
 }
 
-    try {
-      // axiosだとうまくいかない。　form-dataは普通にfetchでやる方が良さげ？
-      const res = await fetch('/api/posts', {
-        method: 'POST',
-        body: data,
-        credentials: 'include',
-      });
+try {
+  // axios使う時はエラーハンドリングも注意。そのままfetchの時みたいにjson使っちゃダメね。
+  const res = await axiosInstance.post('/api/posts', data, {
+    withCredentials: true,
+  });
+  console.log('Post created successfully:', res.data);
 
-      if (!res.ok) {
-        throw new Error('Failed to create post');
-      }
+  setFormData({ title: "", body: "", price: "", image: null });
+  setImagePreview(null);
+} catch (error) {
+  console.error('Error creating post:', error.response ? error.response.data : error.message);
+}
 
-      const responseData = await res.json();
-      console.log('Success:', responseData);
-    } catch (error) {
-      console.error('Error creating post:', error);
-    }
   }
 
   return (
