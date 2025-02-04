@@ -43,12 +43,8 @@ for (let pair of data.entries()) {
       // axiosだとうまくいかない。　form-dataは普通にfetchでやる方が良さげ？
       const res = await fetch('/api/posts', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
         body: data,
         credentials: 'include',
-        mode: 'cors'
       });
 
       if (!res.ok) {
@@ -64,11 +60,12 @@ for (let pair of data.entries()) {
 
   return (
     <>
-      <div className="container">
+    <div className="fb">
+      <div className="box">
         <h1 className="title">Create a new post</h1>
 
-        <div className="card bg-gray-600">
-          <form onSubmit={handleCreate}>
+        <div className="post bg-gray-800">
+          <form onSubmit={handleCreate} className="form">
             <div>
               <input 
                 type="text" 
@@ -80,14 +77,8 @@ for (let pair of data.entries()) {
                 }} />
             </div>
 
-            <div>
-              <input 
-                type="file"
-                className="block px-1 bg-gray-800 mt-0"
-                onChange={handleFileChange} />
-            </div>
             
-            <div className="m-5">
+            <div className="card-body my-5">
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -99,6 +90,13 @@ for (let pair of data.entries()) {
                   <h3>Image</h3>
                 </div>
               )}
+            </div>
+
+            <div>
+              <input 
+                type="file"
+                className="block px-1 bg-gray-800 mt-0"
+                onChange={handleFileChange} />
             </div>
 
             <div>
@@ -134,6 +132,8 @@ for (let pair of data.entries()) {
             <button className="bg-cyan rounded">Create</button>
           </form>
         </div>
+      </div>
+      <div className="bg-red-500 right">hello this is right sec</div>
       </div>
     </>
   );

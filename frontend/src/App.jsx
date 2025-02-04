@@ -4,9 +4,13 @@ import Layout from "./Pages/Layout";
 import Home from "./Pages/Home";
 import Register from "./Pages/Auth/Register";
 import Login from "./Pages/Auth/Login";
+import Follower from "./Pages/User/Follower";
+import Following from "./Pages/User/Following";
+import PostShow from "./Pages/Posts/Show";
 import { useContext } from "react";
 import { AppContext } from "./Context/AppContext";
 import Create from "./Pages/Posts/Create";
+
 
 function App() {
   const {user} = useContext(AppContext);
@@ -20,7 +24,11 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/create" element={user ? <Create /> : <Login />} />
+          <Route path="/follower" element={<Follower />}></Route>
+          <Route path="/following" element={<Following />}></Route>
+          <Route path="/post/:id" element={<PostShow /> }></Route>
         </Route>
+
       </Routes>
     </BrowserRouter>
   )

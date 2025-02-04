@@ -9,7 +9,7 @@ body {
 }
 
 header {
-  width: 20%; /* サイドナビの幅を固定 */
+  width: 18%; /* サイドナビの幅を固定 */
   background-color: #333; /* ナビゲーションの背景色 */
   color: rgb(165, 165, 165);
   display: flex;
