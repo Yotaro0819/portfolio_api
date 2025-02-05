@@ -19,7 +19,9 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
     Route::get('/fetch-follows', [ProfileController::class, 'fetchFollows']);
-    Route::post('/payment/{id}', [PaypalController::class, 'paypal']);
+    Route::post('/paypal/payment/{id}', [PaypalController::class, 'order']);
+    Route::get('/paypal/show-link/{id}', [PayPalCOntroller::class, 'showLink']);
+    Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
