@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthenticateJWT;
@@ -18,6 +19,7 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
     Route::get('/fetch-follows', [ProfileController::class, 'fetchFollows']);
+    Route::post('/payment/{id}', [PaypalController::class, 'paypal']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);

@@ -8,6 +8,8 @@ import Profile from "./Pages/User/Profile";
 import Follower from "./Pages/User/Follower";
 import Following from "./Pages/User/Following";
 import PostShow from "./Pages/Posts/Show";
+import Success from "./Pages/Payments/Success";
+import Cancel from "./Pages/Payments/Cancel";
 import { useContext } from "react";
 import { AppContext } from "./Context/AppContext";
 import Create from "./Pages/Posts/Create";
@@ -28,8 +30,10 @@ function App() {
           <Route path="/profile/:id" element={<Profile />}></Route>
           <Route path="/follower" element={<Follower />}></Route>
           <Route path="/following" element={<Following />}></Route>
-          <Route path="/post/:id" element={<PostShow /> }></Route>
+          <Route path="/post/:post_id" element={<PostShow /> }></Route>
         </Route>
+          <Route path="/paypal/success" element={<Success /> }></Route>
+          <Route path="/paypal/cancel" element={<Cancel /> }></Route>
 
       </Routes>
     </BrowserRouter>
