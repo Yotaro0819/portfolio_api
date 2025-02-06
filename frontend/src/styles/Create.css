@@ -1,3 +1,7 @@
+html {
+  width: 100vh;
+}
+
 .fb {
   display: flex;
   justify-content:space-between;

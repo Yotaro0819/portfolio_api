@@ -106,18 +106,6 @@ try {
                 }} />
             </div>
 
-            {/* <div className="prices">
-              <p className="p-2 btn inline">¥
-                <input 
-                  type="number"
-                  className="btn text-white bg-gray-800 input-price" 
-                  placeholder="price"
-                  value={formData.price}
-                  onChange={(e) => {
-                    setFormData({ ...formData, price: e.target.value })
-                  }} />
-              </p>
-            </div> */}
             <PriceInput
               value={formData.price}
               onChange={(value) => {

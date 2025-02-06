@@ -13,6 +13,7 @@ import Success from "./Pages/Payments/Success";
 import Cancel from "./Pages/Payments/Cancel";
 import { AppContext } from "./Context/AppContext";
 import Create from "./Pages/Posts/Create";
+import Payment from "./Pages/Payments/Payment";
 
 function App() {
   const { user } = useContext(AppContext);
@@ -39,6 +40,7 @@ function App() {
       </Route>
       <Route path="/paypal/success" element={user ? <Success /> : <Login />} />
       <Route path="/paypal/cancel" element={user ? <Cancel /> : <Login />} />
+      <Route path="post/:id/payment" element={user ? <Payment /> : <Login />} />
     </Routes>
   );
 }

@@ -6,6 +6,7 @@ body {
   min-height: 100vh;  /* 画面全体の高さを確保 */
   width: 100vw;
   box-sizing: border-box; /* paddingとborderをサイズに含める */
+  overflow-x:hidden;
 }
 
 header {
@@ -15,6 +16,7 @@ header {
   display: flex;
   flex-direction: column; /* 縦方向にアイテムを並べる */
   padding: 40px 20px 20px 20px;
+  width: 14%;
   box-sizing: border-box;
 }
 
