@@ -2,16 +2,18 @@ import React, { useContext, useEffect, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 
 export default function Home() {
   const { user, setShowNav } = useContext(AppContext);
   const [allPosts, setAllPosts] = useState([]);
+  const [counts, setCounts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [authUser, setAuthUser] = useState(null);
 
   console.log(allPosts);
+  console.log(user);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -28,7 +30,6 @@ export default function Home() {
         console.log(data);
 
         setAllPosts(data.posts);
-        setAuthUser(data.authUser);
         setLoading(false);
 
       } catch (error) {
@@ -36,6 +37,19 @@ export default function Home() {
         setLoading(false);
       }
     };
+
+    const countFollows = async () => {
+      try {
+        const res = await axios.get('/api/count-follows', {
+          withCredentials: true
+        })
+        console.log(res.data);
+        setCounts(res.data);
+      } catch (error) {
+        console.error('failed fatching counts: ', error);
+      }
+    }
+    countFollows();
     fetchPosts();
     setShowNav(true);
   },[]);
@@ -100,10 +114,17 @@ export default function Home() {
             </div>
             <div className="ml-2">
               <h3 className="username inline mt-2">{user.name}</h3>
+
+              { counts ? (
                 <div>
-                <Link to="/follower" className="mr-4">Follower</Link>
-                <Link to="/following">Following</Link>
+                <Link to="/follower" className="mr-4">Follower { counts.followerCount }</Link>
+                <Link to="/following">Following { counts.followingCount }</Link>
                 </div>
+              ):(
+
+                <>Loading counts</>
+              )}
+                
               </div>
             </div>
         </div>

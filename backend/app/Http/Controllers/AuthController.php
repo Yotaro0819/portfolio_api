@@ -42,7 +42,7 @@ class AuthController extends Controller
             //     'followers' => $user->followers,
             //     'following' => $user->following
             // ]
-            'authUser' => $authUser,
+            // 'authUser' => $authUser,
         ]);
     } catch (JWTException $e) {
         return response()->json(['error' => 'Unauthenticated'], 401);
@@ -87,18 +87,19 @@ class AuthController extends Controller
             'password' => 'required|min:8'
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password', 'avatar');
 
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
         $userName = $user->name;
         $userId   = $user->id;
+        $avatar   = $user->avatar;
         $accessToken = JWTAuth::fromUser($user);
         $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
 
         return Response::json([
             'message' => 'Logged in successfully',
-            'user' => ['name' => $userName, 'user_id' => $userId],
+            'user' => ['name' => $userName, 'user_id' => $userId, 'avatar' => $avatar],
         ])
         ->cookie('jwt', $accessToken, 60, null, null, false, true)
         ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true);

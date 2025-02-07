@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthenticateJWT;
 use App\Http\Middleware\CorsMiddleware;
 use Illuminate\Http\Request;
@@ -18,10 +18,13 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-    Route::get('/fetch-follows', [ProfileController::class, 'fetchFollows']);
+    Route::get('/fetch-followers', [FollowController::class, 'fetchFollowers']);
+    Route::get('/fetch-following', [FollowController::class, 'fetchFollowing']);
+    Route::get('/count-follows', [FollowController::class, 'countFollows']);
     Route::post('/paypal/payment/{id}', [PaypalController::class, 'order']);
     Route::get('/paypal/show-link/{id}', [PayPalCOntroller::class, 'showLink']);
     Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
+
 });
 
 Route::post('/register', [AuthController::class, 'register']);

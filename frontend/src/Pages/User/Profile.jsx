@@ -1,42 +1,28 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { AppContext } from '../../Context/AppContext';
 
 const Profile = () => {
 
-  const [authUser, setAuthUser] = useState(null);
+const { user } = useContext(AppContext);
 
-useEffect(() => {
 
-  const fetchUser = async () =>  {
-
-    try {
-      const res = await axios.get('/api/check-auth', {
-        withCredentials: true,
-      });
-
-      console.log('Getting user data successfully:', res.data);
-
-      setAuthUser(res.data.user);
-    } catch (error) {
-      console.error('Error fetching data:', error.response ? error.response.data : error.message);
-    }
-
-  }
-  fetchUser();
-}, [])
+  useEffect(() => {
+   
+  },[]) 
 
 
   return (
     <>
-    {!authUser ? (
+    {!user ? (
       <div></div>
     )
     :
     (
       <>
       <div>Profile</div>
-      <p>{authUser.name}</p>
-      <p>{authUser.password}</p>
+      <p>{user.name}</p>
+      <p>{user.user_id}</p>
       </>
     )}
    
