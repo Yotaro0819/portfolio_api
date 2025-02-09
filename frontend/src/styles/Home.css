@@ -1,9 +1,9 @@
 
-/* .fb {
+.fb {
   display:flex;
   justify-content: space-between;
   width:100%;
-} */
+}
 
 
 .box {
@@ -11,8 +11,9 @@
   margin: 0 auto;
   }
   
-  .right {
+  .home-right {
     width:80%;
+    margin: 60px;
   }
 
 .title {
@@ -26,6 +27,7 @@
   padding:20px;
   margin: 0 0 100px 40px;
 }
+
 .post-title {
   width: 90%;
   margin:20px 0 20px 3px;

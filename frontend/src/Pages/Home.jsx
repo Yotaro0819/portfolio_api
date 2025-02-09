@@ -96,7 +96,7 @@ export default function Home() {
           )}
         </div>
       
-        <div className="right">
+        <div className="home-right">
           <div className="userInfo bg-black">
             <div className="avatar flex items-center">
               <Link to={`/profile/${user.user_id}`}>

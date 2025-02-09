@@ -119,7 +119,7 @@ try {
         </div>
         </div>
       </div>
-      <div className="bg-red-500 right">hello this is right sec</div>
+      <div className="bg-red-500 create-right">hello this is right sec</div>
       </div>
     </>
   );

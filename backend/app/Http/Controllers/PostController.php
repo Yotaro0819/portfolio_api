@@ -74,6 +74,7 @@ public function store(Request $request)
     public function show($id)
     {
         $post = Post::findOrFail($id);
+        $post->image = asset('storage/'. $post->image);
 
         return response()->json($post);
     }
