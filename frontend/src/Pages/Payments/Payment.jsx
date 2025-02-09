@@ -8,12 +8,16 @@ const Payment = () => {
   
   return (
     <>
-    {config ? (<>
+    {config ? (
+      <>
       <div>Payment</div>
                 <PayPalScriptProvider options={{ "client-id": config.client_id, currency: "JPY" }}>
                   <PayPalButton />
                 </PayPalScriptProvider>
-      </>) : (<></>)}
+      </>
+    ) : (
+    <></>
+    )}
     </>
   )
 }

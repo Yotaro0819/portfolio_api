@@ -20,11 +20,11 @@ function App() {
   const navigate = useNavigate(); // useNavigateフックを使ってリダイレクト
 
   // userがnullの場合にログインページへリダイレクト
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate('/login');
+  //   }
+  // }, [user, navigate]);
 
   return (
     <Routes>

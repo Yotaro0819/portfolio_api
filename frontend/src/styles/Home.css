@@ -1,14 +1,19 @@
 
-.fb {
+/* .fb {
   display:flex;
   justify-content: space-between;
-}
-.right {
-  width: 80%;
-}
+  width:100%;
+} */
+
+
 .box {
-  width: 75%;
-}
+  width: 130%;
+  margin: 0 auto;
+  }
+  
+  .right {
+    width:80%;
+  }
 
 .title {
   font-size:30px;

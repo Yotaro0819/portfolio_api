@@ -21,8 +21,9 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::get('/fetch-followers', [FollowController::class, 'fetchFollowers']);
     Route::get('/fetch-following', [FollowController::class, 'fetchFollowing']);
     Route::get('/count-follows', [FollowController::class, 'countFollows']);
-    Route::post('/paypal/payment/{id}', [PaypalController::class, 'order']);
-    Route::get('/paypal/show-link/{id}', [PayPalCOntroller::class, 'showLink']);
+    Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);
+    Route::get('/payment/success', [PaypalController::class, 'success'])->name('api.success');
+    Route::get('/payment/cancel', [PaypalController::class, 'cancel'])->name('api.cancel');
     Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
 
 });

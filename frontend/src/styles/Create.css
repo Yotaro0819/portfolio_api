@@ -1,14 +1,19 @@
-html {
+/* html {
   width: 100vh;
-}
+} */
 
 .fb {
   display: flex;
   justify-content:space-between;
+  width: 100%;
 }
 
-.box {
-width: 75%;
+.content {
+  width:80%;
+}
+
+.post-box {
+width: 120%;
 margin: 0 auto;
 }
 

@@ -71,9 +71,11 @@ public function store(Request $request)
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show($id)
     {
-        return $post;
+        $post = Post::findOrFail($id);
+
+        return response()->json($post);
     }
 
     /**

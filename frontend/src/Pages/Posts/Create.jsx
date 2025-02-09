@@ -58,6 +58,7 @@ try {
     <>
     <div className="fb">
       <div className="box">
+        <div className="content">
         <h1 className="title">Create a new post</h1>
 
         <div className="post bg-gray-800">
@@ -115,6 +116,7 @@ try {
 
             <button className="bg-cyan rounded">Create</button>
           </form>
+        </div>
         </div>
       </div>
       <div className="bg-red-500 right">hello this is right sec</div>

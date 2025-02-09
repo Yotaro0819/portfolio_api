@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../api/axios.js';
 
 
 export default function Home() {
@@ -18,18 +18,13 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/posts', {
-          credentials: 'include',
+        const res = await axiosInstance.get('/api/posts', {
+          withCredentials: true,
         });
 
-        if(!res.ok) {
-          throw new Error('response was not ok');
-        }
+       console.log(res.data);
 
-        const data = await res.json();
-        console.log(data);
-
-        setAllPosts(data.posts);
+        setAllPosts(res.data.posts);
         setLoading(false);
 
       } catch (error) {
@@ -40,7 +35,7 @@ export default function Home() {
 
     const countFollows = async () => {
       try {
-        const res = await axios.get('/api/count-follows', {
+        const res = await axiosInstance.get('/api/count-follows', {
           withCredentials: true
         })
         console.log(res.data);
@@ -101,7 +96,7 @@ export default function Home() {
           )}
         </div>
       
-        <div className="bg-red-500 right">
+        <div className="right">
           <div className="userInfo bg-black">
             <div className="avatar flex items-center">
               <Link to={`/profile/${user.user_id}`}>
