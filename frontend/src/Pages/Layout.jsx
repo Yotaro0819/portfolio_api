@@ -20,9 +20,7 @@ export default function Layout() {
     e.preventDefault();
 
     try {
-      const res = await axios.post('/api/logout', {}, {
-        withCredentials: true,
-      });
+      const res = await axios.post('/api/logout');
   
       console.log("Response:", res);  // レスポンスの内容を確認
   

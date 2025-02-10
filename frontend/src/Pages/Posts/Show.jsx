@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/Show.css';
-import PayPalButton from '../../Component/PayPalButton';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
+import RightSideBuy from '../../Component/RightSideBuy';
 import { AppContext } from '../../Context/AppContext';
 
 
@@ -13,6 +13,8 @@ const Show = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+
   console.log(post_id)
 
 
@@ -43,17 +45,24 @@ const Show = () => {
       <div>
         {post ? (
           <>
+              {message && (
+                  <div className="overlay">
+                    <div className="message">
+                      {message}
+                    </div>
+                  </div>
+                )}
           <div className="fb">
             <div className="box">
               <div className="content">
                 <h2 className="title">Details of the post</h2>
-                  <div className="post bg-gray-800">
+                  <div className="post-showing bg-gray-800">
                     <p className="post-title post-show">{post.title}</p>
                       <div className="block px-1 bg-gray-800 mt-0">
                       <img 
                       src={post.image} 
                       alt="post_image"
-                      className="mt-2 img object-cover border border-gray-300" 
+                      className="post-image mt-2 img object-cover border border-gray-300" 
                       />
                       </div>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -62,25 +71,8 @@ const Show = () => {
               </div>
             </div>
             
-          <div className="right bg-gray-800">
-            <div className="post-body">
-              <p className="show-body">{ post.body }</p>
-              <p className="price">{ post.price }</p>
-            </div>
 
-            { post.user_id !== user.user_id ? (
-              <div className="paypal-btn">
-                <PayPalScriptProvider options={{ "client-id": config.client_id, currency: "JPY" }}>
-                  <PayPalButton config={config} post={post} />
-                </PayPalScriptProvider>
-            </div>
-            ) : (
-              <div>
-                <p>Your post</p>
-              </div>
-            )}
-            
-          </div>
+            <RightSideBuy className="show-body" post={post} user={user} setMessage={setMessage} config={config}/>
         </div>
                     
           </>

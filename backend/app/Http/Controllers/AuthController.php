@@ -105,7 +105,7 @@ class AuthController extends Controller
         ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true);
     }
 
-    return Response::json(['error' => 'Unauthorized'], 401);
+    return Response::json(['error' => 'Unauthorized your'], 401);
     }
 
     public function logout()

@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import '../../styles/Create.css';
 import PriceInput from '../../Component/PriceInput.jsx';
 import axiosInstance from '../../api/axios.js';
+import RightSideProfile from '../../Component/RightSideProfile.jsx';
+import { AppContext } from '../../Context/AppContext.jsx';
 const Create = () => {
+    const { user } = useContext(AppContext);
+  
   const [formData, setFormData] = useState({
     title: "",
     body: "",
@@ -119,7 +123,8 @@ try {
         </div>
         </div>
       </div>
-      <div className="bg-red-500 create-right">hello this is right sec</div>
+      {/* <div className="bg-red-500 create-right">hello this is right sec</div> */}
+      <RightSideProfile user={user}/>
       </div>
     </>
   );

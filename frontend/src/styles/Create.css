@@ -81,14 +81,16 @@ textarea::placeholder {
 }
 
 .prev-img {
-  width: 550px;
-  height: 600px;
+  width: 450px;
+  height: 500px;
   margin: 0 auto;
 
 }
 .prev-non {
-  height: 600px;
+  width:450px;
+  height: 500px;
   display:flex;
+  margin: 0 auto;
   background-color:black;
   align-items:center;
   justify-content:center;

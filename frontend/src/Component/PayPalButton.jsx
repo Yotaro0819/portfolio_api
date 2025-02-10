@@ -1,19 +1,18 @@
 import React, { useContext } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import axios from "axios";
 
-const PayPalButton = ({ post }) => {
+const PayPalButton = ({ post, setMessage }) => {
 
   const createOrder = async () => {
     try {
-      const response = await fetch(`/api/paypal/create-order/${post.id}`, {
-        method: "POST",
+      const response = await axios.post(`/api/paypal/create-order/${post.id}`, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      const data = await response.json();
-
+      const data = response.data;
+      setMessage('Loading...');
       if (data.status === "success") {
         // PayPalのapproveリンクにリダイレクト
         window.location.href = data.redirect_url;

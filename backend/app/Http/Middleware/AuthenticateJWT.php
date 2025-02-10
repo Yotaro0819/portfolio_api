@@ -23,10 +23,11 @@ class AuthenticateJWT extends Middleware
     {
         if ($jwt = $request->cookie('jwt')) {
             Log::info('JWT Token: ' . $jwt);
-
             $request->headers->set('Authorization', 'Bearer ' . $jwt);
             Log::info('Authorization Header: ' . $request->header('Authorization'));
-
+        } else {
+            // JWTがない場合はエラーレスポンスを返す
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
 

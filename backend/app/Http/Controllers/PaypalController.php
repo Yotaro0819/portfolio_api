@@ -58,7 +58,8 @@ class PaypalController extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'redirect_url' => $link['href']
+                        'redirect_url' => $link['href'],
+                        'order_id' => $response['id'],
                     ]);
                 }
             }
