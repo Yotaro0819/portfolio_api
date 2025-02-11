@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
 import '../../styles/Show.css';
-
 import RightSideBuy from '../../Component/RightSideBuy';
 import { AppContext } from '../../Context/AppContext';
+import axiosInstance from '../../api/axios';
 
 
 const Show = () => {
@@ -21,7 +20,7 @@ const Show = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`/api/posts/${post_id}`, {
+        const res = await axiosInstance.get(`/api/posts/${post_id}`, {
           withCredentils: true,
         })
         console.log(res.data);

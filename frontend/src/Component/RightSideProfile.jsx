@@ -22,7 +22,7 @@ const [counts, setCounts] = useState(null);
   },[]);
 
   return (
-            <div className="home-right">
+            <div className="profile-right">
               <div className="userInfo bg-black">
                   
     
@@ -50,8 +50,7 @@ const [counts, setCounts] = useState(null);
     
                     <></>
                   )}
-                    
-                </div>
+              </div>
             </div>
   )
 }

@@ -15,7 +15,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::with('user')->get();
 
         $posts->each(function ($post) {
             $post->image = asset('storage/'. $post->image);
@@ -144,5 +144,21 @@ public function store(Request $request)
         $post->delete();
 
         return ['message' => 'post was deleted'];
+    }
+
+    public function getYourPosts()
+    {
+        try {
+        $user = JWTAuth::parseToken()->authenticate();
+        $auth_posts = Post::where('user_id', $user->id)->get();
+
+        $auth_posts->each(function ($post) {
+            $post->image = asset('storage/'. $post->image);
+        });
+
+        return response()->json($auth_posts);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 }

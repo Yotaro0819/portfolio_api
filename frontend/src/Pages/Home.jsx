@@ -31,19 +31,6 @@ export default function Home() {
         setLoading(false);
       }
     };
-
-    // const countFollows = async () => {
-    //   try {
-    //     const res = await axiosInstance.get('/api/count-follows', {
-    //       withCredentials: true
-    //     })
-    //     console.log(res.data);
-    //     setCounts(res.data);
-    //   } catch (error) {
-    //     console.error('failed fatching counts: ', error);
-    //   }
-    // }
-    // countFollows();
     fetchPosts();
     setShowNav(true);
   },[]);
@@ -68,7 +55,10 @@ export default function Home() {
                 <div className="each-post bg-gray-800">
                   <Link to={`/post/${post.id}`}>
                   <div className="card-body block post-title px-1 text-white bg-gray-800 mt-0">
-                  <h2 className="post-title"> {post.title }</h2>
+                    <div className="flex items-center">
+                    <h2 className="post-title"> {post.title }</h2>
+                    <h2>{post.user.name}</h2>
+                    </div>
                   </div>
                   <div className="block px-1 bg-gray-800 mt-0">
                     <img 

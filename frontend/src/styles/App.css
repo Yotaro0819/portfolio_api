@@ -6,6 +6,12 @@ main {
   width: 100vw;
 }
 
+.fb {
+  display: flex;
+  justify-content:space-between;
+  width: 100%;
+}
+
 .login-form {
   margin-left:32%;
 }
@@ -13,6 +19,18 @@ main {
 .register-form {
   margin-left:32%;
 }
+
+.profile-right {
+  width:60%;
+  margin: 60px 0;
+}
+
+.userInfo {
+  display:flex;
+  align-items:center;
+  width: 100%;
+}
+
 
 
 

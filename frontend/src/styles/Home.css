@@ -1,20 +1,9 @@
 
-.fb {
-  display:flex;
-  justify-content: space-between;
-  width:100%;
-}
-
-
 .box {
   width: 130%;
   margin: 0 auto;
   }
   
-  .home-right {
-    width:80%;
-    margin: 60px;
-  }
 
 .title {
   font-size:30px;
@@ -55,10 +44,8 @@
   margin: 0 auto;
 }
 
-.userInfo {
-  display:flex;
-  align-items:center;
-}
+
+
 .username {
   font-size:30px;
 }

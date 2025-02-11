@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(function () {
     Route::apiResource('posts', PostController::class);
+    Route::get('/auth-posts', [PostController::class, 'getYourPosts']);
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);

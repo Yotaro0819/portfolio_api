@@ -1,6 +1,6 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { createContext } from "react";
+import axiosInstance from '../api/axios';
 
 export const AppContext = createContext();
 
@@ -17,7 +17,7 @@ export default function AppProvider({ children }) {
 
     const fetchConfig = async () => {
       try {
-        const res = await axios.get('/api/paypal/config', {
+        const res = await axiosInstance.get('/api/paypal/config', {
           withCredentials: true,
         })
         // console.log(res.data);
