@@ -21,10 +21,6 @@ class AuthenticateJWT extends Middleware
 
     public function handle($request, Closure $next, ...$guards)
     {
-        if ($request->is('api/refresh-token')) {
-            return $next($request);
-        }
-
         if ($jwt = $request->cookie('jwt')) {
             Log::info('JWT Token: ' . $jwt);
             $request->headers->set('Authorization', 'Bearer ' . $jwt);
