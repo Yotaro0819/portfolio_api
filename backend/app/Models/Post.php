@@ -22,9 +22,11 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function likes()
+    public function likedUser()
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
+        // $this->belongsToMany(RelatedModel::class, 'pivot_table', 'foreign_key', 'related_key');
+
     }
 
     public function comments()

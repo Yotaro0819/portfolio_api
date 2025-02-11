@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Middleware\AuthenticateJWT;
 use App\Models\Post;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PostController extends Controller
@@ -149,14 +146,46 @@ public function store(Request $request)
     public function getYourPosts()
     {
         try {
-        $user = JWTAuth::parseToken()->authenticate();
-        $auth_posts = Post::where('user_id', $user->id)->get();
+            $user = JWTAuth::parseToken()->authenticate();
+            $auth_posts = Post::where('user_id', $user->id)->get();
 
-        $auth_posts->each(function ($post) {
-            $post->image = asset('storage/'. $post->image);
-        });
+            $auth_posts->each(function ($post) {
+                $post->image = asset('storage/'. $post->image);
+            });
 
-        return response()->json($auth_posts);
+            return response()->json($auth_posts);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+    public function getLikePosts()
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            $liked_posts = $user->likedPosts()->get();
+
+            $liked_posts->each(function ($post) {
+                $post->image = asset('storage/'. $post->image);
+            });
+
+            return response()->json($liked_posts);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
+
+    public function getOwnPosts()
+    {
+        try {
+            $user = JWTAuth::parseToken()->authoenticate();
+            $own_posts = Post::where('owner_id', $user->id)->get();
+
+            $own_posts->each(function($post) {
+                $post->image = asset('storage/'. $post->image);
+            });
+
+            return response()->json($own_posts);
         } catch(\Exception $e) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
