@@ -24,29 +24,33 @@ const [counts, setCounts] = useState(null);
   return (
             <div className="home-right">
               <div className="userInfo bg-black">
-                <div className="avatar flex items-center">
-                  <Link to={`/profile/${user.user_id}`}>
-                {user.image ? 
-                <img src="#" alt="avatar"></img>
-                :
-                <i className="fa-solid fa-user inline"></i>
-                }
-                </Link>
-                </div>
-                <div className="ml-2">
-                  <h3 className="username inline mt-2">{user.name}</h3>
+                  
     
                   { counts ? (
-                    <div>
-                    <Link to="/follower" className="mr-4">Follower { counts.followerCount }</Link>
-                    <Link to="/following">Following { counts.followingCount }</Link>
+                    <>
+                    <div className="avatar flex items-center">
+                      <Link to={`/profile/${user.user_id}`}>
+                        {user.image ? 
+                        <img src="#" alt="avatar"></img>
+                        :
+                        <i className="fa-solid fa-user inline"></i>
+                        }
+                      </Link>
                     </div>
+                    <div className="ml-2">
+                      <h3 className="username inline mt-2">{user.name}</h3>
+                        <div>
+                          <Link to="/follower" className="mr-4">Follower { counts.followerCount }</Link>
+                          <Link to="/following">Following { counts.followingCount }</Link>
+                        </div>
+                    </div>
+                  </>
+
                   ):(
     
-                    <>Loading counts</>
+                    <></>
                   )}
                     
-                  </div>
                 </div>
             </div>
   )

@@ -55,7 +55,7 @@ const Register = () => {
     <h1 className="title">Register a new account</h1>
 
     
-    <form onSubmit={handleRegister} className="w-1/2 mx-auto space-y-6">
+    <form onSubmit={handleRegister} className="register-form w-1/2 mx-auto space-y-6">
       <div>
         <input type="text" placeholder="Name" 
         className="border rounded w-full px-2  bg-gray-800"

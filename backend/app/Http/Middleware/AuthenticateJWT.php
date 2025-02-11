@@ -21,6 +21,10 @@ class AuthenticateJWT extends Middleware
 
     public function handle($request, Closure $next, ...$guards)
     {
+        if ($request->is('api/refresh-token')) {
+            return $next($request);
+        }
+
         if ($jwt = $request->cookie('jwt')) {
             Log::info('JWT Token: ' . $jwt);
             $request->headers->set('Authorization', 'Bearer ' . $jwt);
@@ -29,6 +33,7 @@ class AuthenticateJWT extends Middleware
             // JWTがない場合はエラーレスポンスを返す
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
 
 
         return $next($request);

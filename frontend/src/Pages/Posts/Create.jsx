@@ -126,6 +126,7 @@ try {
       {/* <div className="bg-red-500 create-right">hello this is right sec</div> */}
       <RightSideProfile user={user}/>
       </div>
+      
     </>
   );
 };
