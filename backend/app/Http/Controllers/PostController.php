@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -53,7 +54,7 @@ public function store(Request $request)
         }
 
         // デコードしたuserからid取得
-        $post = Post::create(array_merge($fields, ['user_id' => $user->id]));
+        $post = Post::create(array_merge($fields, ['user_id' => $user->id, 'owner_id' => $user->id]));
 
         return response()->json($post, 201);
     } catch (\Exception $e) {
@@ -143,26 +144,26 @@ public function store(Request $request)
         return ['message' => 'post was deleted'];
     }
 
-    public function getYourPosts()
+    public function getYourPosts($id)
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
-            $auth_posts = Post::where('user_id', $user->id)->get();
+            $user = User::findOrFail($id);
+            $my_posts = Post::where('user_id', $user->id)->get();
 
-            $auth_posts->each(function ($post) {
+            $my_posts->each(function ($post) {
                 $post->image = asset('storage/'. $post->image);
             });
 
-            return response()->json($auth_posts);
+            return response()->json($my_posts);
         } catch(\Exception $e) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
     }
 
-    public function getLikePosts()
+    public function getLikePosts($id)
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user = User::findOrFail($id);
             $liked_posts = $user->likedPosts()->get();
 
             $liked_posts->each(function ($post) {
@@ -175,10 +176,10 @@ public function store(Request $request)
         }
     }
 
-    public function getOwnPosts()
+    public function getOwnPosts($id)
     {
         try {
-            $user = JWTAuth::parseToken()->authoenticate();
+            $user = User::findOrFail($id);
             $own_posts = Post::where('owner_id', $user->id)->get();
 
             $own_posts->each(function($post) {

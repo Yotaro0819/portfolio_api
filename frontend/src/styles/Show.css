@@ -1,18 +1,15 @@
-main {
-  margin: 0;
-  padding: 0;
-}
+
 
 .paypal-btn {
   width: 200px;
   margin: 50px 100px;
 }
 
-.fb {
+/* .fb {
   display: flex;
   justify-content:space-between;
   width: 100%;
-}
+} */
 
 .content {
   width:75%;
@@ -20,7 +17,8 @@ main {
 
 .box {
 width: 120%;
-margin: 40px auto;
+height: 100vh;
+margin: 0 auto;
 }
 
 .right {

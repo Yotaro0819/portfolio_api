@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 
 const Follower = () => {
   const [followers, setFollowers] = useState([]);
+  const {user_id} = useParams();
 
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const res = await axios.get('/api/fetch-followers', {
+        const res = await axios.get(`/api/fetch-followers/${user_id}`, {
           withCredentials: true,
         })
         console.log(res.data);

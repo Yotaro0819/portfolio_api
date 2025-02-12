@@ -7,7 +7,7 @@ import axiosInstance from '../../api/axios';
 
 
 const Show = () => {
-  const { config, user } = useContext(AppContext);
+  const { config, authUser } = useContext(AppContext);
   const { post_id } = useParams();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -15,6 +15,7 @@ const Show = () => {
   const [message, setMessage] = useState(null);
 
   console.log(post_id)
+  console.log(post)
 
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const Show = () => {
                       {message}
                     </div>
                   </div>
-                )}
+              )}
           <div className="fb">
             <div className="box">
               <div className="content">
@@ -65,13 +66,12 @@ const Show = () => {
                       />
                       </div>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
-                      
                   </div>
               </div>
             </div>
             
 
-            <RightSideBuy className="show-body" post={post} user={user} setMessage={setMessage} config={config}/>
+            <RightSideBuy className="show-body" post={post} authUser={authUser} setMessage={setMessage} config={config}/>
         </div>
                     
           </>

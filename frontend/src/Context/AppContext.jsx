@@ -5,9 +5,9 @@ import axiosInstance from '../api/axios';
 export const AppContext = createContext();
 
 export default function AppProvider({ children }) {
-  const [user, setUser] = useState(() => {
+  const [authUser, setAuthUser] = useState(() => {
     // ローカルストレージから user を取得（なければ null）
-    const savedUser = localStorage.getItem("user");
+    const savedUser = localStorage.getItem("authUser");
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [showNav, setShowNav] = useState(false);
@@ -32,7 +32,7 @@ export default function AppProvider({ children }) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ user, setUser, config, showNav, setShowNav }}>
+    <AppContext.Provider value={{ authUser, setAuthUser, config, showNav, setShowNav }}>
       {children}
     </AppContext.Provider>
   );

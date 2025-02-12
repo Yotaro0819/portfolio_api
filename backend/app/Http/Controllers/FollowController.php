@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FollowController extends Controller
 {
-    public function fetchFollowers(Request $request)
+    public function fetchFollowers(Request $request, $id)
     {
 
         $jwt = $request->cookie('jwt');
@@ -18,16 +18,16 @@ class FollowController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $userId = JWTAuth::parseToken()->authenticate()->id;
+        $user = User::findOrFail($id);
         // $authUser = User::find($userId);
 
-        $followers = Follow::where('following_id', $userId)
+        $followers = Follow::where('following_id', $user->id)
         ->with('follower:id,name,avatar')->get();
 
         return response()->json($followers);
     }
 
-    public function fetchFollowing(Request $request)
+    public function fetchFollowing(Request $request, $id)
     {
         $jwt = $request->cookie('jwt');
 
@@ -35,16 +35,16 @@ class FollowController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $userId = JWTAuth::parseToken()->authenticate()->id;
+        $user = User::findOrFail($id);
         // $authUser = User::find($userId);
 
-        $following = Follow::where('follower_id', $userId)
+        $following = Follow::where('follower_id', $user->id)
         ->with('following:id,name,avatar')->get();
 
         return response()->json($following);
     }
 
-    public function countFollows(Request $request)
+    public function countFollows(Request $request, $id)
     {
         $jwt = $request->cookie('jwt');
 
@@ -52,10 +52,10 @@ class FollowController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $userId = JWTAuth::parseToken()->authenticate()->id;
+        $user = User::findOrFail($id);
 
-        $followerCount = User::find($userId)->followers()->count();
-        $followingCount = User::find($userId)->following()->count();
+        $followerCount = $user->followers()->count();
+        $followingCount = $user->following()->count();
         return response()->json(['followerCount' => $followerCount, 'followingCount' => $followingCount]);
 
     }

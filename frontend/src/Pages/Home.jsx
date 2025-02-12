@@ -7,14 +7,14 @@ import RightSideProfile from '../Component/RightSideProfile.jsx';
 
 
 export default function Home() {
-  const { user, setShowNav } = useContext(AppContext);
+  const { authUser, setShowNav } = useContext(AppContext);
   const [allPosts, setAllPosts] = useState([]);
-  const [counts, setCounts] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   console.log(allPosts);
-  console.log(user);
+  console.log(authUser);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -51,9 +51,12 @@ export default function Home() {
           <ul>
             {allPosts.map((post) => 
             ( 
-              <li key={post.id}>
+              <li key={post.id} onClick={() => setSelectedPost(post)}>
                 <div className="each-post bg-gray-800">
-                  <Link to={`/post/${post.id}`}>
+                  <Link to={{
+                    pathname: `/post/${post.id}`,
+                    state: { post }
+                    }}>
                   <div className="card-body block post-title px-1 text-white bg-gray-800 mt-0">
                     <div className="flex items-center">
                     <h2 className="post-title"> {post.title }</h2>
@@ -85,7 +88,7 @@ export default function Home() {
           )}
         </div>
       
-        <RightSideProfile user={user} />
+        <RightSideProfile authUser={authUser} />
       </div>
     </>
   );

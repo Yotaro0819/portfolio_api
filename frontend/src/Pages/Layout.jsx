@@ -1,33 +1,33 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../styles/Layout.css';
 import { AppContext } from '../Context/AppContext';
+import axiosInstance from '../api/axios';
 
 export default function Layout() {
-  const { user, setUser } = useContext(AppContext);
+  const { authUser, setAuthUser } = useContext(AppContext);
   const [ showNav, setShowNav] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (authUser) {
       setShowNav(true);  // userがnullならナビゲーションを非表示にする
     }
-  }, [user, setShowNav]);
+  }, [authUser, setShowNav]);
 
   async function handleLogout(e) {
     e.preventDefault();
 
     try {
-      const res = await axios.post('/api/logout');
+      const res = await axiosInstance.post('/api/logout');
   
       console.log("Response:", res);  // レスポンスの内容を確認
   
       if (res.status === 200) {
-        setUser(null);
+        setAuthUser(null);
         setShowNav(false)
-        localStorage.removeItem('user');
+        localStorage.removeItem('authUser');
 
         navigate('/');
       }

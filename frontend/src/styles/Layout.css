@@ -1,27 +1,17 @@
 /* App.css */
 
 
-body {
-  display: flex;
-  background-color: #444; /* メインエリアの背景色 */
-  margin: 0;
-  font-family: Arial, sans-serif;
-  min-height: 100vh;  /* 画面全体の高さを確保 */
-  width: 100vw;
-  box-sizing: border-box; /* paddingとborderをサイズに含める */
-  overflow-x:hidden;
-}
 
 header {
-  width: 10vw; /* サイドナビの幅を固定 */
-  background-color: #333; /* ナビゲーションの背景色 */
+  /* width: 10vw; */
+  background-color: #333; 
   color: rgb(165, 165, 165);
   display: flex;
-  flex-direction: column; /* 縦方向にアイテムを並べる */
+  flex-direction: column;
   padding: 40px 20px 20px 20px;
   width: 14%;
   box-sizing: border-box;
-  height: 120%;
+  height: auto;
 }
 
 header nav {
@@ -46,15 +36,7 @@ header h1 {
   text-decoration: underline;
 }
 
-main {
-  width: 90vw;
-   /* メインコンテンツ領域が残りの幅を占める */
-  background-color: #444; /* メインエリアの背景色 */
-  color: white;
-  margin: 0;
-  box-sizing: border-box;
-  overflow-y: auto; /* 縦スクロールが必要な場合に対応 */
-}
+
 
 input:-webkit-autofill {
   background-color: #1f2937 !important;

@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../api/axios';
 import { Link } from 'react-router-dom';
 
-const PostList = () => {
+const PostList = ({id}) => {
 
   const [authPosts, setAuthPosts] = useState(null);
+
 
   useEffect(() => {
     const getAuthPost = async () => {
       try {
-        const res = await axiosInstance.get('/api/auth-posts');
+        const res = await axiosInstance.get(`/api/my-posts/${id}`);
         
         console.log(res.data);
         setAuthPosts(res.data);
@@ -41,7 +42,7 @@ const PostList = () => {
       ) 
       :
       (
-        <></>
+        <div className="text-center text-4xl mr-10"></div>
       )}
     </div>
   )

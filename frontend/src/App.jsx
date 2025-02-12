@@ -14,9 +14,10 @@ import Cancel from "./Pages/Payments/Cancel";
 import { AppContext } from "./Context/AppContext";
 import Create from "./Pages/Posts/Create";
 import Payment from "./Pages/Payments/Payment";
+import EditProfile from "./Pages/User/EditProfile";
 
 function App() {
-  const { user } = useContext(AppContext);
+  const { authUser } = useContext(AppContext);
   const navigate = useNavigate(); // useNavigateフックを使ってリダイレクト
 
   // userがnullの場合にログインページへリダイレクト
@@ -29,18 +30,19 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={!user ? <Login /> : <Home />} />
+        <Route index element={!authUser ? <Login /> : <Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/create" element={user ? <Create /> : <Login />} />
-        <Route path="/profile/:id" element={user ? <Profile /> : <Login />} />
-        <Route path="/follower" element={user ? <Follower /> : <Login />} />
-        <Route path="/following" element={user ? <Following /> : <Login />} />
-        <Route path="/post/:post_id" element={user ? <PostShow /> : <Login />} />
+        <Route path="/create" element={authUser ? <Create /> : <Login />} />
+        <Route path="/profile/:user_id" element={authUser ? <Profile /> : <Login />} />
+        <Route path="/edit-profile/:user_id" element={authUser ? <EditProfile /> : <Login />} />
+        <Route path="/follower/:user_id" element={authUser ? <Follower /> : <Login />} />
+        <Route path="/following/:user_id" element={authUser ? <Following /> : <Login />} />
+        <Route path="/post/:post_id" element={authUser ? <PostShow /> : <Login />} />
       </Route>
-      <Route path="/paypal/success" element={user ? <Success /> : <Login />} />
-      <Route path="/paypal/cancel" element={user ? <Cancel /> : <Login />} />
-      <Route path="post/:id/payment" element={user ? <Payment /> : <Login />} />
+      <Route path="/paypal/success" element={authUser ? <Success /> : <Login />} />
+      <Route path="/paypal/cancel" element={authUser ? <Cancel /> : <Login />} />
+      <Route path="post/:id/payment" element={authUser ? <Payment /> : <Login />} />
     </Routes>
   );
 }

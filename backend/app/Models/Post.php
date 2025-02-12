@@ -14,6 +14,7 @@ class Post extends Model
         'title',
         'body',
         'price',
+        'owner_id',
         'image',
     ];
 

@@ -99,7 +99,10 @@ class AuthController extends Controller
 
         return Response::json([
             'message' => 'Logged in successfully',
-            'user' => ['name' => $userName, 'user_id' => $userId, 'avatar' => $avatar],
+            'authUser' => [
+                'name' => $userName,
+                'user_id' => $userId,
+                'avatar' => $avatar],
         ])
         ->cookie('jwt', $accessToken, 60, null, null, false, true)
         ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true);

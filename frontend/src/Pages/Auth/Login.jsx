@@ -5,7 +5,7 @@ import { AppContext } from "../../Context/AppContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser } = useContext(AppContext);
+  const { setAuthUser } = useContext(AppContext);
 
 
   const [formData, setFormData] = useState({
@@ -38,8 +38,8 @@ const Login = () => {
     if (data.errors || !res.ok) {
       setErrors(data.errors);
     }else {
-      setUser(data.user);
-      localStorage.setItem('user', JSON.stringify(data.user))
+      setAuthUser(data.authUser);
+      localStorage.setItem('authUser', JSON.stringify(data.authUser))
 
       navigate('/');
     }

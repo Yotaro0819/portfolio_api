@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom';
 
 const Following = () => {
   const [following, setFollowing] = useState([]);
+  const {user_id} = useParams();
 
   useEffect(() => {
     const fetchFollowings = async () => {
       try {
-        const res = await axios.get('/api/fetch-following', {
+        const res = await axios.get(`/api/fetch-following/${user_id}`, {
           withCredentials: true,
         })
         console.log(res.data);
@@ -18,7 +20,7 @@ const Following = () => {
     }
     fetchFollowings();
   },[]) 
-  return (
+  return (  
     <>
     <div>Following</div>
     {following.length > 0 ? (

@@ -5,8 +5,9 @@ import axiosInstance from '../../api/axios.js';
 import RightSideProfile from '../../Component/RightSideProfile.jsx';
 import { AppContext } from '../../Context/AppContext.jsx';
 const Create = () => {
-    const { user } = useContext(AppContext);
-  
+    const { authUser } = useContext(AppContext);
+    const selectedPost = null;
+
   const [formData, setFormData] = useState({
     title: "",
     body: "",
@@ -124,7 +125,7 @@ try {
         </div>
       </div>
       {/* <div className="bg-red-500 create-right">hello this is right sec</div> */}
-      <RightSideProfile user={user}/>
+      <RightSideProfile authUser={authUser} selectedPost={selectedPost} />
       </div>
       
     </>
