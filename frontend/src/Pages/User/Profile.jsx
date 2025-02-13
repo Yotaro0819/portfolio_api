@@ -50,12 +50,15 @@ const Profile = () => {
         </>
       ) : (
         <>
-          <div className="fb">
+          <div className="fb mt-20">
             <div className="box">
-              <div className="userInfo w-0.75 m-userInfo-l-300">
+              <div className="userInfo w-0.75 justify-center">
                 <div className="text-8xl flex items-center ">
-                  {user.image ? (
-                    <img src="#" alt="avatar" />
+                  {user.avatar ? (
+                    <img 
+                    src={user.avatar} 
+                    alt="avatar"
+                    className="w-24 h-24 rounded-full object-cover" />
                   ) : (
                     <i className="fa-solid fa-user inline mx-10"></i>
                   )}
@@ -86,21 +89,21 @@ const Profile = () => {
                 </div>
               </div>
               <div className="profile-contents w-3/4 mx-auto">
-                <div className="border-t border-white mt-20">
+                <div className="border-t border-white mt-20 mx-auto flex justify-center">
                   <button
-                    className={`left-part text-3xl ml-20 ${activeTab === 'post' ? 'font-bold' : ''}`}
+                    className={`text-3xl mt-10 ${activeTab === 'post' ? 'font-bold' : ''}`}
                     onClick={() => setActiveTab('post')}
                   >
                     Post
                   </button>
                   <button
-                    className={`text-3xl ml-20 ${activeTab === 'like' ? 'font-bold' : ''}`}
+                    className={`text-3xl ml-20 mt-10 ${activeTab === 'like' ? 'font-bold' : ''}`}
                     onClick={() => setActiveTab('like')}
                   >
                     Like Post
                   </button>
                   <button
-                    className={`text-3xl ml-20 ${activeTab === 'own' ? 'font-bold' : ''}`}
+                    className={`text-3xl ml-20 mt-10 ${activeTab === 'own' ? 'font-bold' : ''}`}
                     onClick={() => setActiveTab('own')}
                   >
                     Own Post

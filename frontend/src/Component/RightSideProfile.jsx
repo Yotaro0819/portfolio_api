@@ -5,6 +5,7 @@ import axiosInstance from '../api/axios';
 
 const RightSideProfile = ({authUser}) => {
 const [counts, setCounts] = useState(null);
+const [avatar, setAvatar] = useState(null);
 
   useEffect(() => {
      const countFollows = async () => {
@@ -18,7 +19,19 @@ const [counts, setCounts] = useState(null);
             console.error('failed fatching counts: ', error);
           }
         }
+
+      const fetchAvatar = async() => {
+        try {
+          const res = await axiosInstance('/api/get-avatar');
+          console.log(res.data);
+          setAvatar(res.data);
+        } catch (error) {
+          console.error('failed fetching your avatar: ', error);
+        }
+      }
+
         countFollows();
+        fetchAvatar();
   },[]);
 
   return (
@@ -30,10 +43,14 @@ const [counts, setCounts] = useState(null);
                     <>
                     <div className="avatar flex items-center">
                       <Link to={`/profile/${authUser.user_id}`}>
-                        {authUser.image ? 
-                        <img src="#" alt="avatar"></img>
+                        {avatar ? 
+                        <img 
+                        src={avatar} 
+                        alt="avatar"
+                        className="w-24 h-24 rounded-full object-cover p-2"
+                        ></img>
                         :
-                        <i className="fa-solid fa-user inline"></i>
+                        <i className="fa-solid fa-user w-20 h-20 flex rounded-full ml-4"></i>
                         }
                       </Link>
                     </div>

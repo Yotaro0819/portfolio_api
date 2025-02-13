@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../Context/AppContext';
-import '../../styles/Layout.css';
 
 const Register = () => {
   const navigate = useNavigate();

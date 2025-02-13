@@ -1,7 +1,4 @@
 
-.content {
-  width:80%;
-}
 
 .post-box {
 width: 120%;
@@ -14,10 +11,11 @@ margin: 0 auto;
 }
 
 input {
-  width: 100%;
-  margin: 10px 0;
+  /* width: 100%; */
+  /* margin: 10px 0; */
   border-radius:8px;
 }
+
 input::placeholder {
   color: rgb(184, 184, 184);
 }

@@ -1,21 +1,54 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PayPalButton from './PayPalButton';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../api/axios';
 
 const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
+  const [user, setUser] = useState(null);
   console.log(post);
+
+  useEffect(() => {
+    if (post?.user_id) {
+      const fetchUser = async () => {
+        try {
+          const res = await axiosInstance(`/api/user-info/${post.user_id}`);
+          console.log("Fetched user data:", res.data);
+          setUser(res.data);
+        } catch (error) {
+          console.error('Failed fetching user data: ', error);
+        }
+      };
+      fetchUser();
+    }
+  }, [post]);  // postが変わるたびに実行
+  
+
   return (
     <div className="right bg-gray-800">
-            <div className="avatar flex items-center">
-                      <Link to={`/profile/${post.user_id}`}>
-                        {authUser.image ? 
-                        <img src="#" alt="avatar"></img>
-                        :
-                        <i className="fa-solid fa-user inline"></i>
-                        }
-                      </Link>
+      <p className="text-2xl mt-20 mb-4 text-center">Post Owner Info</p>
+      <div className="flex justify-center">
+        <div className="avatar flex items-center">
+          <Link to={`/profile/${post.user_id}`}>
+            {user?.avatar ? 
+            <img 
+            src={user?.avatar} 
+            alt="avatar"
+            className="w-24 h-24 rounded-full " />
+              :
+            <i className="fa-solid fa-user inline"></i>
+            }
+            </Link>
+        </div>
+        <div>
+          <p className="text-4xl">{user?.name}</p>
+          <div className="flex my-4">
+            <p>follower {user?.followers_count}</p>
+            <p className="ml-4">following {user?.following_count}</p>
           </div>
+        </div>
+      </div>
+            
             <div>
               <p className="show-body">{ post.body }</p>
               <p className="price">{ post.price }</p>

@@ -1,7 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import '../styles/Layout.css';
 import { AppContext } from '../Context/AppContext';
 import axiosInstance from '../api/axios';
 
@@ -57,6 +56,7 @@ export default function Layout() {
                 <Link to="/" className="nav-link m-5 block"><p className="text-2xl">Home</p></Link>
                 </div>
                 <Link to="/create" className="nav-link block"><p className="text-2xl">New Post</p></Link>
+                <Link to={`/profile/${authUser.user_id}`} className="nav-link m-5 block"><p className="text-2xl">Profile</p></Link>
                 <div>
                 <form onSubmit={handleLogout} className="m-0 text-2xl">
                   <button>Logout</button>

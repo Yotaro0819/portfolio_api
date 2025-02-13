@@ -11,7 +11,6 @@ export default function Home() {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedPost, setSelectedPost] = useState(null);
 
   console.log(allPosts);
   console.log(authUser);
@@ -19,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await axiosInstance.get('/api/posts');
+        const res = await axiosInstance('/api/posts');
 
        console.log(res.data);
 
@@ -31,6 +30,7 @@ export default function Home() {
         setLoading(false);
       }
     };
+
     fetchPosts();
     setShowNav(true);
   },[]);
