@@ -13,6 +13,10 @@ class UserController extends Controller
         ->withCount(['followers', 'following'])
         ->findOrFail($id);
 
+        $user->avatar = asset('storage/' . $user->avatar);
+
         return response()->json($user);
     }
+
+   
 }

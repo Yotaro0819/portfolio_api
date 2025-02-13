@@ -142,6 +142,14 @@ class AuthController extends Controller
         }
     }
 
+    public function getAvatar()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $user->avatar = asset('storage/' . $user->avatar);
+
+        return response()->json($user->avatar);
+    }
 
 
 }

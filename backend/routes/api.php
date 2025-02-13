@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
@@ -26,11 +27,15 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::patch('/avatar-update', [ProfileController::class, 'uploadAvatar']);
 
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+    Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
     Route::get('/fetch-followers/{id}', [FollowController::class, 'fetchFollowers']);
     Route::get('/fetch-following/{id}', [FollowController::class, 'fetchFollowing']);
     Route::get('/count-follows/{id}', [FollowController::class, 'countFollows']);
+
+    // comments
+    Route::post('/comment/store', [CommentController::class, 'store']);
 
     // paypal
     Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);
