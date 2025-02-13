@@ -57,8 +57,8 @@ const [avatar, setAvatar] = useState(null);
                     <div className="ml-2">
                       <h3 className="username inline mt-2">{authUser.name}</h3>
                         <div>
-                          <Link to="/follower" className="mr-4">Follower { counts.followerCount }</Link>
-                          <Link to="/following">Following { counts.followingCount }</Link>
+                          <Link to={`/follower/${authUser.user_id}`} className="mr-4">Follower { counts.followerCount }</Link>
+                          <Link to={`/following/${authUser.user_id}`}>Following { counts.followingCount }</Link>
                         </div>
                     </div>
                   </>

@@ -43,8 +43,8 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
         <div>
           <p className="text-4xl">{user?.name}</p>
           <div className="flex my-4">
-            <p>follower {user?.followers_count}</p>
-            <p className="ml-4">following {user?.following_count}</p>
+            <Link to={`/follower/${user?.id}`}>follower {user?.followers_count}</Link>
+            <Link to={`/following/${user?.id}`} className="ml-4">following {user?.following_count}</Link>
           </div>
         </div>
       </div>
