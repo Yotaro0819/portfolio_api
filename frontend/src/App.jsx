@@ -35,7 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/create" element={authUser ? <Create /> : <Login />} />
         <Route path="/profile/:user_id" element={authUser ? <Profile /> : <Login />} />
-        <Route path="/edit-profile/:user_id" element={authUser ? <EditProfile /> : <Login />} />
+        <Route path="/edit-profile" element={authUser ? <EditProfile /> : <Login />} />
         <Route path="/follower/:user_id" element={authUser ? <Follower /> : <Login />} />
         <Route path="/following/:user_id" element={authUser ? <Following /> : <Login />} />
         <Route path="/post/:post_id" element={authUser ? <PostShow /> : <Login />} />

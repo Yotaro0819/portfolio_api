@@ -30,6 +30,7 @@ class PostController extends Controller
 
 public function store(Request $request)
 {
+
     // JWT トークンが送信されていることを確認
     // これによってjwtトークンのペイロードをデコードしてuserを取得する。
     $user = JWTAuth::parseToken()->authenticate();

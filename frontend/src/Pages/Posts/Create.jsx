@@ -4,6 +4,7 @@ import PriceInput from '../../Component/PriceInput.jsx';
 import axiosInstance from '../../api/axios.js';
 import RightSideProfile from '../../Component/RightSideProfile.jsx';
 import { AppContext } from '../../Context/AppContext.jsx';
+
 const Create = () => {
     const { authUser } = useContext(AppContext);
     const selectedPost = null;

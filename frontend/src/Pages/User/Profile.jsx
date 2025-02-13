@@ -64,7 +64,7 @@ const Profile = () => {
                   <div className="flex">
                     <p className="text-2xl ml-9">{user.name}</p>
                     <Link
-                      to={`/edit-profile/${user.id}`}
+                      to={'/edit-profile'}
                       className="mx-10 p-1 px-6 bg-gray-500 rounded-md"
                     >
                       Edit
