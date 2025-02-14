@@ -60,7 +60,7 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
               { post.user_id !== authUser.user_id ? (
                 <div className="paypal-btn">
                   <PayPalScriptProvider options={{ "client-id": config.client_id, currency: "JPY" }}>
-                    <PayPalButton config={config} post={post} setMessage={setMessage}/>
+                    <PayPalButton post={post} setMessage={setMessage}/>
                   </PayPalScriptProvider>
               </div>
             ) : (

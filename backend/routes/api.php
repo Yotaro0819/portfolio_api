@@ -44,10 +44,10 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
 
     // paypal
     Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);
-    Route::get('/payment/success', [PaypalController::class, 'success'])->name('api.success');
     Route::get('/payment/cancel', [PaypalController::class, 'cancel'])->name('api.cancel');
     Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/payment/success', [PaypalController::class, 'success'])->name('api.success');

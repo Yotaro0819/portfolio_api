@@ -17,6 +17,7 @@ class PaypalController extends Controller
         $this->provider = new PayPalClient;
         $this->provider->setApiCredentials(config('paypal'));
     }
+
     public function createOrder($id)
     {
 
@@ -103,6 +104,7 @@ class PaypalController extends Controller
             return redirect()->to('http://127.0.0.1:5173');
         }
     }
+
     public function cancel()
     {
         return "Payment is cancelled.";

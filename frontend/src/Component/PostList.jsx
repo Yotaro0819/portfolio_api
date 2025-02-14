@@ -4,28 +4,28 @@ import { Link } from 'react-router-dom';
 
 const PostList = ({id, imageSize, grid}) => {
 
-  const [authPosts, setAuthPosts] = useState(null);
+  const [posts, setPosts] = useState(null);
 
 
   useEffect(() => {
-    const getAuthPost = async () => {
+    const getPost = async () => {
       try {
         const res = await axiosInstance.get(`/api/my-posts/${id}`);
         
         console.log(res.data);
-        setAuthPosts(res.data);
+        setPosts(res.data);
       } catch (error) {
         console.error('failed fetching auth posts: ', error);
       }
     }
-    getAuthPost();
-  },[])
+    getPost();
+  },[id])
   return (
     <div className="contrast-less">
-      { authPosts ? 
+      { posts && posts.length > 0 ? 
       (
         <div className={`grid ${grid}`}>
-        {authPosts.map((post) => (
+        {posts.map((post) => (
           <div key={post.id} className="your-posts">
             <Link to={`/post/${post.id}`}>
             <img 
@@ -34,15 +34,13 @@ const PostList = ({id, imageSize, grid}) => {
               className={`object-cover bg-center ${imageSize}`}
                     />
             </Link>
-        
         </div>
         ))}
-        
         </div>
       ) 
       :
       (
-        <div className="text-center text-4xl mr-10"></div>
+        <div className="text-xl text-center">No posts.</div>
       )}
     </div>
   )

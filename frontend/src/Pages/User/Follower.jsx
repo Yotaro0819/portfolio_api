@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import PostList from '../../Component/PostList';
 
 const Follower = () => {
@@ -28,6 +28,7 @@ const Follower = () => {
                 <ul>
                     {followers.map((follower) => (
                       <div key={`${follower.follower_id}-${follower.following_id}`} >
+                        <Link to={`/profile/${follower.follower?.id}`}>
                         <li className="flex items-center space-x-2">
                             {/* アバターの表示 */}
                             {follower.follower && follower.follower.avatar ? (
@@ -42,6 +43,8 @@ const Follower = () => {
                             {/* ユーザー名の表示 */}
                             <span className="text-2xl">{follower.follower?.name || "Unknown User"}</span>
                         </li>
+                        </Link>
+
                           <div>
                               <PostList id={follower.follower_id} imageSize="w-24 h-24 mx-auto" grid="grid-cols-6"/>
                           </div>

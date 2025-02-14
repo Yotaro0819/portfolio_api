@@ -60,7 +60,7 @@ const Profile = () => {
                     alt="avatar"
                     className="w-24 h-24 rounded-full object-cover" />
                   ) : (
-                    <i className="fa-solid fa-user inline mx-10 w-24 h-24"></i>
+                    <i className="fa-solid fa-user mx-10 w-24 h-24"></i>
                   )}
                 </div>
                 <div className="mr-20">
