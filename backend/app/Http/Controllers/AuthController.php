@@ -146,7 +146,11 @@ class AuthController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
+        if($user->avatar == null) {
+            return $user->avatar = null;
+        }
         $user->avatar = asset('storage/' . $user->avatar);
+
 
         return response()->json($user->avatar);
     }

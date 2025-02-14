@@ -13,10 +13,13 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('user')->get();
+        $user = JWTAuth::parseToken()->authenticate();
+        // withCount('リレーション')とするとテーブル名の単数_countという変数名で合計を取得できる
+        $posts = Post::with('user')->withCount('likes')->where('user_id', '!=', $user->id)->get();
 
-        $posts->each(function ($post) {
+        $posts->each(function ($post) use ($user) {
             $post->image = asset('storage/'. $post->image);
+            $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
         });
 
         return response()->json([
@@ -72,7 +75,10 @@ public function store(Request $request)
      */
     public function show($id)
     {
-        $post = Post::findOrFail($id);
+        $user = JWTAuth::parseToken()->authenticate();
+        // $post = Post::findOrFail($id);
+        $post = Post::with('user')->withCount('likes')->findOrFail($id);
+        $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
         $post->image = asset('storage/'. $post->image);
 
         return response()->json($post);

@@ -17,6 +17,8 @@ const [avatar, setAvatar] = useState(null);
             setCounts(res.data);
           } catch (error) {
             console.error('failed fatching counts: ', error);
+            localStorage.removeItem('authUser');  
+
           }
         }
 
@@ -27,6 +29,8 @@ const [avatar, setAvatar] = useState(null);
           setAvatar(res.data);
         } catch (error) {
           console.error('failed fetching your avatar: ', error);
+          localStorage.removeItem('authUser');
+
         }
       }
 

@@ -20,15 +20,15 @@
   height: 60px;
 }
 
+/* like-button */
 .date {
   margin: 0 0 0 29%;
+  align-items: right;
 }
 
 .fa-heart {
-  display:flex;
   font-size:20px; 
   color:rgb(255, 80, 80);
-  margin-left:20px;
   align-items:center;
 }
 

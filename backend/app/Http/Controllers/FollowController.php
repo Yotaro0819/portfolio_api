@@ -24,6 +24,15 @@ class FollowController extends Controller
         $followers = Follow::where('following_id', $user->id)
         ->with('follower:id,name,avatar')->get();
 
+        foreach($followers as $follower) {
+            if($follower->follower) {
+                if($follower->follower->avatar !== null) { //null以外の時はstorageのパスへ
+                    $follower->follower->avatar = asset('storage/'. $follower->follower->avatar);
+                }
+                // nullは特に処理を行わない
+            }
+        }
+
         return response()->json($followers);
     }
 
@@ -38,10 +47,19 @@ class FollowController extends Controller
         $user = User::findOrFail($id);
         // $authUser = User::find($userId);
 
-        $following = Follow::where('follower_id', $user->id)
+        $followings = Follow::where('follower_id', $user->id)
         ->with('following:id,name,avatar')->get();
 
-        return response()->json($following);
+        foreach($followings as $following) {
+            if($following->following) {
+                if($following->following->avatar !== null) { //null以外の時はstorageのパスへ
+                    $following->following->avatar = asset('storage/'. $following->following->avatar);
+                }
+                // nullは特に処理を行わない
+            }
+        }
+
+        return response()->json($followings);
     }
 
     public function countFollows(Request $request, $id)

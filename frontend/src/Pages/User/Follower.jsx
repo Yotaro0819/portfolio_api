@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import PostList from '../../Component/PostList';
 
 const Follower = () => {
   const [followers, setFollowers] = useState([]);
@@ -21,31 +22,38 @@ const Follower = () => {
     fetchFollowers();
   },[]) 
   return (
-    <>
-    <div>Follower</div>
+    <div className="w-1/2 mx-auto mt-20">
+    <h2 className="text-4xl text-center">Follower</h2>
     {followers.length > 0 ? (
                 <ul>
                     {followers.map((follower) => (
-                        <li key={follower.follower_id} className="flex items-center space-x-2">
+                      <div key={`${follower.follower_id}-${follower.following_id}`} >
+                        <li className="flex items-center space-x-2">
                             {/* アバターの表示 */}
                             {follower.follower && follower.follower.avatar ? (
                                 <img
                                     src={follower.follower.avatar}
-                                    alt={follower.follower.name}
-                                    className="w-10 h-10 rounded-full"
+                                    alt={follower.follower.avatar}
+                                    className="w-12 h-12 rounded-full my-2"
                                 />
                             ) : (
-                                <i className="fa-solid fa-circle-user text-secondary text-2xl"></i>
+                                <i className="fa-solid fa-circle-user text-secondary text-5xl w-12 h-12 my-2"></i>
                             )}
                             {/* ユーザー名の表示 */}
-                            <span>{follower.follower?.name || "Unknown User"}</span>
+                            <span className="text-2xl">{follower.follower?.name || "Unknown User"}</span>
                         </li>
+                          <div>
+                              <PostList id={follower.follower_id} imageSize="w-24 h-24 mx-auto" grid="grid-cols-6"/>
+                          </div>
+                        </div>
                     ))}
                 </ul>
             ) : (
-                <p>フォロワーがいません</p>
+                <div>
+                  <h2 className="flex items-center justify-center nothing">No followers yet.</h2>
+                </div>
             )}
-    </>
+    </div>
   )
 }
 

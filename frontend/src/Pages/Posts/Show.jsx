@@ -4,6 +4,7 @@ import '../../styles/Show.css';
 import RightSideBuy from '../../Component/RightSideBuy';
 import { AppContext } from '../../Context/AppContext';
 import axiosInstance from '../../api/axios';
+import LikeButton from '../../Component/LikeButton';
 
 const Show = () => {
   const { config, authUser } = useContext(AppContext);
@@ -45,11 +46,12 @@ const Show = () => {
         comment: comment,
       });
       console.log(res.data);
-      setMessage('Your comment is sended');
+      // setMessage('Your comment is sended');
       closeModal();
     } catch (error) {
       setMessage('Canceled to send your message');
       console.error('failed post your comment: ', error);
+      localStorage.removeItem('authUser');
     }
   }
  
@@ -86,6 +88,9 @@ const Show = () => {
                       </div>
                     {error && <p style={{ color: 'red' }}>{error}</p>}
 
+                    <div className="mt-2">
+                      <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
+                    </div>
                     <button
                       className="comment-btn bg-blue-500 text-white p-2"
                       onClick={openModal}
@@ -103,21 +108,14 @@ const Show = () => {
                   <h3 className="modal-title">Leave a Comment</h3>
                   <form onSubmit={handleSubmit}>
                     <textarea
-                      className="bg-gray-600 text-white p-3 w-full comment-form"
+                      className="bg-gray-600 text-white p-3 w-full comment-form h-60"
                       placeholder="Type your comment here..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)} // コメントの内容を更新
                     />
                     <div className="button-group">
-                      <button type="submit" className="bg-green-500 text-white p-2">
+                      <button type="submit" className="bg-green-500 text-white px-2 mt-4 rounded">
                         Submit
-                      </button>
-                      <button
-                        type="button"
-                        className="bg-red-500 text-white p-2"
-                        onClick={closeModal}
-                      >
-                        Close
                       </button>
                     </div>
                   </form>

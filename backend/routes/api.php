@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -36,6 +37,10 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
 
     // comments
     Route::post('/comment/store', [CommentController::class, 'store']);
+
+    //likes
+    Route::delete('/like/{id}', [LikeController::class, 'delete']);
+    Route::post('/like/{id}', [LikeController::class, 'store']);
 
     // paypal
     Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);

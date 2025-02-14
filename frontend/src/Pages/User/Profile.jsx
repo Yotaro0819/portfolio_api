@@ -60,21 +60,28 @@ const Profile = () => {
                     alt="avatar"
                     className="w-24 h-24 rounded-full object-cover" />
                   ) : (
-                    <i className="fa-solid fa-user inline mx-10"></i>
+                    <i className="fa-solid fa-user inline mx-10 w-24 h-24"></i>
                   )}
                 </div>
-                <div>
+                <div className="mr-20">
                   <div className="flex">
                     <p className="text-2xl ml-9">{user.name}</p>
-                    <Link
+                    { user.id == authUser.user_id ? (
+                      <Link
                       to={'/edit-profile'}
                       className="mx-10 p-1 px-6 bg-gray-500 rounded-md"
                     >
                       Edit
                     </Link>
+                    )
+                    :
+                    (
+                    <></>
+                    ) }
+                    
                   </div>
                   {counts ? (
-                    <div className="ml-9 my-4">
+                    <div className="ml-9 my-4 w-">
                       <p className="text-xl inline">Posts</p>
                       <Link to={`/follower/${user.id}`} className="ml-5 text-xl">
                         Follower {counts.followerCount}
@@ -110,7 +117,7 @@ const Profile = () => {
                   </button>
                 </div>
                 <div className="mt-10 p-4">
-                  {activeTab === 'post' && <PostList id={user_id} />}
+                  {activeTab === 'post' && <PostList id={user_id} imageSize="w-64 h-64" grid="grid-cols-4"/>}
                   {activeTab === 'like' && <LikePostList id={user_id} />}
                   {activeTab === 'own' && <OwnPostList id={user_id} />}
                 </div>

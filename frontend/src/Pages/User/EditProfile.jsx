@@ -16,6 +16,8 @@ const EditProfile = () => {
         setAvatar(res.data);
       } catch (error) {
         console.error('failed fetching avatar: ', error);
+        localStorage.removeItem('authUser');
+
       }
     }
     fetchUser();

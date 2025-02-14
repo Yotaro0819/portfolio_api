@@ -120,7 +120,6 @@ margin: 0 auto;
   padding: 20px;
   width: 400px;
   opacity: 0;
-  transform: translateY(-50px);
   animation: fadeIn 0.3s ease-out forwards;
 }
 
@@ -131,17 +130,14 @@ margin: 0 auto;
   }
 }
 
-button {
-  margin-top: 10px;
+.comment-btn {
+  margin-top: 5px;
   width: 100%;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.comment-btn {
-  margin-top: 20px;
-}
 
 .bg-blue-500 {
   background-color: #3b82f6;

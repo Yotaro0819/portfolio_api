@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios.js';
 import RightSideProfile from '../Component/RightSideProfile.jsx';
+import LikeButton from '../Component/LikeButton.jsx';
 
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   console.log(allPosts);
   console.log(authUser);
@@ -27,7 +29,8 @@ export default function Home() {
 
       } catch (error) {
         setError(error);
-        setLoading(false);
+        setLoading(false);  
+        localStorage.removeItem('authUser');
       }
     };
 
@@ -51,7 +54,7 @@ export default function Home() {
           <ul>
             {allPosts.map((post) => 
             ( 
-              <li key={post.id} onClick={() => setSelectedPost(post)}>
+              <li key={post.id}>
                 <div className="each-post bg-gray-800">
                   <Link to={{
                     pathname: `/post/${post.id}`,
@@ -75,11 +78,10 @@ export default function Home() {
                   <p className="mt-1">{ post.body }</p>
 
                   </div>
-                  <div className="flex">
-                  <i className="fa-regular fa-heart"></i>
-                  <p className="date">{ post.created_at }</p>
-
-                  </div>
+                    <div className="flex w-full justify-between">
+                    <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
+                    <p className="mr-4">{ post.created_at }</p>
+                    </div>
                 </div>
                 
               </li>

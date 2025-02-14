@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import PostList from '../../Component/PostList';
 
 const Following = () => {
   const [following, setFollowing] = useState([]);
   const {user_id} = useParams();
+  console.log(following);
 
   useEffect(() => {
     const fetchFollowings = async () => {
@@ -21,31 +23,38 @@ const Following = () => {
     fetchFollowings();
   },[]) 
   return (  
-    <>
-    <div>Following</div>
+    <div className="w-1/2 mx-auto mt-20">
+    <h2 className="text-4xl">Followings</h2>
     {following.length > 0 ? (
                 <ul>
                     {following.map((following) => (
-                        <li key={following.following_id} className="flex items-center space-x-2">
+                      <div key={following.following_id}>
+                        <li className="flex items-center space-x-2">
                             {/* アバターの表示 */}
                             {following.following && following.following.avatar ? (
                                 <img
                                     src={following.following.avatar}
                                     alt={following.following.name}
-                                    className="w-10 h-10 rounded-full"
+                                    className="w-12 h-12 rounded-full my-2"
                                 />
                             ) : (
-                                <i className="fa-solid fa-circle-user text-secondary text-2xl"></i>
+                                <i className="fa-solid fa-circle-user text-secondary text-5xl w-12 h-12 my-2"></i>
                             )}
                             {/* ユーザー名の表示 */}
-                            <span>{following.following?.name || "Unknown User"}</span>
+                            <span className="text-2xl">{following.following?.name || "Unknown User"}</span>
                         </li>
+                          <div>
+                              <PostList id={following.following_id} imageSize="w-24 h-24 mx-auto" grid="grid-cols-6"/>
+                          </div>
+                      </div>
                     ))}
                 </ul>
             ) : (
-                <p>フォローしているユーザーがいません</p>
+                <div>
+                <p className="flex items-center justify-center nothing">No following yet.</p>
+                </div>
             )}
-    </>
+    </div>
   )
 }
 

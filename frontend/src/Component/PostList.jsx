@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axiosInstance from '../api/axios';
 import { Link } from 'react-router-dom';
 
-const PostList = ({id}) => {
+const PostList = ({id, imageSize, grid}) => {
 
   const [authPosts, setAuthPosts] = useState(null);
 
@@ -24,14 +24,14 @@ const PostList = ({id}) => {
     <div className="contrast-less">
       { authPosts ? 
       (
-        <div className="grid grid-cols-4">
+        <div className={`grid ${grid}`}>
         {authPosts.map((post) => (
           <div key={post.id} className="your-posts">
             <Link to={`/post/${post.id}`}>
             <img 
               src={post.image} 
               alt="post_image"
-              className="image-container w-64 h-64 object-cover bg-center" 
+              className={`object-cover bg-center ${imageSize}`}
                     />
             </Link>
         

@@ -17,6 +17,8 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
           setUser(res.data);
         } catch (error) {
           console.error('Failed fetching user data: ', error);
+          localStorage.removeItem('authUser');
+
         }
       };
       fetchUser();
@@ -33,8 +35,9 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
             {user?.avatar ? 
             <img 
             src={user?.avatar} 
-            alt="avatar"
-            className="w-24 h-24 rounded-full " />
+            alt={user?.avatar}
+            className="w-24 h-24 rounded-full"
+            />
               :
             <i className="fa-solid fa-user inline"></i>
             }

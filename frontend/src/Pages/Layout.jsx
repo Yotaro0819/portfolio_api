@@ -32,6 +32,7 @@ export default function Layout() {
       }
     } catch (error) {
       console.error("Logout error:", error.response || error);  // エラーを確認
+      setShowNav(false);
       
     }
   }

@@ -56,6 +56,8 @@ try {
   setImagePreview(null);
 } catch (error) {
   console.error('Error creating post:', error.response ? error.response.data : error.message);
+  localStorage.removeItem('authUser');
+
 }
 
   }
