@@ -3,10 +3,12 @@ import PayPalButton from './PayPalButton';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../api/axios';
+import FollowButton from './FollowButton';
 
 const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
   const [user, setUser] = useState(null);
-  console.log(post);
+  console.log(post)
+  console.log(user)
 
   useEffect(() => {
     if (post?.user_id) {
@@ -45,9 +47,10 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
         </div>
         <div>
           <p className="text-4xl">{user?.name}</p>
-          <div className="flex my-4">
-            <Link to={`/follower/${user?.id}`}>follower {user?.followers_count}</Link>
-            <Link to={`/following/${user?.id}`} className="ml-4">following {user?.following_count}</Link>
+          <div className="flex my-4 align-center">
+            <Link to={`/follower/${user?.id}`} className="mt-1">follower {user?.followers_count}</Link>
+            <Link to={`/following/${user?.id}`} className="mx-4 mt-1">following {user?.following_count}</Link>
+            <FollowButton userId={user?.id} isFollowing={user?.isFollowing}></FollowButton>
           </div>
         </div>
       </div>
