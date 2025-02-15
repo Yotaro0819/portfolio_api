@@ -6,7 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PaypalController extends Controller
 {
@@ -25,10 +25,6 @@ class PaypalController extends Controller
 
         $sellerId = $post->user->id;
         $sellerEmail = $post->user->email;
-
-        session()->put('seller_id', $sellerId);
-        session()->put('seller_email', $sellerEmail);
-        session()->save();
 
         $provider = new PayPalClient;
         $provider->getAccessToken();
@@ -71,6 +67,7 @@ class PaypalController extends Controller
 
     public function success(Request $request)
     {
+
         $provider = new PayPalClient;
         $provider->setApiCredentials(config('paypal'));
         $provider->getAccessToken();

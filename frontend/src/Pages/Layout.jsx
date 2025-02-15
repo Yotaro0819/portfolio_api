@@ -58,6 +58,7 @@ export default function Layout() {
                 </div>
                 <Link to="/create" className="nav-link block"><p className="text-2xl">New Post</p></Link>
                 <Link to={`/profile/${authUser.user_id}`} className="nav-link m-5 block"><p className="text-2xl">Profile</p></Link>
+                <Link to={"/messages/index"} className="nav-link m-5 block"><p className="text-2xl">Messages</p></Link>
                 <div>
                 <form onSubmit={handleLogout} className="m-0 text-2xl">
                   <button className="m-0 p-0 text-left">Logout</button>

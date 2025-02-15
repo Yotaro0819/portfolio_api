@@ -15,6 +15,8 @@ import { AppContext } from "./Context/AppContext";
 import Create from "./Pages/Posts/Create";
 import Payment from "./Pages/Payments/Payment";
 import EditProfile from "./Pages/User/EditProfile";
+import MessageIndex from "./Pages/Messages/Index";
+import MessageShow from "./Pages/Messages/Show";
 
 function App() {
   const { authUser } = useContext(AppContext);
@@ -39,6 +41,8 @@ function App() {
         <Route path="/follower/:user_id" element={authUser ? <Follower /> : <Login />} />
         <Route path="/following/:user_id" element={authUser ? <Following /> : <Login />} />
         <Route path="/post/:post_id" element={authUser ? <PostShow /> : <Login />} />
+        <Route path="/messages/index" element={authUser ? <MessageIndex /> : <Login />} />
+        <Route path="/messages/show/:user_id" element={authUser ? <MessageShow /> : <Login />} />
       </Route>
       <Route path="/paypal/success" element={authUser ? <Success /> : <Login />} />
       <Route path="/paypal/cancel" element={authUser ? <Cancel /> : <Login />} />
