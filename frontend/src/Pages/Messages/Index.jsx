@@ -1,7 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import axiosInstance from '../../api/axios'
 
 const Index = () => {
+  const [messages, setMessages] = useState();
+  
+  useEffect(() => {
+    const fetchUserMessages = async() => {
+      try {
+        const res = await axiosInstance('/api/messages/index');
+        console.log(res.data);
+        setMessages(res.data);
+      } catch (error) {
+        console.error('failed fetching messages: ', error);
+      }
+    }
+    fetchUserMessages();
+  }, [])
+  
 
   return (
     <div className="fb">
@@ -13,48 +29,20 @@ const Index = () => {
             <input type="text" placeholder="search User" className="text-black px-2" />
           </div>
           <div className="px-5 bg-gray-800 h-5/6 max-h-full overflow-auto scrollbar-none">
-          <Link to={"/messages/show/1"}>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
-          <Link to={"/messages/show/2"}>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
-          <Link>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
-          <Link>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
-          <Link>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
-          <Link>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
-          <Link>
-            <div className="border p-5 m-1 bg-gray-500">
-              <p>userName</p>
-              <p>text messages</p>
-            </div>
-          </Link>
+          {messages ? (
+             messages.map((message) => (
+              <Link to={`/messages/show/${message.id}`} key={message.id}>
+                <div className="border p-5 m-1 bg-gray-500">
+                  <p>{message.name}</p>
+                  <p>{message.latest_message?.content || "no message"}</p>
+                </div>
+              </Link>
+            ))
+          ) 
+          :
+          (
+            <>loading...</>
+          )}
           </div>
         </div>
       </div>

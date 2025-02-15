@@ -23,7 +23,7 @@ axiosInstance.interceptors.response.use(
         const newAccessToken = refreshResponse.data.newAccessToken;
 
         if (!newAccessToken) {
-          window.location.href = '/login';
+          // window.location.href = '/login';
           throw new Error('New access token is undefined');
         }
 

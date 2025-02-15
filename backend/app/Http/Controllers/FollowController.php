@@ -19,19 +19,30 @@ class FollowController extends Controller
         }
 
         $user = User::findOrFail($id);
-        // $authUser = User::find($userId);
+        $authUser = JWTAuth::parseToken()->authenticate();
 
         $followers = Follow::where('following_id', $user->id)
-        ->with('follower:id,name,avatar')->get();
+        ->with('follower:id,name,avatar')
+        ->get()
+        ->map(function ($follow) use ($authUser) {
+            return [
+                'id' => $follow->follower->id,
+                'name' => $follow->follower->name,
+                'avatar' => $follow->follower->avatar ? asset('storage/'. $follow->follower->avatar) : null,
+                'isFollowing' => Follow::where('follower_id', $authUser->id)
+                                        ->where('following_id', $follow->follower->id)
+                                        ->exists(),
+            ];
+        });
 
-        foreach($followers as $follower) {
-            if($follower->follower) {
-                if($follower->follower->avatar !== null) { //null以外の時はstorageのパスへ
-                    $follower->follower->avatar = asset('storage/'. $follower->follower->avatar);
-                }
-                // nullは特に処理を行わない
-            }
-        }
+        // foreach($followers as $follower) {
+        //     if($follower->follower) {
+        //         if($follower->follower->avatar !== null) { //null以外の時はstorageのパスへ
+        //             $follower->follower->avatar = asset('storage/'. $follower->follower->avatar);
+        //         }
+        //         // nullは特に処理を行わない
+        //     }
+        // }
 
         return response()->json($followers);
     }
@@ -45,19 +56,22 @@ class FollowController extends Controller
         }
 
         $user = User::findOrFail($id);
-        // $authUser = User::find($userId);
+
+        $authUser = JWTAuth::parseToken()->authenticate();
 
         $followings = Follow::where('follower_id', $user->id)
-        ->with('following:id,name,avatar')->get();
-
-        foreach($followings as $following) {
-            if($following->following) {
-                if($following->following->avatar !== null) { //null以外の時はstorageのパスへ
-                    $following->following->avatar = asset('storage/'. $following->following->avatar);
-                }
-                // nullは特に処理を行わない
-            }
-        }
+        ->with('following:id,name,avatar')
+        ->get()
+        ->map(function ($follow) use ($authUser) {
+            return [
+                'id' => $follow->following->id,
+                'name' => $follow->following->name,
+                'avatar' => $follow->following->avatar ? asset('storage/'. $follow->following->avatar) : null,
+                'isFollowing' => Follow::where('follower_id', $authUser->id)
+                                        ->where('following_id', $follow->following->id)
+                                        ->exists(),
+            ];
+        });
 
         return response()->json($followings);
     }
@@ -76,5 +90,30 @@ class FollowController extends Controller
         $followingCount = $user->following()->count();
         return response()->json(['followerCount' => $followerCount, 'followingCount' => $followingCount]);
 
+    }
+
+    public function follow($id)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(Follow::where('follower_id', $user->id)->where('following_id', $id)->exists()) {
+            return response()->json(['message' => 'already following this user' ]);
+        }
+
+        Follow::create([
+            'follower_id' => $user->id,
+            'following_id' => $id
+        ]);
+
+        return response()->json(['message' => 'successfully follow this user']);
+    }
+
+    public function unfollow($id)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        Follow::where('follower_id', $user->id)->where('following_id', $id)->delete();
+
+        return response()->json(['message' => 'successfully unfollow this user']);
     }
 }

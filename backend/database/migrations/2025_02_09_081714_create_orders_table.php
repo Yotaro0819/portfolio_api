@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('seller_email');
             $table->string('order_status');
             $table->string('order_method');
+            $table->enum('status', ['pending', 'approved', 'failed', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }

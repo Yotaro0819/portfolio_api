@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -31,16 +32,23 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-    Route::get('/fetch-followers/{id}', [FollowController::class, 'fetchFollowers']);
-    Route::get('/fetch-following/{id}', [FollowController::class, 'fetchFollowing']);
-    Route::get('/count-follows/{id}', [FollowController::class, 'countFollows']);
+
 
     // comments
     Route::post('/comment/store', [CommentController::class, 'store']);
 
-    //likes
+    // messages
+    Route::get('/messages/index', [MessageController::class, 'index']);
+    // likes
     Route::delete('/like/{id}', [LikeController::class, 'delete']);
     Route::post('/like/{id}', [LikeController::class, 'store']);
+
+    // follows
+    Route::get('/fetch-followers/{id}', [FollowController::class, 'fetchFollowers']);
+    Route::get('/fetch-following/{id}', [FollowController::class, 'fetchFollowing']);
+    Route::get('/count-follows/{id}', [FollowController::class, 'countFollows']);
+    Route::post('/follow/{id}', [FollowController::class, 'follow']);
+    Route::post('/unfollow/{id}', [FollowController::class, 'unfollow']);
 
     // paypal
     Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);
