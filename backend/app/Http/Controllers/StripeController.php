@@ -10,6 +10,11 @@ class StripeController extends Controller
 {
     public function createOrder(Request $request, $id)
     {
+        $request->validate([
+            'title' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
         $seller = User::findOrFail($id);
         if($seller->stripe_account_id) {
             return response()->json(['error' => 'You have not registered Stripe yet.'],400);
@@ -47,10 +52,10 @@ class StripeController extends Controller
             session()->put('product_name', $request->product_name);
             session()->put('quantity', $request->quantity);
             session()->put('price', $request->price);
-            session()->put('payment_intent_id', $response->payment_intent);
+            // session()->put('payment_intent_id', $response->payment_intent);
             return response()->json([
                 'checkout_url' => $response->url,
-                'payment_intent_id' => $response->payment_intent,
+                // 'payment_intent_id' => $response->payment_intent,
             ]);
         }
 

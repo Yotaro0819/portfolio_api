@@ -8,6 +8,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateJWT;
 use App\Http\Middleware\CorsMiddleware;
@@ -39,6 +40,7 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
 
     // messages
     Route::get('/messages/index', [MessageController::class, 'index']);
+
     // likes
     Route::delete('/like/{id}', [LikeController::class, 'delete']);
     Route::post('/like/{id}', [LikeController::class, 'store']);
@@ -54,6 +56,9 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);
     Route::get('/payment/cancel', [PaypalController::class, 'cancel'])->name('api.cancel');
     Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
+
+    // stripe
+    Route::post('/stripe/create-order/{id}', [StripeController::class,'createOrder']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
