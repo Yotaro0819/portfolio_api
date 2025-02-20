@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  mode: 'jit',
   content: [
     "./index.html",
     "./src/**/*.{js,jsx}",
@@ -8,7 +9,6 @@ export default {
     extend: {},
   },
   plugins: [
-    require('tailwind-scrollbar-hide')
   ],
 }
 

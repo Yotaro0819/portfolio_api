@@ -138,7 +138,7 @@ margin: 0 auto;
   cursor: pointer;
 }
 
-
+/* 
 .bg-blue-500 {
   background-color: #3b82f6;
 }
@@ -149,7 +149,7 @@ margin: 0 auto;
 
 .bg-red-500 {
   background-color: #ef4444;
-}
+} */
 
 textarea {
   margin-top: 10px;

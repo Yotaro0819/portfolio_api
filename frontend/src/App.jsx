@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import '../src/styles/App.css';
 import Layout from "./Pages/Layout";
@@ -20,14 +20,25 @@ import MessageShow from "./Pages/Messages/Show";
 
 function App() {
   const { authUser } = useContext(AppContext);
-  const navigate = useNavigate(); // useNavigateフックを使ってリダイレクト
 
-  // userがnullの場合にログインページへリダイレクト
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate('/login');
-  //   }
-  // }, [user, navigate]);
+  useEffect(() => {
+    const handlePopState = (event) => {
+        console.log("popstate event:", event);
+        console.log("current pathname:", window.location.pathname);
+
+        if (window.location.pathname === "/login") {
+            localStorage.removeItem("authUser");
+            window.location.reload(); // リロードでサイドバーの状態をリセット
+        }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+        window.removeEventListener("popstate", handlePopState);
+    };
+}, []);
+
+
 
   return (
     <Routes>

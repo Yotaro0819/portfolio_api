@@ -49,9 +49,9 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="container w-1/2 mx-auto mt-20">
-      <div className="flex">
-        <div>
+    <div className="container w-1/2 ml-64 mt-2 border bg-gray-900">
+      <div className="flex mx-auto w-3/4">
+        <div className="mt-5">
           <label htmlFor="avatarInput" className="cursor-pointer">
             {imagePreview ? (
               <img
@@ -81,14 +81,38 @@ const EditProfile = () => {
         </div>
         <div>
           <div className="m-5">
-            <p className="text-4xl">{authUser.name}</p>
+          <input 
+                type="text" 
+                className="block post-title px-1 text-white bg-gray-900 mt-0"
+                placeholder={authUser.name}
+          />
             <p className="my-4">Tap the icon to change the Avatar</p>
           </div>
         </div>
       </div>
 
-      <div className="mt-20">
-            Self-Introduction
+      <div className="mt-20 p-4">
+        <label className="w-3/4 mx-auto">Self-Introduction</label>
+          <textarea 
+          rows="6" 
+          className="block px-2 py-1 text-white bg-gray-500 mt-0 mx-auto w-3/4"
+          placeholder="Post Content"
+          />
+      </div>
+      <div className="mt-5 p-4">
+        <label className="w-3/4 mx-auto">website URL</label>
+        <input type="text"className="block px-2 bg-gray-500 mt-0 mx-auto w-3/4" placeholder="Enter your Website URL"/>
+      </div>
+      <div className="mt-5 p-4">
+        <label className="mt-5 w-3/4 mx-auto">Connect with your Stripe Account</label>
+        <button className="block bg-blue-400 px-2 py-2 rounded-md text-sm mt-2 mx-auto w-1/2">Connect</button>
+      </div>
+      <div className="mt-5 bg-black p-4">
+        <p className="mt-5 mx-auto">Change Password</p>
+        <label className="block w-3/4 mx-auto">Current password</label>
+        <input type="password" className="block w-1/2 mx-auto"/>
+        <label className="block w-3/4 mx-auto">New password</label>
+        <input type="password" className="block w-1/2 mx-auto"/>
       </div>
 
 
