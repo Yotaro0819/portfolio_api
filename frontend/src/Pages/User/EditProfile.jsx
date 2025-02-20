@@ -95,13 +95,13 @@ const EditProfile = () => {
         <label className="w-3/4 mx-auto">Self-Introduction</label>
           <textarea 
           rows="6" 
-          className="block px-2 py-1 text-white bg-gray-500 mt-0 mx-auto w-3/4"
+          className="block px-2 py-1 text-white bg-gray-500 mt-1 mx-auto w-3/4"
           placeholder="Post Content"
           />
       </div>
       <div className="mt-5 p-4">
         <label className="w-3/4 mx-auto">website URL</label>
-        <input type="text"className="block px-2 bg-gray-500 mt-0 mx-auto w-3/4" placeholder="Enter your Website URL"/>
+        <input type="text"className="block px-4 bg-gray-500 mt-1 mx-auto w-3/4" placeholder="Enter your Website URL"/>
       </div>
       <div className="mt-5 p-4">
         <label className="mt-5 w-3/4 mx-auto">Connect with your Stripe Account</label>
