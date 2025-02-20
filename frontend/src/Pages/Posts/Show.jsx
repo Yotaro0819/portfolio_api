@@ -125,6 +125,7 @@ const Show = () => {
             
 
             <RightSideBuy className="show-body" post={post} authUser={authUser} setMessage={setMessage} config={config}/>
+            <StripeButton sellerId={post.user.id} title={post.title} price={post.price} ></StripeButton>
         </div>
                     
           </>
