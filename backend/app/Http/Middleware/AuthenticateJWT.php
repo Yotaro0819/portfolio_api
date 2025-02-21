@@ -31,7 +31,7 @@ class AuthenticateJWT extends Middleware
             Log::info('Authorization Header: ' . $request->header('Authorization'));
         } else {
             // JWTがない場合はエラーレスポンスを返す
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Oops! Unauthorized'], 401);
         }
 
 

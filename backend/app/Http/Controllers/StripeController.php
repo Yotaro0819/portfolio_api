@@ -61,4 +61,32 @@ class StripeController extends Controller
 
         return response()->json(['error' => 'Failed to create Stripe session'], 400);
     }
+
+    public function connectStripe($id)
+    {
+        $stripe = new StripeClient(config('stripe.stripe_sk'));
+
+        $user = User::findOrFail($id);
+        if(!empty($user->stripe_account_id)) {
+            $stripe->accounts->delete($user->stripe_account_id);
+        };
+
+        $account = $stripe->accounts->create([
+            'type' => 'express',
+        ]);
+
+        $user->stripe_account_id = $account->id;
+        $user->save();
+
+        $accountLink = $stripe->accountLinks->create([
+            'account' => $account->id,
+            'failure_url' => 'http://127.0.0.1:5173/payment/failure', 
+            'success_url' => 'http://127.0.0.1:5173/payment/success',
+            'type' => 'account_onboarding',
+        ]);
+
+        return response()->json([
+            'url' => $accountLink->url,
+        ]);
+    }
 }

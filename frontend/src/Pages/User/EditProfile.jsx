@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../Context/AppContext';
+import ConnectStripe from '../../Component/StripeConnect';
 import axiosInstance from '../../api/axios';
 
 const EditProfile = () => {
@@ -105,7 +106,7 @@ const EditProfile = () => {
       </div>
       <div className="mt-5 p-4">
         <label className="mt-5 w-3/4 mx-auto">Connect with your Stripe Account</label>
-        <button className="block bg-blue-400 px-2 py-2 rounded-md text-sm mt-2 mx-auto w-1/2">Connect</button>
+        <ConnectStripe />
       </div>
       <div className="mt-5 bg-black p-4">
         <p className="mt-5 mx-auto">Change Password</p>
