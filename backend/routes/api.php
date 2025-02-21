@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -40,6 +41,8 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
 
     // messages
     Route::get('/messages/index', [MessageController::class, 'index']);
+    Route::get('/messages/show/{id}', [MessageController::class, 'show']);
+    Route::post('/messages/store/{id}', [MessageController::class, 'store']);
 
     // likes
     Route::delete('/like/{id}', [LikeController::class, 'delete']);
@@ -58,6 +61,7 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
 
     // stripe
+    Route::post('/stripe/connect-account/{id}', [StripeController::class, 'connectStripe']);
     Route::post('/stripe/create-order/{id}', [StripeController::class,'createOrder']);
 });
 

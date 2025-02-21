@@ -7,7 +7,7 @@ const StripeButton = ({sellerId, title, price}) => {
   const handleClick = async () => {
     setLoading(true);
     try {
-      const res = await axiosInstance.post(`/api/create-order/${sellerId}`, {
+      const res = await axiosInstance.post(`/api/stripe/create-order/${sellerId}`, {
         title,
         price,
       });

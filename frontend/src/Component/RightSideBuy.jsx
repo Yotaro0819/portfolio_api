@@ -4,6 +4,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import FollowButton from './FollowButton';
+import StripeButton from './StripeButton';
 
 const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
   const [user, setUser] = useState(null);
@@ -30,7 +31,7 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
 
   return (
     <div className="right bg-gray-800">
-      <p className="text-2xl mt-20 mb-4 text-center">Post Owner Info</p>
+      <p className="text-2xl mt-10 mb-4 text-center">Post Owner Info</p>
       <div className="flex justify-center">
         <div className="avatar flex items-center">
           <Link to={`/profile/${post.user_id}`}>
@@ -38,7 +39,7 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
             <img 
             src={user?.avatar} 
             alt={user?.avatar}
-            className="w-24 h-24 rounded-full"
+            className="w-24 h-24 rounded-full object-cover"
             />
               :
             <i className="fa-solid fa-user inline"></i>
@@ -65,6 +66,7 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
                   <PayPalScriptProvider options={{ "client-id": config.client_id, currency: "JPY", intent: "authorize"}}>
                     <PayPalButton post={post} setMessage={setMessage}/>
                   </PayPalScriptProvider>
+                  <StripeButton sellerId={post.user.id} title={post.title} price={post.price} ></StripeButton>
               </div>
             ) : (
               <div>

@@ -155,7 +155,7 @@ public function store(Request $request)
     {
         try {
             $user = User::findOrFail($id);
-            $my_posts = Post::where('user_id', $user->id)->get();
+            $my_posts = Post::where('user_id', $user->id)->latest()->limit(6)->get();
 
             $my_posts->each(function ($post) {
                 $post->image = asset('storage/'. $post->image);
@@ -171,7 +171,7 @@ public function store(Request $request)
     {
         try {
             $user = User::findOrFail($id);
-            $liked_posts = $user->likedPosts()->get();
+            $liked_posts = $user->likedPosts()->latest()->limit(6)->get();
 
             $liked_posts->each(function ($post) {
                 $post->image = asset('storage/'. $post->image);
@@ -187,7 +187,7 @@ public function store(Request $request)
     {
         try {
             $user = User::findOrFail($id);
-            $own_posts = Post::where('owner_id', $user->id)->get();
+            $own_posts = Post::where('owner_id', $user->id)->latest()->limit(6)->get();
 
             $own_posts->each(function($post) {
                 $post->image = asset('storage/'. $post->image);

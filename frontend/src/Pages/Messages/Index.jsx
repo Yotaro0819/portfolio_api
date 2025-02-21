@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
+import dayjs from "dayjs";
+
 
 const Index = () => {
-  const [messages, setMessages] = useState();
+  const [users, setUsers] = useState();
   
   useEffect(() => {
     const fetchUserMessages = async() => {
       try {
         const res = await axiosInstance('/api/messages/index');
         console.log(res.data);
-        setMessages(res.data);
+        setUsers(res.data);
       } catch (error) {
         console.error('failed fetching messages: ', error);
       }
@@ -29,12 +31,15 @@ const Index = () => {
             <input type="text" placeholder="search User" className="text-black px-2" />
           </div>
           <div className="px-5 bg-gray-800 h-5/6 max-h-full overflow-auto scrollbar-none">
-          {messages ? (
-             messages.map((message) => (
-              <Link to={`/messages/show/${message.id}`} key={message.id}>
-                <div className="border p-5 m-1 bg-gray-500">
-                  <p>{message.name}</p>
-                  <p>{message.latest_message?.content || "no message"}</p>
+          {users ? (
+             users.map((user) => 
+              (
+              <Link to={`/messages/show/${user.id}`} key={user.id}>
+                <div className="border rounded p-2 px-4 m-1 my-4 bg-gray-500 h-24">
+                  <p>{user.name}</p>
+                  <p>{user.latest_message?.content || "no messages"}</p>
+                  <p className="text-right">{user.latest_message?.created_at ? dayjs(user.latest_message.created_at).format("YYYY/MM/DD HH:mm") : ""}</p>
+
                 </div>
               </Link>
             ))

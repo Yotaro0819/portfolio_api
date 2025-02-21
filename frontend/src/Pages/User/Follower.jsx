@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import PostList from '../../Component/PostList';
 import FollowButton from '../../Component/FollowButton';
+import axiosInstance from '../../api/axios';
 
 const Follower = () => {
   const [followers, setFollowers] = useState([]);
@@ -12,9 +13,7 @@ const Follower = () => {
   useEffect(() => {
     const fetchFollowers = async () => {
       try {
-        const res = await axios.get(`/api/fetch-followers/${user_id}`, {
-          withCredentials: true,
-        })
+        const res = await axiosInstance.get(`/api/fetch-followers/${user_id}`)
         console.log(res.data);
         setFollowers(res.data);
       } catch (error) {
