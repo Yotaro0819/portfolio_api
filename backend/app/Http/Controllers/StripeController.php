@@ -46,9 +46,8 @@ class StripeController extends Controller
                     'destination' => $seller->stripe_account_id,
                 ],
                 'metadata' => [
+                    'payer_id' => $payer->id,
                     'seller_id' => $seller->id,
-                    'payer_name' => $payer->name,
-                    'payer_email' => $payer->email,
                     'product_name' => $request->title,
                     'quantity' => 1,
                     'price' => $request->price,
@@ -59,12 +58,8 @@ class StripeController extends Controller
         ]);
 
         if(isset($response->id) && $response->id != '') {
-            session()->put('payer_name', $payer->name);
-            session()->put('payer_email', $payer->email);
-            // session()->put('payment_intent_id', $response->payment_intent);
             return response()->json([
                 'checkout_url' => $response->url,
-                // 'payment_intent_id' => $response->payment_intent,
             ]);
         }
 
@@ -104,8 +99,7 @@ class StripeController extends Controller
             'quantity'        => $paymentIntent->metadata->quantity,
             'amount'          => $paymentIntent->metadata->price,
             'currency'        => $paymentIntent->currency,
-            'payer_name'      => $paymentIntent->metadata->payer_name,
-            'payer_email'     => $paymentIntent->metadata->payer_email,
+            'payer_id'        => $paymentIntent->metadata->payer_id,
             'seller_id'       => $sellerId,
             'seller_stripe_account_id' => $seller->stripe_account_id,
             'payment_status'  => $paymentStatus,
@@ -113,11 +107,49 @@ class StripeController extends Controller
             'payment_method'  => "Stripe",
         ]);
 
+        return redirect()->away('http://127.0.0.1:5173/payment/success');
+    }
 
-        return response()->json([
-            'failure_url' => 'http://127.0.0.1:5173/payment/failure',
-            'success_url' => 'http://127.0.0.1:5173/payment/success',
-        ]);
+    public function approve($paymentId)
+    {
+        $payment = Payment::where('payment_id', $paymentId);
+
+        $payment->update(['process_status' => 'approved']);
+
+        return response()->json(['message' => 'The order approved']);
+    }
+
+    public function captureOrder($paymentId)
+    {
+        $stripe = new StripeClient(config('stripe.stripe_sk'));
+
+        try {
+            $payment = Payment::where('payment_id', $paymentId)->first();
+
+            if(!$payment) return response()->json(['message' => 'The order not found']);
+
+            $stripe->paymentIntents->capture($paymentId);
+            $payment->update(['payment_status' => 'succeded']);
+
+            return response()->json(['message' => 'Capture is successful']);
+        } catch(\Exception $e) {
+            return response()->json(['message' => 'Failed to capture']);
+        }
+    }
+
+    public function cancelOrder($paymentId)
+    {
+        $stripe = new StripeClient(config('stripe.stripe_sk'));
+
+        try {
+            $stripe->paymentIntents->cancel($paymentId);
+
+            Payment::where('payment_id', $paymentId)->update(['payment_status' => 'canceled']);
+
+            return response()->json(['message' => 'The order canceled']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to cancel order']);
+        }
     }
 
     public function connectStripe($id)

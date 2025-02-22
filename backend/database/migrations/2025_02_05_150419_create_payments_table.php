@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('amount');
             $table->string('currency');
-            $table->string('payer_name');
-            $table->string('payer_email');
+            $table->string('payer_id');
             $table->string('seller_id');
             $table->string('seller_stripe_account_id');
             $table->string('payment_status');

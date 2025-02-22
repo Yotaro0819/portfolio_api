@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import PayPalButton from './PayPalButton';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import FollowButton from './FollowButton';
@@ -62,10 +60,7 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
             </div>
 
               { post.user_id !== authUser.user_id ? (
-                <div className="paypal-btn">
-                  <PayPalScriptProvider options={{ "client-id": config.client_id, currency: "JPY", intent: "authorize"}}>
-                    <PayPalButton post={post} setMessage={setMessage}/>
-                  </PayPalScriptProvider>
+                <div className="mx-auto w-40 flex mt-4 justify-center">
                   <StripeButton sellerId={post.user.id} title={post.title} price={post.price} ></StripeButton>
               </div>
             ) : (

@@ -7,7 +7,7 @@ import axiosInstance from '../../api/axios';
 import LikeButton from '../../Component/LikeButton';
 
 const Show = () => {
-  const { config, authUser } = useContext(AppContext);
+  const { authUser } = useContext(AppContext);
   const { post_id } = useParams();
   const [post, setPost] = useState(null);
   const [error, setError] = useState(null);
@@ -57,12 +57,6 @@ const Show = () => {
  
   return (
     <>
-    {!config ? 
-      (
-        <div>loading...</div>
-      )
-      : 
-      (
       <div>
         {post ? (
           <>
@@ -123,7 +117,7 @@ const Show = () => {
             )}
             
 
-            <RightSideBuy className="show-body" post={post} authUser={authUser} setMessage={setMessage} config={config}/>
+            <RightSideBuy className="show-body" post={post} authUser={authUser} setMessage={setMessage} />
            
         </div>
                     
@@ -132,8 +126,6 @@ const Show = () => {
           <>loading post info...</>
         )}
       </div>
-      )
-     }
     </>
 
   )

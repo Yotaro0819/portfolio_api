@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ProfileController extends Controller
@@ -40,4 +42,55 @@ class ProfileController extends Controller
             return response()->json(['message' => 'failed uploading avatar', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function updatePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Current password is required',
+            'new_password.required' => 'New password is required',
+            'new_password.min' => 'New password must be at least 8 characters',
+            'new_password.confirmed' => 'New password and confirmation do not match',
+        ]);
+
+        // バリデーション失敗時の処理
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = JWTAuth::parseToken()->authenticate();
+
+        if(!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['message' => 'incorrect password']);
+        }
+
+        $user->update(['password' => Hash::make($request->new_password)]);
+
+        return response()->json(['message' => 'Password is successfully changed']);
+    }
+
+    public function updateWebsite(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'website' =>'nullable|url',
+        ],[
+            'website.url' => 'The url format is incorrect',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $user->update(['website' => $request->website]);
+
+        return response()->json(['message' => 'Website url is successfully changed!']);
+    }
+
 }
