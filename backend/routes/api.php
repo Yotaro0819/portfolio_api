@@ -65,6 +65,7 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::post('/stripe/create-order/{id}', [StripeController::class,'createOrder']);
 });
 
+Route::get('/stripe/success', [StripeController::class, 'success']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/payment/success', [PaypalController::class, 'success'])->name('api.success');

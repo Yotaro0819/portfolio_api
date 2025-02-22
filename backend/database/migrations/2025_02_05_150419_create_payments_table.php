@@ -13,14 +13,18 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('post_id')->constrained()->onDelete('cascade');
-            $table->decimal('amount', 10, 2);
-            $table->string('currency', 3)->default('JPY');
-            $table->string('payment_id')->unique();
-            $table->string('payer_id');
-            $table->string('payment_token', 255);
-            $table->enum('status', ['pending', 'approved', 'failed', 'rejected']);
+            $table->string('payment_id');
+            $table->string('product_name');
+            $table->string('quantity');
+            $table->string('amount');
+            $table->string('currency');
+            $table->string('payer_name');
+            $table->string('payer_email');
+            $table->string('seller_id');
+            $table->string('seller_stripe_account_id');
+            $table->string('payment_status');
+            $table->string('process_status');
+            $table->string('payment_method');
             $table->timestamps();
         });
     }

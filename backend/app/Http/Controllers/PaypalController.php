@@ -32,7 +32,7 @@ class PaypalController extends Controller
             "intent" => "AUTHORIZE",
             "application_context" => [
                 "return_url" => url('/api/payment/success') . '?seller_id=' . $sellerId . '&seller_email=' . $sellerEmail,
-                "cancel_url" => url('/api/payment/cancel')
+                "cancel_url" => 'http://127.0.0.1:5173/payment/failure'
             ],
             "purchase_units" => [
                 [
@@ -96,9 +96,13 @@ class PaypalController extends Controller
             $payment->save();
 
 
-            return redirect()->to('http://127.0.0.1:5173');
+            return response()->json([
+                'success_url' => 'http://127.0.0.1:5173/payment/success',
+            ]);
         } else {
-            return redirect()->to('http://127.0.0.1:5173');
+            return response()->json([
+                'failure_url' => 'http://127.0.0.1:5173/payment/failure',
+            ]);
         }
     }
 
@@ -159,25 +163,6 @@ class PaypalController extends Controller
             return redirect()->route('payment.index')->with('error', 'エラー: ' . $e->getMessage());
         }
     }
-
-    // public function sendPayout(Request $request)
-    // {
-    //     // 受取人のメールアドレスと送金額を取得
-
-    //     $receiverEmail = $request->input('receiver_email');
-    //     $amount = $request->input('amount'); // 例えば、USDで送金額
-
-    //     // PayPal送金サービスを呼び出し
-    //     $response = $this->payPalPayoutService->payoutToUser($receiverEmail, $amount);
-
-    //     // 送金結果に基づいて適切なビューを返す
-    //     if (isset($response['batch_header']) && $response['batch_header']['batch_status'] == 'PENDING') {
-    //         return view('payouts.success', ['response' => $response]);
-    //     } else {
-    //         dd($response);
-    //         return view('payouts.failure')->with('error', 'something wrong');
-    //     }
-    // }
 
     public function getConfig()
     {
