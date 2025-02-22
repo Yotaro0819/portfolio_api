@@ -77,6 +77,13 @@ textarea::placeholder {
 
 .title {
   margin-top: 60px;
+  font-size:30px;
+  margin-left:100px;
+}
+
+.home-title {
+  font-size:30px;
+  margin-left:100px;
 }
 
 

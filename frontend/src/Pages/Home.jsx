@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios.js';
 import RightSideProfile from '../Component/RightSideProfile.jsx';
 import LikeButton from '../Component/LikeButton.jsx';
+import SearchBar from '../Component/SearchBar.jsx';
 
 
 export default function Home() {
@@ -42,7 +43,8 @@ export default function Home() {
     <>
       <div className="fb">
         <div className="box">
-          <h1 className="title">All Posts</h1>
+          <SearchBar />
+          <h1 className="home-title">All Posts</h1>
           { loading ? (
             <div className="text-center">Loading...</div>
           ) 
