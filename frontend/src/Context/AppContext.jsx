@@ -11,28 +11,14 @@ export default function AppProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [showNav, setShowNav] = useState(false);
-  const [config, setConfig] = useState(null);
 
   useEffect(() => {
 
-    const fetchConfig = async () => {
-      try {
-        const res = await axiosInstance.get('/api/paypal/config', {
-          withCredentials: true,
-        })
-        // console.log(res.data);
-        setConfig(res.data);
-      } catch (error) {
-        console.error('failed fetching config: ', error);
-      }
-    }
-
-    fetchConfig();
     setShowNav(true);
   }, []);
 
   return (
-    <AppContext.Provider value={{ authUser, setAuthUser, config, showNav, setShowNav }}>
+    <AppContext.Provider value={{ authUser, setAuthUser, showNav, setShowNav }}>
       {children}
     </AppContext.Provider>
   );

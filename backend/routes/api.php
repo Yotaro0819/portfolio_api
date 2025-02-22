@@ -29,11 +29,14 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::get('/own-posts/{id}', [PostController::class, 'getOwnPosts']);
     Route::get('/user-info/{id}', [UserController::class, 'getUser']);
     Route::patch('/avatar-update', [ProfileController::class, 'uploadAvatar']);
+    Route::patch('/change-password', [ProfileController::class, 'updatePassword']);
+    Route::patch('/change-website', [ProfileController::class, 'updateWebsite']);
 
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
+    Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
 
 
     // comments
@@ -55,17 +58,14 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::post('/follow/{id}', [FollowController::class, 'follow']);
     Route::post('/unfollow/{id}', [FollowController::class, 'unfollow']);
 
-    // paypal
-    Route::post('/paypal/create-order/{id}', [PaypalController::class, 'createOrder']);
-    Route::get('/payment/cancel', [PaypalController::class, 'cancel'])->name('api.cancel');
-    Route::get('/paypal/config', [PaypalController::class, 'getConfig']);
-
     // stripe
     Route::post('/stripe/connect-account/{id}', [StripeController::class, 'connectStripe']);
     Route::post('/stripe/create-order/{id}', [StripeController::class,'createOrder']);
+    Route::patch('/stripe/{paymentId}/approve', [StripeController::class, 'approve']);
+    Route::post('/stripe/{paymentId}/capture', [StripeController::class, 'captureOrder']);
+    Route::post('/stripe/{paymentId}/cancel', [StripeController::class, 'cancelOrder']);
 });
 
 Route::get('/stripe/success', [StripeController::class, 'success']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/payment/success', [PaypalController::class, 'success'])->name('api.success');

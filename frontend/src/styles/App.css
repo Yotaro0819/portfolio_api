@@ -51,7 +51,7 @@ textarea::placeholder {
 
 .fb {
   display: flex;
-  justify-content:space-between;
+  /* justify-content:space-between; */
   width: 100%;
 }
 
@@ -134,6 +134,14 @@ input:-webkit-autofill {
 
 .h-500px {
   height: 500px;
+}
+
+.ml-150 {
+  margin-left: 150px;
+}
+
+.mb-100 {
+  margin-bottom: 100px;
 }
 
 

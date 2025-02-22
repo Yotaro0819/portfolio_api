@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PostController extends Controller
@@ -33,31 +34,42 @@ class PostController extends Controller
 
 public function store(Request $request)
 {
-
-    // JWT トークンが送信されていることを確認
-    // これによってjwtトークンのペイロードをデコードしてuserを取得する。
     $user = JWTAuth::parseToken()->authenticate();
 
-    // ユーザーが認証されていなければ 401 エラーを返す
     if (!$user) {
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 
-    try {
-        $fields = $request->validate([
-            'title' => 'required|max:255',
-            'body'  => 'required',
-            'image' => 'required',
-            'price' => 'required|numeric|min:0',
-        ]);
+    $validator = Validator::make($request->all(), [
+        'title' => 'required|max:255',
+        'body'  => 'required',
+        'image' => 'required|image', // 画像ファイルであることを明示
+        'price' => 'required|numeric|min:0',
+    ]);
 
-        // 画像の保存
+    // バリデーション失敗時の処理
+    if ($validator->fails()) {
+        return response()->json([
+            'error' => 'Validation failed',
+            'messages' => $validator->errors() // 各フィールドごとのエラーメッセージを取得
+        ], 422);
+    }
+
+    try {
+        // $fields = $request->validate([
+        //     'title' => 'required|max:255',
+        //     'body'  => 'required',
+        //     'image' => 'required',
+        //     'price' => 'required|numeric|min:0',
+        // ]);
+
+        $fields = $request->all();
+
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('posts', 'public');
             $fields['image'] = $imagePath;
         }
 
-        // デコードしたuserからid取得
         $post = Post::create(array_merge($fields, ['user_id' => $user->id, 'owner_id' => $user->id]));
 
         return response()->json($post, 201);
@@ -88,52 +100,6 @@ public function store(Request $request)
      * Update the specified resource in storage.
      */
     public function update(Request $request, Post $post)
-{
-    try {
-        Gate::authorize('modify', $post);
-    } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-        // カスタムメッセージを追加
-        return response()->json([
-            'error' => 'You do not have permission to modify this post',
-            'message' => $e->getMessage(), // オリジナルのメッセージ
-        ], 403);
-    }
-
-
-    $fields = $request->validate([
-        'title' => 'required|max:255',
-        'body'  => 'required',
-        'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    if ($request->hasFile('image')) {
-        // 新しい画像を保存
-        $imagePath = $request->file('image')->store('uploads', 'public');
-
-        // 古い画像があれば削除（任意）
-        if ($post->image) {
-            Storage::disk('public')->delete($post->image);
-        }
-
-        // 画像パスを `$fields` に追加
-        $fields['image'] = $imagePath;
-    }
-
-    // データを更新
-    $post->update($fields);
-
-    // 成功した場合のレスポンスを返す
-    return response()->json([
-        'message' => 'Post updated successfully!',
-        'post' => $post
-    ], 200);
-}
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
     {
         try {
             Gate::authorize('modify', $post);
@@ -145,8 +111,41 @@ public function store(Request $request)
             ], 403);
         }
 
+        $fields = $request->validate([
+            'title' => 'required|max:255',
+            'body'  => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-        $post->delete();
+        if ($request->hasFile('image')) {
+            // 新しい画像を保存
+            $imagePath = $request->file('image')->store('uploads', 'public');
+
+            // 古い画像があれば削除（任意）
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+
+            // 画像パスを `$fields` に追加
+            $fields['image'] = $imagePath;
+        }
+
+        // データを更新
+        $post->update($fields);
+
+        // 成功した場合のレスポンスを返す
+        return response()->json([
+            'message' => 'Post updated successfully!',
+            'post' => $post
+        ], 200);
+    }
+
+    public function destroy($postId)
+    {
+        $post = Post::find($postId);
+        if ($post) {
+            $post->delete();
+        }
 
         return ['message' => 'post was deleted'];
     }

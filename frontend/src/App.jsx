@@ -13,10 +13,12 @@ import Success from "./Pages/Payments/Success";
 import Cancel from "./Pages/Payments/Cancel";
 import { AppContext } from "./Context/AppContext";
 import Create from "./Pages/Posts/Create";
-import Payment from "./Pages/Payments/Payment";
 import EditProfile from "./Pages/User/EditProfile";
 import MessageIndex from "./Pages/Messages/Index";
 import MessageShow from "./Pages/Messages/Show";
+import PurchaseHistory from "./Pages/User/PurchaseHistory";
+import SalesHistory from "./Pages/User/SalesHistory";
+import OngoingOrders from "./Pages/User/OngoingOrders";
 
 function App() {
   const { authUser } = useContext(AppContext);
@@ -54,10 +56,12 @@ function App() {
         <Route path="/post/:post_id" element={authUser ? <PostShow /> : <Login />} />
         <Route path="/messages/index" element={authUser ? <MessageIndex /> : <Login />} />
         <Route path="/messages/show/:user_id" element={authUser ? <MessageShow /> : <Login />} />
+        <Route path="/purchase-history" element={authUser ? <PurchaseHistory /> : <Login />} />
+        <Route path="/sales-history" element={authUser ? <SalesHistory /> : <Login />} />
+        <Route path="/ongoing-orders" element={authUser ? <OngoingOrders /> : <Login />} />
       </Route>
       <Route path="/payment/success" element={authUser ? <Success /> : <Login />} />
       <Route path="/payment/failure" element={authUser ? <Cancel /> : <Login />} />
-      <Route path="post/:id/payment" element={authUser ? <Payment /> : <Login />} />
     </Routes>
   );
 }
