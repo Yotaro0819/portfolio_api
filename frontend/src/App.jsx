@@ -55,8 +55,8 @@ function App() {
         <Route path="/messages/index" element={authUser ? <MessageIndex /> : <Login />} />
         <Route path="/messages/show/:user_id" element={authUser ? <MessageShow /> : <Login />} />
       </Route>
-      <Route path="/paypal/success" element={authUser ? <Success /> : <Login />} />
-      <Route path="/paypal/cancel" element={authUser ? <Cancel /> : <Login />} />
+      <Route path="/payment/success" element={authUser ? <Success /> : <Login />} />
+      <Route path="/payment/failure" element={authUser ? <Cancel /> : <Login />} />
       <Route path="post/:id/payment" element={authUser ? <Payment /> : <Login />} />
     </Routes>
   );

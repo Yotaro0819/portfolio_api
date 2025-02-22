@@ -11,7 +11,7 @@ const StripeButton = ({sellerId, title, price}) => {
         title,
         price,
       });
-      if(res.data.url) {
+      if(res.data.checkout_url) {
         window.location.href = res.data.checkout_url;
       } else {
         alert("Error: Could not get payment URL");
