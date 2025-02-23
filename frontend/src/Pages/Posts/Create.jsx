@@ -133,6 +133,7 @@ const Create = () => {
         </div>
         </div>
       </div>
+      <div><p className="w-20">&nbsp;</p></div>
       {/* <div className="bg-red-500 create-right">hello this is right sec</div> */}
       <RightSideProfile authUser={authUser} selectedPost={selectedPost} />
       </div>
