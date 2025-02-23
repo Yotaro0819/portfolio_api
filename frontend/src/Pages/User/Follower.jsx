@@ -1,11 +1,13 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
 import PostList from '../../Component/PostList';
 import FollowButton from '../../Component/FollowButton';
 import axiosInstance from '../../api/axios';
+import { AppContext } from '../../Context/AppContext';
 
 const Follower = () => {
+  const {authUser} = useContext(AppContext);
   const [followers, setFollowers] = useState([]);
   const {user_id} = useParams();
   console.log(followers);
@@ -43,7 +45,12 @@ const Follower = () => {
                             )}
                             <span className="text-2xl">{follower.name || "Unknown User"}</span>
                     </Link>
-                    <FollowButton userId={follower.id} isFollowing={follower.isFollowing} />
+                    {follower.id == authUser.user_id ? (
+                      <></>
+                    ) : (
+                      <FollowButton userId={follower.id} isFollowing={follower.isFollowing} />
+                    )}
+                  
                 </div>
                 <div>
                   <PostList id={follower.id} imageSize="w-24 h-24 mx-auto" grid="grid-cols-6"/>
