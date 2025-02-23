@@ -91,15 +91,16 @@ class AuthController extends Controller
             $userName = $user->name;
             $userId   = $user->id;
             $avatar   = $user->avatar;
-            $accessToken = JWTAuth::fromUser($user);
 
             // noneになってないかだけ確認
             // $parts = explode('.', $accessToken);
             // $header = json_decode(base64_decode($parts[0]), true);
             // \Log::info('JWT Algorithm: ' . ($header['alg'] ?? 'Not found'));
             // dd($header);
-
+            $accessToken = JWTAuth::fromUser($user);
             $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+
+            $csrfToken = bin2hex(random_bytes(32));
 
             return Response::json([
                 'message' => 'Logged in successfully',
@@ -108,6 +109,7 @@ class AuthController extends Controller
                     'user_id' => $userId,
                     'avatar' => $avatar],
             ])
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', null, false, false)
             ->cookie('jwt', $accessToken, 60, null, null, false, true)
             ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true);
 
