@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateJWT;
@@ -38,7 +39,6 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
     Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
 
-
     // comments
     Route::post('/comment/store', [CommentController::class, 'store']);
 
@@ -64,6 +64,9 @@ Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(funct
     Route::patch('/stripe/{paymentId}/approve', [StripeController::class, 'approve']);
     Route::post('/stripe/{paymentId}/capture', [StripeController::class, 'captureOrder']);
     Route::post('/stripe/{paymentId}/cancel', [StripeController::class, 'cancelOrder']);
+
+    //search
+    Route::get('/search', [SearchController::class, 'search']);
 });
 
 Route::get('/stripe/success', [StripeController::class, 'success']);
