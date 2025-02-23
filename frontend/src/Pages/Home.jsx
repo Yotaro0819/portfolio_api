@@ -13,6 +13,7 @@ export default function Home() {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
 
   console.log(allPosts);
@@ -87,8 +88,15 @@ export default function Home() {
           </ul>
           )}
         </div>
-      
-        <RightSideProfile authUser={authUser} />
+        <div>
+        <button 
+          onClick={() => setShowProfile(!showProfile)} 
+          className="bg-black "
+        >
+          <div>{showProfile ? <p className="p-2 ">Hide Profile</p> : <p className="p-2 mr-20 text-left rounded-l-md">Show Profile</p>}</div>
+        </button>
+        </div>
+        {showProfile && <RightSideProfile authUser={authUser} />}
       </div>
     </>
   );

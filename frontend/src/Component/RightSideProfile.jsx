@@ -39,8 +39,8 @@ const [avatar, setAvatar] = useState(null);
   },[]);
 
   return (
-            <div className="profile-right">
-              <div className="userInfo bg-black">
+            <div className="profile-right bg-gray-800">
+              <div className="userInfo">
                   
     
                   { counts ? (
