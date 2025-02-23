@@ -22,6 +22,7 @@ class PostController extends Controller
             $post->image = asset('storage/'. $post->image);
             $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
         });
+        
 
         return response()->json([
             'posts' => $posts
