@@ -22,16 +22,12 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance('/api/posts');
-
-       console.log(res.data);
-
         setAllPosts(res.data.posts);
         setLoading(false);
-
       } catch (error) {
         setError(error);
         setLoading(false);  
-        localStorage.removeItem('authUser');
+        // localStorage.removeItem('authUser');
       }
     };
 
@@ -43,7 +39,7 @@ export default function Home() {
     <>
       <div className="fb">
         <div className="box">
-          <SearchBar />
+          <SearchBar setResults={setAllPosts} />
           <h1 className="home-title">All Posts</h1>
           { loading ? (
             <div className="text-center">Loading...</div>
