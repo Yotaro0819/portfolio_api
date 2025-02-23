@@ -14,6 +14,7 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthenticateJWT;
 use App\Http\Middleware\CorsMiddleware;
+use App\Http\Middleware\VerifyXSRFToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::middleware([ CorsMiddleware::class, AuthenticateJWT::class])->group(function () {
+Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJWT::class])->group(function () {
     Route::apiResource('posts', PostController::class);
 
     // profile

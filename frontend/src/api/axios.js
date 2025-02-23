@@ -1,10 +1,33 @@
 import axios from 'axios';
 
+// クッキーからXSRF-TOKENを取得する関数
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return '';
+}
+
 const axiosInstance = axios.create({
   baseURL: 'http://127.0.0.1:8000',
   timeout: 10000,
   withCredentials: true,  // クッキーを送信するため
 });
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    // XSRF-TOKENをクッキーから取得
+    const csrfToken = getCookie('XSRF-TOKEN');
+    if (csrfToken) {
+      // ヘッダーにX-XSRF-TOKENを追加
+      config.headers['X-XSRF-TOKEN'] = csrfToken;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 axiosInstance.interceptors.response.use(
   (response) => response,  // 正常なレスポンスはそのまま返す
