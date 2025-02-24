@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axiosInstance from '../api/axios.js';
 import RightSideProfile from '../Component/RightSideProfile.jsx';
 import LikeButton from '../Component/LikeButton.jsx';
 import SearchBar from '../Component/SearchBar.jsx';
 import dayjs from 'dayjs';
+import { useInView } from "react-intersection-observer";
 
 
 export default function Home() {
@@ -15,14 +16,16 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
-  const navigate = useNavigate();
+  const { ref, inView, entry } = useInView({});
+  const [link, setLink] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance('/api/posts');
-        console.log(res.data.data);
+        console.log(res.data);
         setAllPosts(res.data.data);
+        setLink(res.data.next_page_url);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -33,6 +36,21 @@ export default function Home() {
     fetchPosts();
     setShowNav(true);
   },[]);
+
+  useEffect(() => {
+    if(inView && link) {
+      axiosInstance.get(link).then((res) => {
+        console.log(res.data);
+        setAllPosts((prevPosts) => {
+          const newPosts = res.data.data.filter(
+            (newPost) => !prevPosts.some((post) => post.id === newPost.id)
+          );
+          return [...prevPosts, ...newPosts];
+        });
+        setLink(res.data.next_page_url);
+      })
+    }
+  }, [inView]);
 
   return (
     <>
@@ -67,7 +85,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div>hello</div>
+          <div ref={ref}>hello</div>
           </div>
           )}
         </div>

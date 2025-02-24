@@ -12,7 +12,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
         // withCount('リレーション')とするとテーブル名の単数_countという変数名で合計を取得できる
@@ -33,7 +33,14 @@ class PostController extends Controller
             return $post;
         });
 
-        return response()->json($posts);
+        $isLastPage = !$posts->hasMorePages();
+        $message = $isLastPage ? 'This is the last Page' : null;
+
+        return response()->json([
+            'data' => $posts->items(),
+            'next_page_url' => $posts->nextPageUrl(),
+            'message' => $message,
+        ]);
     }
 
     /**
