@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axios'
 import { useParams } from 'react-router-dom';
 import { AppContext } from '../../Context/AppContext';
 import dayjs from "dayjs";
+import RightSideProfile from '../../Component/RightSideProfile';
 
 const Show = () => {
   const {authUser} = useContext(AppContext);
@@ -44,7 +45,7 @@ const Show = () => {
   }
   return (
     <div className="fb">
-      <div className="w-5/6 h-screen">
+      <div className="box">
       <p className="title">Messages</p>
         <div className="bg-black w-3/4 mx-auto h-5/6 rounded">
           <div className="m-3">
@@ -101,7 +102,8 @@ const Show = () => {
           </form>
         </div>
       </div>
-      <div className="w-1/3 bg-red-500">hello</div>
+      <div><p className="w-20">&nbsp;</p></div>
+      <RightSideProfile authUser={authUser} />
     </div>
   )
 }

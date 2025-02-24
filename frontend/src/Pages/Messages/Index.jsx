@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axiosInstance from '../../api/axios'
 import dayjs from "dayjs";
+import RightSideProfile from '../../Component/RightSideProfile';
+import { AppContext } from '../../Context/AppContext';
 
 
 const Index = () => {
+  const {authUser} = useContext(AppContext);
   const [users, setUsers] = useState();
   
   useEffect(() => {
@@ -23,7 +26,7 @@ const Index = () => {
 
   return (
     <div className="fb">
-      <div className="w-5/6 h-screen">
+      <div className="box">
         <p className="title">Messages</p>
         <div className="bg-black w-3/4 mx-auto h-5/6 rounded">
           <div className="m-3">
@@ -51,7 +54,8 @@ const Index = () => {
           </div>
         </div>
       </div>
-      <div className="w-1/3 bg-red-500">hello</div>
+      <div><p className="w-20">&nbsp;</p></div>
+      <RightSideProfile authUser={authUser} />
     </div>
 
   )
