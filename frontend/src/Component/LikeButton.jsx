@@ -22,13 +22,12 @@ const LikeButton = ({postId, isLiked, likeCount}) => {
   }
 
   return (
-    <button onClick={handleLike} className="p-0 m-0 w-auto ml-4">
+    <button onClick={handleLike} className="p-0 m-0 w-auto ml-4 absolute top-2">
       {liked ? (
         <i className="fa-solid fa-heart"></i>
       ) : (
         <i className="fa-regular fa-heart"></i>
       )} 
-      {/* <div>{likeCounts}</div> */}
     </button>
   )
 }
