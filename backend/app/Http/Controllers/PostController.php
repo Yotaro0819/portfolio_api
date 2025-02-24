@@ -16,17 +16,24 @@ class PostController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         // withCount('リレーション')とするとテーブル名の単数_countという変数名で合計を取得できる
-        $posts = Post::with('user')->withCount('likes')->where('user_id', '!=', $user->id)->get();
+        // $posts = Post::with('user')->withCount('likes')->where('user_id', '!=', $user->id)->get();
 
-        $posts->each(function ($post) use ($user) {
+        // $posts->each(function ($post) use ($user) {
+        //     $post->image = asset('storage/'. $post->image);
+        //     $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
+        // });
+
+        $posts = Post::with('user')
+                ->withCount('likes')
+                ->paginate(24);
+
+        $posts->getCollection()->transform(function($post) use ($user) {
             $post->image = asset('storage/'. $post->image);
             $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
+            return $post;
         });
-        
 
-        return response()->json([
-            'posts' => $posts
-        ]);
+        return response()->json($posts);
     }
 
     /**

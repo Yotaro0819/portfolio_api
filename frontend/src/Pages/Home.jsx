@@ -6,6 +6,7 @@ import axiosInstance from '../api/axios.js';
 import RightSideProfile from '../Component/RightSideProfile.jsx';
 import LikeButton from '../Component/LikeButton.jsx';
 import SearchBar from '../Component/SearchBar.jsx';
+import dayjs from 'dayjs';
 
 
 export default function Home() {
@@ -16,19 +17,16 @@ export default function Home() {
   const [showProfile, setShowProfile] = useState(false);
   const navigate = useNavigate();
 
-  console.log(allPosts);
-  console.log(authUser);
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance('/api/posts');
-        setAllPosts(res.data.posts);
+        console.log(res.data.data);
+        setAllPosts(res.data.data);
         setLoading(false);
       } catch (error) {
         setError(error);
         setLoading(false);  
-        // localStorage.removeItem('authUser');
       }
     };
 
@@ -41,7 +39,6 @@ export default function Home() {
       <div className="fb">
         <div className="box">
           <SearchBar setResults={setAllPosts} />
-          <h1 className="home-title">All Posts</h1>
           { loading ? (
             <div className="text-center">Loading...</div>
           ) 
@@ -50,50 +47,36 @@ export default function Home() {
           )
           :
           (
-          <ul>
+          <div className="overflow-auto" style={{height: "825px"}}>
+          <div className="flex flex-wrap mt-12">
             {allPosts.map((post) => 
             ( 
-              <li key={post.id}>
-                <div className="each-post bg-gray-800">
-                  <Link to={{
-                    pathname: `/post/${post.id}`,
-                    state: { post }
-                    }}>
-                  <div className="card-body block post-title px-1 text-white bg-gray-800 mt-0">
-                    <div className="flex items-center">
-                    <h2 className="post-title"> {post.title }</h2>
-                    <h2>{post.user.name}</h2>
-                    </div>
-                  </div>
-                  <div className="block px-1 bg-gray-800 mt-0">
-                    <img 
-                    src={post.image} 
-                    alt="post_image"
-                    className="mt-2 img object-cover border border-gray-300" 
-                    />
-                  </div>
-                  </Link>
-                  <div className="body">
-                  <p className="mt-1">{ post.body }</p>
-
-                  </div>
-                    <div className="flex w-full justify-between">
-                    <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
-                    <p className="mr-4">{ post.created_at }</p>
-                    </div>
-                </div>
-                
-              </li>
+              <div key={post.id} className="relative"> 
+                <Link to={{
+                  pathname: `/post/${post.id}`,
+                  state: {post}
+                  }}>
+                <img className="h-auto" src={post.image} alt="post_image" style={{width: "280px"}}/>
+                </Link>
+                <LikeButton 
+                postId={ post.id } 
+                isLiked={ post.isLiked } 
+                likeCount={ post.like_count } 
+                />
+                <p className="mr-4 absolute top-2 right-1">{dayjs(post.created_at).format("YYYY/MM/DD HH:mm")}</p>
+              </div>
             ))}
-          </ul>
+          </div>
+          <div>hello</div>
+          </div>
           )}
         </div>
-        <div>
+        <div className="relative">
         <button 
           onClick={() => setShowProfile(!showProfile)} 
-          className="bg-black "
+          className="bg-black"
         >
-          <div>{showProfile ? <p className="p-2 ">Hide Profile</p> : <p className="p-2 mr-20 text-left rounded-l-md">Show Profile</p>}</div>
+          <div>{showProfile ? <p className="p-2">Hide Profile</p> : <p className="p-2 mr-20 text-left rounded-l-md">Show Profile</p>}</div>
         </button>
         </div>
         {showProfile && <RightSideProfile authUser={authUser} />}

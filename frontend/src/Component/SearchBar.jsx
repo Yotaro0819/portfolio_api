@@ -44,7 +44,7 @@ const SearchBar = ({setResults}) => {
   }, []);
 
   return (
-    <div className="search-container m-3" style={{ position: "relative", width: "300px" }}>
+    <div className="relative z-10" style={{width: "300px" }}>
       <input
         type="text"
         value={query}
@@ -57,7 +57,7 @@ const SearchBar = ({setResults}) => {
           }
         }}
         ref={inputRef}
-        className="bg-gray-300 h-8 m-1 ml-10"
+        className="bg-gray-300 h-8 m-1 ml-10 absolute top-1"
         placeholder={`Search (${searchType === "user" ? "Username" : "Post title"})`}
         style={{
           width: "100%",
