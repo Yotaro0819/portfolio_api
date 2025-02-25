@@ -144,12 +144,17 @@ class StripeController extends Controller
 
         try {
             $payment = Payment::where('payment_id', $paymentId)->first();
+            if (!$payment) {
+                return response()->json(['message' => 'Payment not found'], 404);
+            }
 
-            $stripe->paymentIntents->cancel($paymentId);
+            $paymentIntentId = $payment->payment_id;
+
+            $stripe->paymentIntents->cancel($paymentIntentId);
+
             $payment->update(['process_status' => 'canceled']);
-            $payment->update(['payment_status' => 'canceled']);
 
-            return response()->json(['message' => 'The order canceled']);
+            return response()->json(['message' => 'The order has been canceled']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to cancel order', 'error' => $e->getMessage()], 500);
         }
