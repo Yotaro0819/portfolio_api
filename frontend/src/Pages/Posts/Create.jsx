@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import '../../styles/Create.css';
 import PriceInput from '../../Component/PriceInput.jsx';
 import axiosInstance from '../../api/axios.js';
+import RightSideProfile from '../../Component/RightSideProfile.jsx';
+import { AppContext } from '../../Context/AppContext.jsx';
+
 const Create = () => {
+    const { authUser } = useContext(AppContext);
+    const selectedPost = null;
+
   const [formData, setFormData] = useState({
     title: "",
     body: "",
     price: "",
     image: null
   });
-  const [imagePreview, setImagePreview] = useState(null); // 画像プレビュー用
+  const [imagePreview, setImagePreview] = useState(null);
+  const [errors, setErrors] = useState({});
 
+  console.log(errors?.messages?.body[0]);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -34,23 +42,25 @@ const Create = () => {
       data.append('image', formData.image); // 画像ファイルをフォームデータに追加
     }
 
-// FormDataの内容を確認する
-for (let pair of data.entries()) {
-  console.log(pair[0] + ': ' + pair[1]);
-}
+    // FormDataの内容を確認する
+    for (let pair of data.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
 
-try {
-  // axios使う時はエラーハンドリングも注意。そのままfetchの時みたいにjson使っちゃダメね。
-  const res = await axiosInstance.post('/api/posts', data, {
-    withCredentials: true,
-  });
-  console.log('Post created successfully:', res.data);
+    try {
+      // axios使う時はエラーハンドリングも注意。そのままfetchの時みたいにjson使っちゃダメね。
+      const res = await axiosInstance.post('/api/posts', data, {
+        withCredentials: true,
+      });
+      console.log('Post created successfully:', res.data);
 
-  setFormData({ title: "", body: "", price: "", image: null });
-  setImagePreview(null);
-} catch (error) {
-  console.error('Error creating post:', error.response ? error.response.data : error.message);
-}
+      setFormData({ title: "", body: "", price: "", image: null });
+      setImagePreview(null);
+    } catch (error) {
+      console.error('Error creating post:', error.response ? error.response.data : error.message);
+      setErrors(error.response.data);
+      localStorage.removeItem('authUser');
+    }
 
   }
 
@@ -58,9 +68,10 @@ try {
     <>
     <div className="fb">
       <div className="box">
+        <div className="content">
         <h1 className="title">Create a new post</h1>
 
-        <div className="post bg-gray-800">
+        <div className="post w-4/5 bg-gray-800 ml-150 mb-100">
           <form onSubmit={handleCreate} className="form">
             <div>
               <input 
@@ -71,6 +82,7 @@ try {
                 onChange={(e) => {
                   setFormData({ ...formData, title: e.target.value })
                 }} />
+                {errors && <p className="text-red-500">{errors?.messages?.title[0]}</p>}
             </div>
 
             
@@ -94,6 +106,7 @@ try {
                 className="block px-1 bg-gray-800 mt-0"
                 onChange={handleFileChange} />
             </div>
+            {errors && <p className="text-red-500">{errors?.messages?.image[0]}</p>}
 
             <div>
               <textarea 
@@ -104,33 +117,27 @@ try {
                 onChange={(e) => {
                   setFormData({ ...formData, body: e.target.value })
                 }} />
+                {errors && <p className="text-red-500">{errors?.messages?.body[0]}</p>}
             </div>
 
-            {/* <div className="prices">
-              <p className="p-2 btn inline">¥
-                <input 
-                  type="number"
-                  className="btn text-white bg-gray-800 input-price" 
-                  placeholder="price"
-                  value={formData.price}
-                  onChange={(e) => {
-                    setFormData({ ...formData, price: e.target.value })
-                  }} />
-              </p>
-            </div> */}
             <PriceInput
               value={formData.price}
               onChange={(value) => {
                 setFormData({ ...formData, price: value });
               }}
             />
+            {errors && <p className="text-red-500">{errors?.messages?.price[0]}</p>}
 
             <button className="bg-cyan rounded">Create</button>
           </form>
         </div>
+        </div>
       </div>
-      <div className="bg-red-500 right">hello this is right sec</div>
+      <div><p className="w-20">&nbsp;</p></div>
+      {/* <div className="bg-red-500 create-right">hello this is right sec</div> */}
+      <RightSideProfile authUser={authUser} selectedPost={selectedPost} />
       </div>
+      
     </>
   );
 };

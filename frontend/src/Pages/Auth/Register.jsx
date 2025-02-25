@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../../Context/AppContext';
-import '../../styles/Layout.css';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -55,7 +54,7 @@ const Register = () => {
     <h1 className="title">Register a new account</h1>
 
     
-    <form onSubmit={handleRegister} className="w-1/2 mx-auto space-y-6">
+    <form onSubmit={handleRegister} className="register-form w-1/2 mx-auto space-y-6">
       <div>
         <input type="text" placeholder="Name" 
         className="border rounded w-full px-2  bg-gray-800"
@@ -92,9 +91,15 @@ const Register = () => {
         onChange={(e) => { setFormData({...formData, password_confirmation: e.target.value})}} 
         />
       </div>
-
-      <button className="bg-blue-500 text-white py-2 px-4 rounded transition transform hover:bg-blue-600 hover:scale-90">Register</button>
+      
+      <div className="flex items-center space-x-4">
+        <button className="bg-blue-500 text-white py-2 px-4 rounded transition transform hover:bg-blue-600 hover:scale-90">Register</button>
+        <div>
+          <p><Link to="/Login" className="text-blue-500">Login</Link> now.</p>
+        </div>
+      </div>
     </form>
+
     </>
   )
 }

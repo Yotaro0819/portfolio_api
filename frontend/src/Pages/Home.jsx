@@ -2,49 +2,61 @@ import React, { useContext, useEffect, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../api/axios.js';
+import RightSideProfile from '../Component/RightSideProfile.jsx';
+import LikeButton from '../Component/LikeButton.jsx';
+import SearchBar from '../Component/SearchBar.jsx';
+import dayjs from 'dayjs';
+import { useInView } from "react-intersection-observer";
 
 
 export default function Home() {
-  const { user, setShowNav } = useContext(AppContext);
+  const { authUser, setShowNav } = useContext(AppContext);
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [authUser, setAuthUser] = useState(null);
-
-  console.log(allPosts);
+  const [showProfile, setShowProfile] = useState(false);
+  const { ref, inView, entry } = useInView({});
+  const [link, setLink] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/posts', {
-          credentials: 'include',
-        });
-
-        if(!res.ok) {
-          throw new Error('response was not ok');
-        }
-
-        const data = await res.json();
-        console.log(data);
-
-        setAllPosts(data.posts);
-        setAuthUser(data.authUser);
+        const res = await axiosInstance('/api/posts');
+        console.log(res.data);
+        setAllPosts(res.data.data);
+        setLink(res.data.next_page_url);
         setLoading(false);
-
       } catch (error) {
         setError(error);
-        setLoading(false);
+        setLoading(false);  
       }
     };
+
     fetchPosts();
     setShowNav(true);
   },[]);
+
+  useEffect(() => {
+    if(inView && link) {
+      axiosInstance.get(link).then((res) => {
+        console.log(res.data);
+        setAllPosts((prevPosts) => {
+          const newPosts = res.data.data.filter(
+            (newPost) => !prevPosts.some((post) => post.id === newPost.id)
+          );
+          return [...prevPosts, ...newPosts];
+        });
+        setLink(res.data.next_page_url);
+      })
+    }
+  }, [inView]);
 
   return (
     <>
       <div className="fb">
         <div className="box">
-          <h1 className="title">All Posts</h1>
+          <SearchBar setResults={setAllPosts} />
           { loading ? (
             <div className="text-center">Loading...</div>
           ) 
@@ -53,60 +65,40 @@ export default function Home() {
           )
           :
           (
-          <ul>
+          <div className="overflow-auto" style={{height: "825px"}}>
+          <div className="flex flex-wrap">
             {allPosts.map((post) => 
             ( 
-              <li key={post.id}>
-                <div className="each-post bg-gray-800">
-                  <Link to={`/post/${post.id}`}>
-                  <div className="card-body block post-title px-1 text-white bg-gray-800 mt-0">
-                  <h2 className="post-title"> {post.title }</h2>
-                  </div>
-                  <div className="block px-1 bg-gray-800 mt-0">
-                    <img 
-                    src={post.image} 
-                    alt="post_image"
-                    className="mt-2 img object-cover border border-gray-300" 
-                    />
-                  </div>
-                  </Link>
-                  <div className="body">
-                  <p className="mt-1">{ post.body }</p>
-
-                  </div>
-                  <div className="flex">
-                  <i className="fa-regular fa-heart"></i>
-                  <p className="date">{ post.created_at }</p>
-
-                  </div>
-                </div>
-                
-              </li>
+              <div key={post.id} className="relative"> 
+                <Link to={{
+                  pathname: `/post/${post.id}`,
+                  state: {post}
+                  }}>
+                <img className="h-auto" src={post.image} alt="post_image" style={{width: "280px"}}/>
+                </Link>
+                <LikeButton 
+                postId={ post.id } 
+                isLiked={ post.isLiked } 
+                likeCount={ post.like_count } 
+                addClass={ "absolute top-2" }
+                />
+                <p className="mr-4 absolute top-2 right-1">{dayjs(post.created_at).format("YYYY/MM/DD HH:mm")}</p>
+              </div>
             ))}
-          </ul>
+          </div>
+          <div ref={ref}><p className="text-center p-4 text-2xl mb-20">No more posts...</p></div>
+          </div>
           )}
         </div>
-      
-        <div className="bg-red-500 right">
-          <div className="userInfo bg-black">
-            <div className="avatar flex items-center">
-              <Link to={`/profile/${user.user_id}`}>
-            {user.image ? 
-            <img src="#" alt="avatar"></img>
-            :
-            <i className="fa-solid fa-user inline"></i>
-            }
-            </Link>
-            </div>
-            <div className="ml-2">
-              <h3 className="username inline mt-2">{user.name}</h3>
-                <div>
-                <Link to="/follower" className="mr-4">Follower</Link>
-                <Link to="/following">Following</Link>
-                </div>
-              </div>
-            </div>
+        <div className="relative">
+        <button 
+          onClick={() => setShowProfile(!showProfile)} 
+          className="bg-black"
+        >
+          <div>{showProfile ? <p className="p-2">Hide Profile</p> : <p className="p-2 mr-20 text-left rounded-l-md">Show Profile</p>}</div>
+        </button>
         </div>
+        {showProfile && <RightSideProfile authUser={authUser} />}
       </div>
     </>
   );

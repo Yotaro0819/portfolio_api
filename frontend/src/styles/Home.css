@@ -1,19 +1,4 @@
 
-.fb {
-  display:flex;
-  justify-content: space-between;
-}
-.right {
-  width: 80%;
-}
-.box {
-  width: 75%;
-}
-
-.title {
-  font-size:30px;
-  margin-left:100px;
-}
 
 .each-post {
   width: 90%;
@@ -21,6 +6,7 @@
   padding:20px;
   margin: 0 0 100px 40px;
 }
+
 .post-title {
   width: 90%;
   margin:20px 0 20px 3px;
@@ -30,15 +16,15 @@
   height: 60px;
 }
 
+/* like-button */
 .date {
   margin: 0 0 0 29%;
+  align-items: right;
 }
 
 .fa-heart {
-  display:flex;
   font-size:20px; 
   color:rgb(255, 80, 80);
-  margin-left:20px;
   align-items:center;
 }
 
@@ -48,13 +34,12 @@
   margin: 0 auto;
 }
 
-.userInfo {
-  display:flex;
-  align-items:center;
-}
+
+
 .username {
   font-size:30px;
 }
+
 .avatar {
   font-size:60px;
   margin: 0 20px;
