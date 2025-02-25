@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
+        'session_id',
         'payment_id',
         'product_name',
         'quantity',
@@ -20,4 +21,8 @@ class Payment extends Model
         'payment_method'
     ];
 
+    public function payer()
+    {
+        return $this->belongsTo(User::class, 'payer_id');
+    }
 }
