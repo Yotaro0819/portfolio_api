@@ -66,7 +66,7 @@ export default function Home() {
           :
           (
           <div className="overflow-auto" style={{height: "825px"}}>
-          <div className="flex flex-wrap mt-12">
+          <div className="flex flex-wrap">
             {allPosts.map((post) => 
             ( 
               <div key={post.id} className="relative"> 
@@ -85,7 +85,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div ref={ref}>hello</div>
+          <div ref={ref}><p className="text-center p-4 text-2xl mb-20">No more posts...</p></div>
           </div>
           )}
         </div>
