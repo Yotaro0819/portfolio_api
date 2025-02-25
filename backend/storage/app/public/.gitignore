@@ -1,3 +1,16 @@
 *
 !.gitignore
-!*.jpeg
+
+storage/
+
+!storage/app/public/
+
+!storage/app/public/avatars/
+!storage/app/public/posts/
+
+!storage/app/public/avatars/*.jpeg
+!storage/app/public/avatars/*.jpg
+!storage/app/public/avatars/*.png
+!storage/app/public/posts/*.jpeg
+!storage/app/public/posts/*.jpg
+!storage/app/public/posts/*.png
