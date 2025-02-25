@@ -1,46 +1,19 @@
-.fb {
-  display: flex;
-  justify-content:space-between;
-}
 
-.box {
-width: 75%;
+
+.post-box {
+width: 120%;
 margin: 0 auto;
 }
 
-.right {
+.create-right {
   width:80%;
-}
-
-input {
-  width: 100%;
-  margin: 10px 0;
-  border-radius:8px;
-}
-input::placeholder {
-  color: rgb(184, 184, 184);
-}
-
-.input-price:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-textarea {
-  height: 60px;
-  width: 100%;
-  border-radius:8px;
-}
-textarea::placeholder {
-  color:rgb(212, 212, 212);
+  margin: 60px;
 }
 
 .post {
-  width: 90%;
-  height: 900px;
   border-radius: 15px;  
   padding:20px;
-  margin: 0 0 100px 40px;
+  /* margin: 0 0 100px 150px; */
 }
 
 .form {
@@ -50,11 +23,10 @@ textarea::placeholder {
 
 .post-title {
   font-size: 30px;
+  margin:0;
 }
 
-.title {
-  font-size:25px;
-}
+
 .prices {
   width: 400px; 
   text-align:center;
@@ -62,7 +34,7 @@ textarea::placeholder {
   
 }
 
-.btn {
+/* .btn {
   background-color:rgb(134, 134, 72);
   width: 20%;
   margin: 20px auto;
@@ -71,17 +43,19 @@ textarea::placeholder {
   font-size:20px;
   color:white;
   border-radius:10px;
-}
+} */
 
 .prev-img {
-  width: 550px;
-  height: 600px;
+  width: 450px;
+  height: 400px;
   margin: 0 auto;
 
 }
 .prev-non {
-  height: 600px;
+  width:450px;
+  height: 400px;
   display:flex;
+  margin: 0 auto;
   background-color:black;
   align-items:center;
   justify-content:center;

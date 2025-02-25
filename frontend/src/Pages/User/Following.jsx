@@ -1,8 +1,69 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom';
+import PostList from '../../Component/PostList';
+import FollowButton from '../../Component/FollowButton';
+import axiosInstance from '../../api/axios';
+import { AppContext } from '../../Context/AppContext';
 
 const Following = () => {
-  return (
-    <div>Following</div>
+  const {authUser} = useContext(AppContext);
+  const [following, setFollowing] = useState([]);
+  const {user_id} = useParams();
+  console.log(following);
+
+  useEffect(() => {
+    const fetchFollowings = async () => {
+      try {
+        const res = await axiosInstance.get(`/api/fetch-following/${user_id}`)
+        console.log(res.data);
+        setFollowing(res.data);
+      } catch (error) {
+        console.error('failed fatching followings: ', error);
+      }
+    }
+    fetchFollowings();
+  },[]) 
+  return (  
+    <div className="w-1/2 mx-auto mt-20">
+    <h2 className="text-4xl">Followings</h2>
+    {following.length > 0 ? (
+    <ul>
+        {following.map((following) => {
+            return (
+              <div key={following.id}>
+                <div className="flex items-center gap-x-4">
+                    <Link to={`/profile/${following.id}`} className="flex items-center space-x-2">
+                            { following?.avatar ? (
+                                <img
+                                    src={following.avatar}
+                                    alt={following.avatar}
+                                    className="w-12 h-12 rounded-full my-2 object-cover"
+                                />
+                            ) : (
+                                <i className="fa-solid fa-circle-user text-secondary text-5xl w-12 h-12 my-2"></i>
+                            )}
+                            <span className="text-2xl">{following.name || "Unknown User"}</span>
+                    </Link>
+                    {following.id == authUser.user_id ? (
+                      <></>
+                    ) : (
+                      <FollowButton userId={following.id} isFollowing={following.isFollowing} />
+                    )}
+                </div>
+                <div>
+                  <PostList id={following.id} imageSize="w-24 h-24 mx-auto" grid="grid-cols-6"/>
+                </div>
+              </div>
+            );
+        })}
+    </ul>
+) : (
+    <div>
+        <h2 className="flex items-center justify-center nothing">No followers yet.</h2>
+    </div>
+)}
+    </div>
   )
 }
 

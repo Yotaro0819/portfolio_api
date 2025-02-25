@@ -1,40 +1,38 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../styles/Layout.css';
 import { AppContext } from '../Context/AppContext';
+import axiosInstance from '../api/axios';
 
 export default function Layout() {
-  const { user, setUser } = useContext(AppContext);
+  const { authUser, setAuthUser } = useContext(AppContext);
   const [ showNav, setShowNav] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (authUser) {
       setShowNav(true);  // userがnullならナビゲーションを非表示にする
     }
-  }, [user, setShowNav]);
+  }, [authUser, setShowNav]);
 
   async function handleLogout(e) {
     e.preventDefault();
 
     try {
-      const res = await axios.post('/api/logout', {}, {
-        withCredentials: true,
-      });
+      const res = await axiosInstance.post('/api/logout');
   
       console.log("Response:", res);  // レスポンスの内容を確認
   
       if (res.status === 200) {
-        setUser(null);
+        setAuthUser(null);
         setShowNav(false)
-        localStorage.removeItem('user');
+        localStorage.removeItem('authUser');
 
         navigate('/');
       }
     } catch (error) {
       console.error("Logout error:", error.response || error);  // エラーを確認
+      setShowNav(false);
       
     }
   }
@@ -59,9 +57,11 @@ export default function Layout() {
                 <Link to="/" className="nav-link m-5 block"><p className="text-2xl">Home</p></Link>
                 </div>
                 <Link to="/create" className="nav-link block"><p className="text-2xl">New Post</p></Link>
+                <Link to={`/profile/${authUser.user_id}`} className="nav-link m-5 block"><p className="text-2xl">Profile</p></Link>
+                <Link to={"/messages/index"} className="nav-link m-5 block"><p className="text-2xl">Messages</p></Link>
                 <div>
                 <form onSubmit={handleLogout} className="m-0 text-2xl">
-                  <button>Logout</button>
+                  <button className="m-0 p-0 text-left">Logout</button>
                 </form>
                 </div>
               </>

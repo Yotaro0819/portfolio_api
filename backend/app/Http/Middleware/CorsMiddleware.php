@@ -19,13 +19,19 @@ class CorsMiddleware
     if (in_array($origin, $allowedOrigins)) {
         $response->headers->set('Access-Control-Allow-Origin', $origin);
     }
-        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+        // $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+        // 追加のCORSヘッダー
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization, Accept, Origin');
         $response->headers->set('Access-Control-Allow-Credentials', 'true');
 
         // OPTIONSリクエスト（プリフライトリクエスト）に対しては200を返す
         if ($request->getMethod() == "OPTIONS") {
-            return response('', 200);
+            // return response('', 200);
+            return response('', 200)
+          ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
+          ->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization, Accept, Origin')
+          ->header('Access-Control-Allow-Origin', '*');
         }
 
         return $response;

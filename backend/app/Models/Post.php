@@ -14,6 +14,7 @@ class Post extends Model
         'title',
         'body',
         'price',
+        'owner_id',
         'image',
     ];
 
@@ -22,9 +23,11 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function likes()
+    public function likedUser()
     {
-        return $this->hasMany(Like::class);
+        return $this->belongsToMany(User::class, 'likes', 'post_id', 'user_id');
+        // $this->belongsToMany(RelatedModel::class, 'pivot_table', 'foreign_key', 'related_key');
+
     }
 
     public function comments()
@@ -40,5 +43,10 @@ class Post extends Model
     public function hashtags()
     {
         return $this->hasMany(Hashtag::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
     }
 }

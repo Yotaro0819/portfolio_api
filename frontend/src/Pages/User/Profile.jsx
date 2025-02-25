@@ -1,47 +1,133 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
+import { AppContext } from '../../Context/AppContext';
+import '../../styles/Profile.css';
+import { Link, useParams } from 'react-router-dom';
+import axiosInstance from '../../api/axios';
+import OwnPostList from '../../Component/OwnPostList';
+import PostList from '../../Component/PostList';
+import LikePostList from '../../Component/LikePostList';
 
 const Profile = () => {
+  const { authUser } = useContext(AppContext);
+  const [user, setUser] = useState(null);
+  const [counts, setCounts] = useState(null);
+  const [activeTab, setActiveTab] = useState("post");
+  const { user_id } = useParams();//ここのuseParamはApp.jsxに記載したrouteのparamと同じ名前にする必要がある。
 
-  const [authUser, setAuthUser] = useState(null);
+  console.log(user)
+  console.log(user_id)
 
-useEffect(() => {
+  useEffect(() => {
 
-  const fetchUser = async () =>  {
+    const countFollows = async () => {
+      try {
+        const res = await axiosInstance(`/api/count-follows/${user_id}`);
+        console.log(res.data);
+        setCounts(res.data);
+      } catch (error) {
+        console.error('failed fetching counts: ', error);
+      }
+    };
 
-    try {
-      const res = await axios.get('/api/check-auth', {
-        withCredentials: true,
-      });
+    const fetchUser = async () => {
+      try {
+        const res = await axiosInstance(`/api/user-info/${user_id}`);
+        console.log(res.data);
+        setUser(res.data);
+      } catch (error) {
+        console.error('failed fetching user data: ', error);
+      }
+    };
 
-      console.log('Getting user data successfully:', res.data);
-
-      setAuthUser(res.data.user);
-    } catch (error) {
-      console.error('Error fetching data:', error.response ? error.response.data : error.message);
-    }
-
-  }
-  fetchUser();
-}, [])
-
+    countFollows();
+    fetchUser();
+  }, []); // location が変更されたときにデータを再取得
 
   return (
     <>
-    {!authUser ? (
-      <div></div>
-    )
-    :
-    (
-      <>
-      <div>Profile</div>
-      <p>{authUser.name}</p>
-      <p>{authUser.password}</p>
-      </>
-    )}
-   
+      {!user ? (
+        <>
+        </>
+      ) : (
+        <>
+          <div className="fb mt-20">
+            <div className="box">
+              <div className="userInfo w-0.75 justify-center">
+                <div className="text-8xl flex items-center ">
+                  {user.avatar ? (
+                    <img 
+                    src={user.avatar} 
+                    alt="avatar"
+                    className="w-24 h-24 rounded-full object-cover" />
+                  ) : (
+                    <i className="fa-solid fa-user mx-10 w-24 h-24"></i>
+                  )}
+                </div>
+                <div className="mr-20">
+                  <div className="flex">
+                    <p className="text-2xl ml-9">{user.name}</p>
+                    { user.id == authUser.user_id ? (
+                      <Link
+                      to={'/edit-profile'}
+                      className="mx-10 p-1 px-6 bg-gray-500 rounded-md"
+                    >
+                      Edit
+                    </Link>
+                    )
+                    :
+                    (
+                    <></>
+                    ) }
+                    
+                  </div>
+                  {counts ? (
+                    <div className="ml-9 my-4 w-">
+                      <p className="text-xl inline">Posts</p>
+                      <Link to={`/follower/${user.id}`} className="ml-5 text-xl">
+                        Follower {counts.followerCount}
+                      </Link>
+                      <Link to={`/following/${user.id}`} className="ml-5 text-xl">
+                        Following {counts.followingCount}
+                      </Link>
+                    </div>
+                  ) : (
+                    <>Loading...</>
+                  )}
+                </div>
+              </div>
+              <div className="profile-contents w-3/4 mx-auto">
+                <div className="border-t border-white mt-20 mx-auto flex justify-center">
+                  <button
+                    className={`text-3xl mt-10 ${activeTab === 'post' ? 'font-bold' : ''}`}
+                    onClick={() => setActiveTab('post')}
+                  >
+                    Post
+                  </button>
+                  <button
+                    className={`text-3xl ml-20 mt-10 ${activeTab === 'like' ? 'font-bold' : ''}`}
+                    onClick={() => setActiveTab('like')}
+                  >
+                    Like Post
+                  </button>
+                  <button
+                    className={`text-3xl ml-20 mt-10 ${activeTab === 'own' ? 'font-bold' : ''}`}
+                    onClick={() => setActiveTab('own')}
+                  >
+                    Own Post
+                  </button>
+                </div>
+                <div className="mt-10 p-4">
+                  {activeTab === 'post' && <PostList id={user_id} imageSize="w-64 h-64" grid="grid-cols-4"/>}
+                  {activeTab === 'like' && <LikePostList id={user_id} />}
+                  {activeTab === 'own' && <OwnPostList id={user_id} />}
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;
