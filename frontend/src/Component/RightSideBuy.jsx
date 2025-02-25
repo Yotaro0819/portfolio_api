@@ -4,7 +4,7 @@ import axiosInstance from '../api/axios';
 import FollowButton from './FollowButton';
 import StripeButton from './StripeButton';
 
-const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
+const RightSideBuy = ( {post, authUser} ) => {
   const [user, setUser] = useState(null);
   console.log(post)
   console.log(user?.stripe_account_id)
