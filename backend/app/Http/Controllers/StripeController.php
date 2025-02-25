@@ -94,6 +94,7 @@ class StripeController extends Controller
         }
 
         Payment::create([
+            'session_id'      => $request->session_id,
             'payment_id'      => $paymentIntentId,
             'product_name'    => $paymentIntent->metadata->product_name,
             'quantity'        => $paymentIntent->metadata->quantity,
@@ -142,13 +143,15 @@ class StripeController extends Controller
         $stripe = new StripeClient(config('stripe.stripe_sk'));
 
         try {
-            $stripe->paymentIntents->cancel($paymentId);
+            $payment = Payment::where('payment_id', $paymentId)->first();
 
-            Payment::where('payment_id', $paymentId)->update(['payment_status' => 'canceled']);
+            $stripe->paymentIntents->cancel($paymentId);
+            $payment->update(['process_status' => 'canceled']);
+            $payment->update(['payment_status' => 'canceled']);
 
             return response()->json(['message' => 'The order canceled']);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to cancel order']);
+            return response()->json(['message' => 'Failed to cancel order', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -170,8 +173,8 @@ class StripeController extends Controller
 
         $accountLink = $stripe->accountLinks->create([
             'account' => $account->id,
-            'failure_url' => 'http://127.0.0.1:5173/payment/failure',
-            'success_url' => 'http://127.0.0.1:5173/payment/success',
+            'failure_url' => 'http://127.0.0.1:5173',
+            'success_url' => 'http://127.0.0.1:5173/edit-profile',
             'type' => 'account_onboarding',
         ]);
 

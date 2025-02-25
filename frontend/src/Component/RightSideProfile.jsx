@@ -7,6 +7,7 @@ const RightSideProfile = ({authUser}) => {
 const [counts, setCounts] = useState(null);
 const [avatar, setAvatar] = useState(null);
 
+console.log(avatar);
   useEffect(() => {
      const countFollows = async () => {
           try {
@@ -52,7 +53,7 @@ const [avatar, setAvatar] = useState(null);
                         src={avatar} 
                         alt="avatar"
                         className="w-24 h-24 rounded-full object-cover p-2"
-                        ></img>
+                        />
                         :
                         <i className="fa-solid fa-user w-20 h-20 flex rounded-full ml-4"></i>
                         }

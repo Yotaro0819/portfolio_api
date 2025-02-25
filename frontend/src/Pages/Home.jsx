@@ -80,6 +80,7 @@ export default function Home() {
                 postId={ post.id } 
                 isLiked={ post.isLiked } 
                 likeCount={ post.like_count } 
+                addClass={ "absolute top-2" }
                 />
                 <p className="mr-4 absolute top-2 right-1">{dayjs(post.created_at).format("YYYY/MM/DD HH:mm")}</p>
               </div>

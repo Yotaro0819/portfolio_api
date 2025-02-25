@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         $authUser = JWTAuth::parseToken()->authenticate();
 
-        $user = User::select('id', 'name', 'avatar')
+        $user = User::select('id', 'name', 'avatar', 'stripe_account_id')
         ->withCount(['followers', 'following'])
         ->findOrFail($id);
 

@@ -1,43 +1,12 @@
-import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import React from 'react'
+import { Link } from 'react-router-dom';
 
 const Success = () => {
-    const [searchParams] = useSearchParams();
-    const sessionId = searchParams.get("session_id");
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        const processPayment = async () => {
-            if (!sessionId) {
-                console.error("No session_id found");
-                return;
-            }
-
-            try {
-                const response = await fetch("http://127.0.0.1:8000/api/stripe/success", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ session_id: sessionId }),
-                });
-
-                const data = await response.json();
-
-                if (data.success_url) {
-                    navigate("/payment/complete"); // 成功画面へ遷移
-                } else if (data.failure_url) {
-                    navigate("/payment/failure"); // 失敗画面へ遷移
-                }
-            } catch (error) {
-                console.error("Error processing payment:", error);
-            }
-        };
-
-        processPayment();
-    }, [sessionId, navigate]);
-
-    return <div>Payment was successful!</div>
+    return  <div className="w-60 mx-auto">
+                <p className="text-white flex justify-center text-xl mt-20">Redirect to home</p>
+                <Link to={"/"} className="text-white text-3xl ml-10"><i className="fa-solid fa-arrow-left"></i>  Home</Link>
+            </div>
 };
 
 export default Success;

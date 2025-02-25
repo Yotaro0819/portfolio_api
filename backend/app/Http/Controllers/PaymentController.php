@@ -12,7 +12,7 @@ class PaymentController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        $orders = Payment::where('payer_id', $user->id)->where('process_status', 'pending')->get();
+        $orders = Payment::where('payer_id', $user->id)->where('process_status', 'pending')->with('payer:id,name')->get();
 
         return response()->json(['orders' => $orders]);
     }

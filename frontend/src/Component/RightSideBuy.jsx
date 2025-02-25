@@ -7,7 +7,7 @@ import StripeButton from './StripeButton';
 const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
   const [user, setUser] = useState(null);
   console.log(post)
-  console.log(user)
+  console.log(user?.stripe_account_id)
 
   useEffect(() => {
     if (post?.user_id) {
@@ -61,10 +61,14 @@ const RightSideBuy = ( {post, authUser, setMessage, config} ) => {
 
               { post.user_id !== authUser.user_id ? (
                 <div className="mx-auto w-40 flex mt-4 justify-center">
+                  {user?.stripe_account_id ? (
                   <StripeButton sellerId={post.user.id} title={post.title} price={post.price} ></StripeButton>
+                  ) : (
+                  <div>No selling</div>
+                  )}
               </div>
             ) : (
-              <div>
+              <div className="mx-auto w-40 flex mt-4 justify-center">
                 <p>Your post</p>
               </div>
             )}

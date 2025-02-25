@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axiosInstance from '../api/axios';
 
-const LikeButton = ({postId, isLiked, likeCount}) => {
+const LikeButton = ({postId, isLiked, likeCount, addClass}) => {
   const [liked, setLiked] = useState(isLiked);
   const [likeCounts, setLikeCounts] = useState(likeCount);
 
@@ -22,7 +22,7 @@ const LikeButton = ({postId, isLiked, likeCount}) => {
   }
 
   return (
-    <button onClick={handleLike} className="p-0 m-0 w-auto ml-4 absolute top-2">
+    <button onClick={handleLike} className={`p-0 m-0 w-auto ml-4 ${addClass}`}>
       {liked ? (
         <i className="fa-solid fa-heart"></i>
       ) : (
