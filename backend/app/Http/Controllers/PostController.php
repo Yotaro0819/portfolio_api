@@ -153,6 +153,10 @@ public function store(Request $request)
     {
         $post = Post::find($postId);
         if ($post) {
+
+            if($post->image) {
+                Storage::delete($post->image);
+            }
             $post->delete();
         }
 
