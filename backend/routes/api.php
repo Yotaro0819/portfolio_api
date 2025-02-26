@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJWT::class])->group(function () {
+    //posts
     Route::apiResource('posts', PostController::class);
 
     // profile
@@ -38,7 +39,11 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
     Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
+
+    //payments
     Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
+    Route::get('/get-purchases', [PaymentController::class, 'purchases']);
+    Route::get('/get-sales', [PaymentController::class, 'sales']);
 
     // comments
     Route::post('/comment/store', [CommentController::class, 'store']);
