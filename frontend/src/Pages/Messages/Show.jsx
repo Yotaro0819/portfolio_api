@@ -11,16 +11,17 @@ const Show = () => {
   const [messages, setMessages] = useState('');
   const { user_id } = useParams();
 
-  useEffect(() => {
-    const getMessage = async () => {
-      try {
-        const res = await axiosInstance(`/api/messages/show/${user_id}`);
-        console.log(res.data);
-        setMessages(res.data);
-      } catch (error) {
-        console.error('Failed to fetch messages: ', error);
-      }
+  const getMessage = async () => {
+    try {
+      const res = await axiosInstance(`/api/messages/show/${user_id}`);
+      console.log(res.data);
+      setMessages(res.data);
+    } catch (error) {
+      console.error('Failed to fetch messages: ', error);
     }
+  }
+
+  useEffect(() => {
     getMessage();
   }, []);
 
@@ -38,6 +39,7 @@ const Show = () => {
 
       console.log('Message sent successfully:', res.data);
       setSendMessage(''); 
+      getMessage();
       
     } catch (error) {
       console.error('Failed to send message: ', error);
