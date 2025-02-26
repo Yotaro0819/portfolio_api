@@ -16,7 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
-  const { ref, inView, entry } = useInView({});
+  const { ref, inView } = useInView({});
   const [link, setLink] = useState(null);
   const gridRef = useRef(null);
   const masonryRef = useRef(null);
@@ -114,9 +114,9 @@ export default function Home() {
         <div className="relative">
         <button 
           onClick={() => setShowProfile(!showProfile)} 
-          className="bg-black"
+
         >
-          <div>{showProfile ? <p className="p-2">Hide Profile</p> : <p className="p-2 mr-20 text-left rounded-l-md">Show Profile</p>}</div>
+          <div>{showProfile ? <p className="p-2 bg-gray-800 rounded-l-lg">Hide Profile</p> : <p className="p-2 text-center rounded-l-lg bg-gray-800">Show Profile</p>}</div>
         </button>
         </div>
         {showProfile && <RightSideProfile authUser={authUser} />}
