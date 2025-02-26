@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import LikeButton from '../Component/LikeButton.jsx';
 import SearchBar from '../Component/SearchBar.jsx';
 import dayjs from 'dayjs';
 import { useInView } from "react-intersection-observer";
-
+import Masonry from "masonry-layout";
 
 export default function Home() {
   const { authUser, setShowNav } = useContext(AppContext);
@@ -18,6 +18,27 @@ export default function Home() {
   const [showProfile, setShowProfile] = useState(false);
   const { ref, inView, entry } = useInView({});
   const [link, setLink] = useState(null);
+  const gridRef = useRef(null);
+  const masonryRef = useRef(null);
+
+  useEffect(() => {
+    if (gridRef.current) {
+      masonryRef.current = new Masonry(gridRef.current, {
+        itemSelector: ".masonry-item",
+        columnWidth: ".masonry-item",
+        percentPosition: true, 
+        gutter: 0,
+      });
+    }
+  }, [allPosts]);
+
+  useEffect(() => {
+    if (masonryRef.current) {
+      setTimeout(() => {
+        masonryRef.current.layout();
+      }, 100); // 遅延させてレイアウトを再計算
+    }
+  }, [showProfile]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -66,15 +87,15 @@ export default function Home() {
           :
           (
           <div className="overflow-auto" style={{height: "825px"}}>
-          <div className="flex flex-wrap">
+          <div className="masonry-grid" ref={gridRef}>
             {allPosts.map((post) => 
             ( 
-              <div key={post.id} className="relative"> 
+              <div key={post.id} className="masonry-item"> 
                 <Link to={{
                   pathname: `/post/${post.id}`,
                   state: {post}
                   }}>
-                <img className="h-auto" src={post.image} alt="post_image" style={{width: "280px"}}/>
+                <img className="h-auto" src={post.image} alt="post_image"/>
                 </Link>
                 <LikeButton 
                 postId={ post.id } 
