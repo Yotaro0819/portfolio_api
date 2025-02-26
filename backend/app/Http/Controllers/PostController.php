@@ -58,7 +58,7 @@ public function store(Request $request)
     $validator = Validator::make($request->all(), [
         'title' => 'required|max:255',
         'body'  => 'required',
-        'image' => 'required|image', // 画像ファイルであることを明示
+        'image' => 'required|image',
         'price' => 'required|numeric|min:0',
     ]);
 
@@ -71,12 +71,6 @@ public function store(Request $request)
     }
 
     try {
-        // $fields = $request->validate([
-        //     'title' => 'required|max:255',
-        //     'body'  => 'required',
-        //     'image' => 'required',
-        //     'price' => 'required|numeric|min:0',
-        // ]);
 
         $fields = $request->all();
 
