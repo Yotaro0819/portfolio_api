@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import FollowButton from './FollowButton';
 import StripeButton from './StripeButton';
 
 const RightSideBuy = ( {post, authUser} ) => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   console.log(post)
   console.log(user?.stripe_account_id)
+
+
 
   useEffect(() => {
     if (post?.user_id) {
@@ -25,6 +28,16 @@ const RightSideBuy = ( {post, authUser} ) => {
       fetchUser();
     }
   }, [post]);  // postが変わるたびに実行
+
+  const handleDelete = async () => {
+    try {
+      const res = await axiosInstance.delete(`/api/posts/${post.id}`);
+      console.log("Deleted this post", res.data);
+      navigate('/');
+    } catch (error) {
+      console.error('Failed to delete this post: ', error);
+    }
+  }
   
 
   return (
@@ -68,8 +81,10 @@ const RightSideBuy = ( {post, authUser} ) => {
                   )}
               </div>
             ) : (
-              <div className="mx-auto w-40 flex mt-4 justify-center">
+              <div className="block text-center mx-auto w-40 mt-4 ">
                 <p>Your post</p>
+                <button onClick={handleDelete} className="block mt-4 w-50 mx-auto bg-red-400 px-2 rounded-md">Delete this post</button>
+
               </div>
             )}
             
