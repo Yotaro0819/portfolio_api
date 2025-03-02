@@ -51,7 +51,7 @@ export default function Layout() {
 
               <> 
                 <div>
-                <p className="text-white my-2.5 block text-2xl">Welcome Back!</p>
+                <p className="text-white my-2.5 block text-2xl">Welcome Back {authUser.name}!</p>
                 </div>
                 <div>
                 <Link to="/" className="nav-link m-5 block"><p className="text-2xl">Home</p></Link>
