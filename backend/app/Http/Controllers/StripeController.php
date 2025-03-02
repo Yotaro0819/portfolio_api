@@ -129,8 +129,11 @@ class StripeController extends Controller
 
             if(!$payment) return response()->json(['message' => 'The order not found']);
 
-            $stripe->paymentIntents->capture($paymentId);
-            $payment->update(['payment_status' => 'succeded']);
+            $intent = $stripe->paymentIntents->capture($paymentId);
+            $payment->update([
+                'payment_status' => $intent->status,
+                'process_status' => 'paid'
+            ]);
 
             return response()->json(['message' => 'Capture is successful']);
         } catch(\Exception $e) {

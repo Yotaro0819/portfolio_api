@@ -47,6 +47,16 @@ const OngoingOrders = () => {
       console.error('Failed to cancel the order: ', error);
     }
   }
+  
+  const handleCapture = async (paymentId) => {
+    try {
+      const res = await axiosInstance.post(`/api/stripe/${paymentId}/capture`);
+      console.log(res.data);
+      fetchOrders();
+    } catch (error) {
+      console.error('Failed to capture the order: ', error);
+    }
+  }
 
   return (
     <>
@@ -64,21 +74,21 @@ const OngoingOrders = () => {
 
           <div className="border border-white w-full bg-gray-400">
             <div className="flex">
-              <p className="w-20 text-center">Order ID</p>
-              <p className="w-64 text-center">Customer Name</p>
-              <p className="w-40 text-center">Order ID</p>
+
+              <p className="w-40 text-center">Customer Name</p>
+              <p className="w-64 text-center">Order ID</p>
               <p className="w-72 text-center">Item Name</p>
             </div>
             <div className="overflow-auto h-5/6">
           {orders ? (
             orders.map((order) => {
               return (
-                <>
+                <div key={order.id}>
                 {order.process_status == 'pending' ? (
-                  <div className="flex py-2 border" key={order.id}>
-                  <p className="w-20 text-center">{order.id}</p>
-                  <p className="w-64 text-center">{order.payment_id}</p>
+                  <div className="flex py-2 border">
+
                   <p className="w-40 text-center">{order.payer.name}</p>
+                  <p className="w-64 text-center">{order.payment_id}</p>
                   <p className="w-72 text-center">{order.product_name}</p>
                     { authUser.user_id == order.seller_id ? (
                     <button 
@@ -105,11 +115,15 @@ const OngoingOrders = () => {
                     <p className="w-64 text-center">{order.payment_id}</p>
                     <p className="w-40 text-center">{order.payer.name}</p>
                     <p className="w-72 text-center">{order.product_name}</p>
-                    <p className="mr-4">Confirm</p>
+                    <button
+                    onClick={() => {handleCapture(order.payment_id)}}
+                    className="btn bg-blue-500 px-2 rounded mr-5"
+                    >Confirm</button>
 
                     <button 
                     onClick={() => {handleCancel(order.payment_id)}}
-                    className="btn bg-red-400 px-2 rounded mr-5">Cancel
+                    className="btn bg-red-400 px-2 rounded mr-5">
+                      Cancel
                     </button>
                   </div>
                   ) 
@@ -119,7 +133,7 @@ const OngoingOrders = () => {
                   )}
                   </>
                 )}
-                </>
+                </div>
               )
             })
           ) : (

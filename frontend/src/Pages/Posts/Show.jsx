@@ -5,6 +5,7 @@ import RightSideBuy from '../../Component/RightSideBuy';
 import { AppContext } from '../../Context/AppContext';
 import axiosInstance from '../../api/axios';
 import LikeButton from '../../Component/LikeButton';
+import dayjs from 'dayjs';
 
 const Show = () => {
   const { authUser } = useContext(AppContext);
@@ -13,16 +14,37 @@ const Show = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [comment, setComment] = useState('');
+  const [allComments, setAllComments] = useState([]);
+  const [selectedComment, setSelectedComment] = useState(null);
 
   // console.log(post_id)
   // console.log(post)
   console.log(comment);
 
   const openModal = () => setIsModalOpen(true);
+  const openModal2 = (comment) => {
+    setIsModalOpen2(true);
+    setSelectedComment(comment)
+  }
 
   // モーダルを閉じる
   const closeModal = () => setIsModalOpen(false);
+  const closeModal2 = () => {
+    setIsModalOpen2(false);
+    setSelectedComment(null);
+  }
+
+  const fetchComment = async () => {
+    try {
+      const res = await axiosInstance(`/api/comments/${post_id}`)
+      console.log(res.data);
+      setAllComments(res.data);
+    } catch (error) {
+      console.error('Failed fetching comment: ', error);
+    }
+  }
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -34,8 +56,9 @@ const Show = () => {
         console.error('failed fetching post: ', error);
       }
     }
-
+    
     fetchPost();
+    fetchComment();
   },[])
 
   const handleSubmit = async (e) => {
@@ -53,6 +76,8 @@ const Show = () => {
       console.error('failed post your comment: ', error);
       localStorage.removeItem('authUser');
     }
+
+    fetchComment();
   }
  
   return (
@@ -85,6 +110,33 @@ const Show = () => {
                     <div className="mt-2">
                       <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
                     </div>
+                    <div className="h-32 overflow-auto">
+                      {allComments.map((comment) => {
+                        return (
+                          <div key={comment.id} className="bg-gray-400 border p-2">
+                            <button onClick={()=> {openModal2(comment)}} className="w-full text-left p-3">
+                              <div className="flex items-center">
+                                <div>
+                                  {comment.user.avatar ? (
+                                    <img 
+                                    src={comment.user.avatar}
+                                    alt={comment.user.avatar}
+                                    className="w-10 h-10 rounded-full object-cover"
+                                    />
+                                  ) : (
+                                    <i className="fa-solid fa-user inline"></i>
+                                  )}
+                                </div>
+                                <p className="font-bold ml-3">{comment.user.name}</p>
+                              </div>
+                              
+                              <p className="break-words">{comment.body}</p>
+                              <p className="text-right">{dayjs(comment.created_at).format("YYYY/MM/DD HH:mm")}</p>
+                            </button>
+                          </div>
+                        )
+                      })}
+                    </div>
                     <button
                       className="comment-btn bg-blue-500 text-white p-2"
                       onClick={openModal}
@@ -112,6 +164,27 @@ const Show = () => {
                       </button>
                     </div>
                   </form>
+                </div>
+              </div>
+            )}
+
+            {isModalOpen2 && (
+              <div className="modal-overlay" onClick={closeModal2}>
+                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <Link to={`/profile/${selectedComment.user_id}`}>
+                    <div className="flex items-center m-2">
+                      {selectedComment.user.avatar ? (
+                        <img src={selectedComment.user.avatar} alt={selectedComment.user.avatar}
+                        className="w-16 h-16 rounded-full object-cover"
+                        />
+                      ):(
+                        <i className="fa-solid fa-user inline"></i>
+                      )}
+                      <h2 className="text-2xl ml-3">{selectedComment.user.name}</h2>
+                    </div>
+                  </Link>
+                  <p className="h-20 bg-gray-400 p-1 break-words">{selectedComment.body}</p>
+                  <p className="text-right">{dayjs(selectedComment.created_at).format("YYYY/MM/DD HH:mm")}</p>
                 </div>
               </div>
             )}
