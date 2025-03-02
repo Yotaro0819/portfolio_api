@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios.js';
 import RightSideProfile from '../Component/RightSideProfile.jsx';
 import LikeButton from '../Component/LikeButton.jsx';
@@ -24,6 +24,7 @@ export default function Home() {
   const masonryRef = useRef(null);
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if(location.state?.deleted) {
@@ -31,8 +32,9 @@ export default function Home() {
         position: "top-right",
         autoClose: 1500,
       })
+      navigate("/", { replace: true, state: {} });
     }
-  }, [location])
+  }, [location, navigate])
 
   useEffect(() => {
     if (gridRef.current) {
