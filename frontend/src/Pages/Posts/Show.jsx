@@ -6,6 +6,8 @@ import { AppContext } from '../../Context/AppContext';
 import axiosInstance from '../../api/axios';
 import LikeButton from '../../Component/LikeButton';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Show = () => {
   const { authUser } = useContext(AppContext);
@@ -56,7 +58,7 @@ const Show = () => {
         console.error('failed fetching post: ', error);
       }
     }
-    
+
     fetchPost();
     fetchComment();
   },[])
@@ -69,17 +71,25 @@ const Show = () => {
         comment: comment,
       });
       console.log(res.data);
-      // setMessage('Your comment is sended');
+
+      toast.success("You posted comment!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+
       closeModal();
     } catch (error) {
-      setMessage('Canceled to send your message');
+      toast.error("Failed to post your comment...", {
+        position: "top-right",
+        autoClose: 1500,
+      });
       console.error('failed post your comment: ', error);
       localStorage.removeItem('authUser');
     }
 
     fetchComment();
   }
- 
+
   return (
     <>
       <div>
