@@ -3,6 +3,8 @@ import { AppContext } from '../../Context/AppContext';
 import ConnectStripe from '../../Component/StripeConnect';
 import axiosInstance from '../../api/axios';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditProfile = () => {
   const { authUser } = useContext(AppContext);
@@ -62,8 +64,15 @@ const EditProfile = () => {
         new_password: newPassword,
         new_password_confirmation: newPasswordConfirmation,
       });
-      console.log(res.data);
+      toast.success("You successfully changed the password!", {
+        position: "top-right",
+        autoClose: 2000,
+      }) 
     } catch (error) {
+      toast.error("You failed to change the password...", {
+        position: "top-right",
+        autoClose: 2000,
+      })
       console.error('Failed to update password: ', error);
     }
   }
@@ -74,9 +83,16 @@ const EditProfile = () => {
       const res = await axiosInstance.patch('/api/change-website', {
         website: website,
       })
-      console.log(res.data);
+      toast.success(`You successfully changed your website! ${website}`, {
+        position: "top-right",
+        autoClose: 2000,
+      })
       setMessage(res.data.message);
     } catch (error) {
+      toast.error("You failed to change your website...", {
+        position: "top-right",
+        autoClose: 2000,
+      })
       const errors = error.response.data.errors;
       setError(errors.website);
       console.error('Failed to update websiteUrl:', error);

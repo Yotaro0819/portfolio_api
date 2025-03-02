@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axiosInstance from '../api/axios.js';
 import RightSideProfile from '../Component/RightSideProfile.jsx';
 import LikeButton from '../Component/LikeButton.jsx';
@@ -9,6 +9,8 @@ import SearchBar from '../Component/SearchBar.jsx';
 import dayjs from 'dayjs';
 import { useInView } from "react-intersection-observer";
 import Masonry from "masonry-layout";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
   const { authUser, setShowNav } = useContext(AppContext);
@@ -20,6 +22,17 @@ export default function Home() {
   const [link, setLink] = useState(null);
   const gridRef = useRef(null);
   const masonryRef = useRef(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if(location.state?.deleted) {
+      toast.success('Your post deleted', {
+        position: "top-right",
+        autoClose: 1500,
+      })
+    }
+  }, [location])
 
   useEffect(() => {
     if (gridRef.current) {

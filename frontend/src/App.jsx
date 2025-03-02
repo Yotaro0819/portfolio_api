@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext, useEffect } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../src/styles/App.css';
 import Layout from "./Pages/Layout";
 import Home from "./Pages/Home";
@@ -43,6 +45,8 @@ function App() {
 
 
   return (
+    <>
+    <ToastContainer position="top-right" autoClose={3000} />
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={authUser ? <Home /> : <Login />} />
@@ -63,6 +67,7 @@ function App() {
       <Route path="/payment/success" element={authUser ? <Success /> : <Login />} />
       <Route path="/payment/failure" element={authUser ? <Cancel /> : <Login />} />
     </Routes>
+    </>
   );
 }
 
