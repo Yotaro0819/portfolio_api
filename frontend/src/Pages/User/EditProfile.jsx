@@ -14,6 +14,7 @@ const EditProfile = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState('');
+  const [bio, setBio] = useState('');
   const [website, setWebsite] = useState(''); 
   const [message, setMessage] = useState('');
 
@@ -74,6 +75,26 @@ const EditProfile = () => {
         autoClose: 2000,
       })
       console.error('Failed to update password: ', error);
+    }
+  }
+
+  const handleBio = async () => {
+    try {
+      const res = await axiosInstance.patch('/api/change-bio', {
+        bio: bio,
+      })
+      toast.success('You successfully changed your introduction!', {
+        position: "top-right",
+        autoClose: 1500,
+      })
+      setMessage(res.data.message);
+    } catch (error) {
+      toast.error("You failed to change your introduction...", {
+        position: "top-right",
+        autoClose: 1500,
+      })
+      const errors = error.response.data.errors;
+      setError(errors.bio);
     }
   }
 
@@ -155,7 +176,14 @@ const EditProfile = () => {
             <textarea 
             rows="6" 
             className="block px-2 py-1 text-white bg-gray-500 mt-1 mx-auto w-3/4"
-            placeholder="Post Content"
+            placeholder="Enter your introduction..."
+            onChange={(e) => setBio(e.target.value)}
+            onKeyDown={(e) => {
+              if(e.key === "Enter") {
+                e.preventDefault();
+                handleBio();
+              }
+            }}
             />
         </div>
         <div className="p-4">

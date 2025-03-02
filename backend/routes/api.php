@@ -34,6 +34,7 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
     Route::patch('/avatar-update', [ProfileController::class, 'uploadAvatar']);
     Route::patch('/change-password', [ProfileController::class, 'updatePassword']);
     Route::patch('/change-website', [ProfileController::class, 'updateWebsite']);
+    Route::patch('/change-bio', [ProfileController::class, 'updateBio']);
 
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
