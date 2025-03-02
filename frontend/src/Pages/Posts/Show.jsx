@@ -119,6 +119,7 @@ const Show = () => {
 
                     <div className="mt-2">
                       <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
+                      <button onClick={() => {openModal2()}}><i class="fa-regular fa-comment ml-3 text-xl"></i></button>
                     </div>
                     <div className="h-32 overflow-auto bg-gray-600 border rounded">
                       {allComments && allComments.length > 0 ? (
