@@ -120,32 +120,43 @@ const Show = () => {
                     <div className="mt-2">
                       <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
                     </div>
-                    <div className="h-32 overflow-auto">
-                      {allComments.map((comment) => {
-                        return (
-                          <div key={comment.id} className="bg-gray-400 border p-2">
-                            <button onClick={()=> {openModal2(comment)}} className="w-full text-left p-3">
-                              <div className="flex items-center">
-                                <div>
-                                  {comment.user.avatar ? (
-                                    <img 
-                                    src={comment.user.avatar}
-                                    alt={comment.user.avatar}
-                                    className="w-10 h-10 rounded-full object-cover"
-                                    />
-                                  ) : (
-                                    <i className="fa-solid fa-user inline"></i>
-                                  )}
+                    <div className="h-32 overflow-auto bg-gray-600 border rounded">
+                      {allComments && allComments.length > 0 ? (
+                        <>
+                        {allComments.map((comment) => {
+                          return (
+                            <div key={comment.id} className="bg-gray-600 border p-2 rounded">
+                              <button onClick={()=> {openModal2(comment)}} className="w-full text-left p-3">
+                                <div className="flex items-center">
+                                  <div>
+                                    {comment.user.avatar ? (
+                                      <img 
+                                      src={comment.user.avatar}
+                                      alt={comment.user.avatar}
+                                      className="w-10 h-10 rounded-full object-cover"
+                                      />
+                                    ) : (
+                                      <i className="fa-solid fa-user inline"></i>
+                                    )}
+                                  </div>
+                                  <p className="font-bold ml-3">{comment.user.name}</p>
                                 </div>
-                                <p className="font-bold ml-3">{comment.user.name}</p>
-                              </div>
-                              
-                              <p className="break-words">{comment.body}</p>
-                              <p className="text-right">{dayjs(comment.created_at).format("YYYY/MM/DD HH:mm")}</p>
-                            </button>
-                          </div>
-                        )
-                      })}
+                                
+                                <p className="break-words">{comment.body}</p>
+                                <p className="text-right">{dayjs(comment.created_at).format("YYYY/MM/DD HH:mm")}</p>
+                              </button>
+                            </div>
+                          )
+                        })}
+                        </>
+                      ) : (
+                        <button onClick={() => {openModal2()}} className="h-full w-full">
+                        <div className="bg-gray-600">
+                          <p>No comments yet.</p>
+                        </div>
+                        </button>
+                      ) }
+                      
                     </div>
                     <button
                       className="comment-btn bg-blue-500 text-white p-2"
@@ -159,7 +170,7 @@ const Show = () => {
 
             {isModalOpen && (
               <div className="modal-overlay" onClick={closeModal}>
-                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                <div className="modal-content w-2/6 p-5" onClick={(e) => e.stopPropagation()}>
                   <h3 className="modal-title">Leave a Comment</h3>
                   <form onSubmit={handleSubmit}>
                     <textarea
@@ -180,21 +191,46 @@ const Show = () => {
 
             {isModalOpen2 && (
               <div className="modal-overlay" onClick={closeModal2}>
-                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                  <Link to={`/profile/${selectedComment.user_id}`}>
-                    <div className="flex items-center m-2">
-                      {selectedComment.user.avatar ? (
-                        <img src={selectedComment.user.avatar} alt={selectedComment.user.avatar}
-                        className="w-16 h-16 rounded-full object-cover"
-                        />
-                      ):(
-                        <i className="fa-solid fa-user inline"></i>
-                      )}
-                      <h2 className="text-2xl ml-3">{selectedComment.user.name}</h2>
+                <div className="modal-content w-4/6 h-5/6" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex h-5/6">
+                    <div className="w-1/2 flex items-center" style={{ height: "650px"}}>
+                      <img src={post.image} alt={post.image}  className="p-5 h-full mt-5 object-cover" />
                     </div>
-                  </Link>
-                  <p className="h-20 bg-gray-400 p-1 break-words">{selectedComment.body}</p>
-                  <p className="text-right">{dayjs(selectedComment.created_at).format("YYYY/MM/DD HH:mm")}</p>
+                    <div className="w-1/2 pt-5">
+                      <div className="overflow-auto" style={{ height: "650px"}}>
+                        {allComments && allComments.length > 0 ? (<>
+                          {allComments.map((comment) => {
+                            return (
+                              <div className="border-b border-t p-4" key={comment.id}>
+                                <Link to={`/profile/${comment.user_id}`}>
+                                <div className="flex items-center m-2">
+                                  {comment.user.avatar ? (
+                                    <img src={comment.user.avatar} alt={comment.user.avatar}
+                                    className="w-16 h-16 rounded-full object-cover"
+                                    />
+                                  ):(
+                                    <i className="fa-solid fa-user inline"></i>
+                                  )}
+                                  <h2 className="text-2xl ml-3">{comment.user.name}</h2>
+                                </div>
+                                <p className="h-20 bg-gray-600 p-1 break-words rounded">{comment.body}</p>
+                                <p className="text-right">{dayjs(comment.created_at).format("YYYY/MM/DD HH:mm")}</p>
+                                </Link>
+                              </div>
+                            )
+                          })}
+                        </>):
+                        (
+                        <button className="h-5/6 inline w-full" onClick={closeModal2}>
+                          <p className="text-center text-2xl">No comments yet.</p>
+                        </button>
+                      )}
+                        
+                      </div>
+                    </div>
+                    
+                  </div>
+                
                 </div>
               </div>
             )}

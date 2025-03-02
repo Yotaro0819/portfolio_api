@@ -103,8 +103,7 @@ margin: 0 auto;
 .modal-content {
   background-color: #2d2d2d;
   border-radius: 10px;
-  padding: 20px;
-  width: 400px;
+  /* padding: 20px; */
   opacity: 0;
   animation: fadeIn 0.3s ease-out forwards;
 }
@@ -123,19 +122,6 @@ margin: 0 auto;
   border-radius: 5px;
   cursor: pointer;
 }
-
-/* 
-.bg-blue-500 {
-  background-color: #3b82f6;
-}
-
-.bg-green-500 {
-  background-color: #10b981;
-}
-
-.bg-red-500 {
-  background-color: #ef4444;
-} */
 
 textarea {
   margin-top: 10px;
