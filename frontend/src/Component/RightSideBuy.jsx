@@ -7,7 +7,14 @@ import StripeButton from './StripeButton';
 const RightSideBuy = ( {post, authUser} ) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  
   console.log(user)
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  
+
 
   useEffect(() => {
     if (post?.user_id) {
@@ -30,7 +37,7 @@ const RightSideBuy = ( {post, authUser} ) => {
     try {
       const res = await axiosInstance.delete(`/api/posts/${post.id}`);
       console.log("Deleted this post", res.data);
-      navigate('/');
+      navigate('/', { state: {deleted: true} });
     } catch (error) {
       console.error('Failed to delete this post: ', error);
     }
@@ -80,12 +87,23 @@ const RightSideBuy = ( {post, authUser} ) => {
             ) : (
               <div className="block text-center mx-auto w-40 mt-4 ">
                 <p>Your post</p>
-                <button onClick={handleDelete} className="block mt-4 w-50 mx-auto bg-red-400 px-2 rounded-md">Delete this post</button>
+                <button onClick={openModal} className="block mt-4 w-50 mx-auto bg-red-400 px-2 rounded-md">Delete this post</button>
 
               </div>
             )}
-            
+
+            {isModalOpen && (
+              <div className="modal-overlay" onClick={closeModal}>
+                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                  <p className="text-center">Are you sure you delete this post?</p>
+                  <button onClick={handleDelete} className="block mt-4 w-50 mx-auto bg-red-400 px-2 rounded-md">Delete this post</button>
+                </div>
+              </div>
+            )}
+
           </div>
+
+          
   )
 }
 
