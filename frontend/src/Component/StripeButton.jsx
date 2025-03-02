@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axiosInstance from '../api/axios';
 
-const StripeButton = ({sellerId, title, price}) => {
+const StripeButton = ({postId, sellerId, title, price}) => {
   const [loading, setLoading] = useState(false);
   
   const handleClick = async () => {
@@ -10,6 +10,7 @@ const StripeButton = ({sellerId, title, price}) => {
       const res = await axiosInstance.post(`/api/stripe/create-order/${sellerId}`, {
         title,
         price,
+        postId,
       });
       if(res.data.checkout_url) {
         window.location.href = res.data.checkout_url;

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Stripe\StripeClient;
@@ -16,10 +17,12 @@ class StripeController extends Controller
         $request->validate([
             'title' => 'required|string',
             'price' => 'required|numeric',
+            'postId' => 'required|exists:posts,id'
         ]);
 
         $seller = User::findOrFail($id);
         $payer  = JWTAuth::parseToken()->authenticate();
+
 
         if(!$seller->stripe_account_id) {
             return response()->json(['error' => 'This user have not registered Stripe yet.'],400);
@@ -46,6 +49,7 @@ class StripeController extends Controller
                     'destination' => $seller->stripe_account_id,
                 ],
                 'metadata' => [
+                    'post_id' => $request->postId,
                     'payer_id' => $payer->id,
                     'seller_id' => $seller->id,
                     'product_name' => $request->title,
@@ -87,6 +91,7 @@ class StripeController extends Controller
 
         $paymentIntentId = $paymentIntent->id;
         $paymentStatus = $paymentIntent->status;
+        $postId = $paymentIntent->metadata->post_id;
         $sellerId = $paymentIntent->metadata->seller_id;
         $seller = User::find($sellerId);
         if(!$seller) {
@@ -100,6 +105,7 @@ class StripeController extends Controller
             'quantity'        => $paymentIntent->metadata->quantity,
             'amount'          => $paymentIntent->metadata->price,
             'currency'        => $paymentIntent->currency,
+            'post_id'         => $postId,
             'payer_id'        => $paymentIntent->metadata->payer_id,
             'seller_id'       => $sellerId,
             'seller_stripe_account_id' => $seller->stripe_account_id,
@@ -113,9 +119,11 @@ class StripeController extends Controller
 
     public function approve($paymentId)
     {
-        $payment = Payment::where('payment_id', $paymentId);
+        $payment = Payment::where('payment_id', $paymentId)->first();
+        $post    = Post::where('id', $payment->post_id);
 
         $payment->update(['process_status' => 'approved']);
+        $post->update(['owner_id' => $payment->payer_id]);
 
         return response()->json(['message' => 'The order approved']);
     }
@@ -150,12 +158,15 @@ class StripeController extends Controller
             if (!$payment) {
                 return response()->json(['message' => 'Payment not found'], 404);
             }
+            $post = Post::where('id', $payment->post_id);
+
 
             $paymentIntentId = $payment->payment_id;
 
             $stripe->paymentIntents->cancel($paymentIntentId);
 
             $payment->update(['process_status' => 'canceled']);
+            $post->update(['owner_id' => $payment->seller_id]);
 
             return response()->json(['message' => 'The order has been canceled']);
         } catch (\Exception $e) {
