@@ -178,7 +178,8 @@ const Show = () => {
                       className="bg-gray-600 text-white p-3 w-full comment-form h-60"
                       placeholder="Type your comment here..."
                       value={comment}
-                      onChange={(e) => setComment(e.target.value)} // コメントの内容を更新
+                      onChange={(e) => setComment(e.target.value)}
+                      autoFocus // コメントの内容を更新
                     />
                     <div className="button-group">
                       <button type="submit" className="bg-green-500 text-white px-2 mt-4 rounded">
@@ -195,7 +196,7 @@ const Show = () => {
                 <div className="modal-content w-4/6 h-5/6" onClick={(e) => e.stopPropagation()}>
                   <div className="flex h-5/6">
                     <div className="w-1/2 flex items-center" style={{ height: "650px"}}>
-                      <img src={post.image} alt={post.image}  className="p-5 h-full mt-5 object-cover" />
+                      <img src={post.image} alt={post.image}  className="p-5 mt-5" />
                     </div>
                     <div className="w-1/2 pt-5">
                       <div className="overflow-auto" style={{ height: "650px"}}>
