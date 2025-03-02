@@ -9,6 +9,26 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CommentController extends Controller
 {
+    public function getComments($id)
+    {
+        $comments = Comment::where('post_id', $id)
+                            ->with(['user:id,name,avatar'])
+                            ->get()
+                            ->map(function ($comment) {
+                                if ($comment->user->avatar) {
+                                    $avatar = $comment->user->avatar;
+
+                                    // すでに http から始まるならそのまま、それ以外ならフルパスに変換
+                                    if (!str_starts_with($avatar, 'http')) {
+                                        $comment->user->avatar = asset('storage/' . ltrim($avatar, '/'));
+                                    }
+                                }
+                                return $comment;
+                            });
+
+        return response()->json($comments);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
