@@ -46,6 +46,7 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
     Route::get('/get-sales', [PaymentController::class, 'sales']);
 
     // comments
+    Route::get('/comments/{id}', [CommentController::class, 'getComments']);
     Route::post('/comment/store', [CommentController::class, 'store']);
 
     // messages
