@@ -13,6 +13,7 @@ class Payment extends Model
         'quantity',
         'amount',
         'currency',
+        'post_id',
         'payer_id',
         'seller_id',
         'seller_stripe_account_id',

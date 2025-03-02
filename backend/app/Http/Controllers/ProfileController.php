@@ -93,4 +93,24 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Website url is successfully changed!']);
     }
 
+    public function updateBio(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'bio' => 'nullable|max:255',
+        ], [
+            'bio.max' => 'Too long your introduction',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = JWTAuth::parseToken()->authenticate();
+        $user->update(['bio' => $request->bio]);
+
+        return response()->json(['message' => 'Bio is successfully changed!']);
+    }
+
 }

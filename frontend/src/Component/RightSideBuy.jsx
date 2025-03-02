@@ -79,7 +79,7 @@ const RightSideBuy = ( {post, authUser} ) => {
               { post.user_id !== authUser.user_id ? (
                 <div className="mx-auto w-40 flex mt-4 justify-center">
                   {user?.stripe_account_id ? (
-                  <StripeButton sellerId={post.user.id} title={post.title} price={post.price} ></StripeButton>
+                  <StripeButton postId={post.id} sellerId={post.user.id} title={post.title} price={post.price} ></StripeButton>
                   ) : (
                   <div>No selling</div>
                   )}
