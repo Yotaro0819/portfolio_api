@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import FollowButton from './FollowButton';
 import StripeButton from './StripeButton';
+import { AppContext } from '../Context/AppContext';
 
 const RightSideBuy = ( {post, authUser} ) => {
   const [user, setUser] = useState(null);
@@ -66,7 +67,9 @@ const RightSideBuy = ( {post, authUser} ) => {
           <div className="flex my-4 align-center">
             <Link to={`/follower/${user?.id}`} className="mt-1">follower {user?.followers_count}</Link>
             <Link to={`/following/${user?.id}`} className="mx-4 mt-1">following {user?.following_count}</Link>
+            {user?.id != authUser.user_id && (
             <FollowButton userId={user?.id} isFollowing={user?.isFollowing}></FollowButton>
+            )}
           </div>
         </div>
       </div>
