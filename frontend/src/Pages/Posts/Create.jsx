@@ -4,6 +4,8 @@ import PriceInput from '../../Component/PriceInput.jsx';
 import axiosInstance from '../../api/axios.js';
 import RightSideProfile from '../../Component/RightSideProfile.jsx';
 import { AppContext } from '../../Context/AppContext.jsx';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Create = () => {
     const { authUser } = useContext(AppContext);
@@ -52,12 +54,18 @@ const Create = () => {
       const res = await axiosInstance.post('/api/posts', data, {
         withCredentials: true,
       });
-      console.log('Post created successfully:', res.data);
+      toast.success("You posted new post!", {
+        position: "top-right",
+        autoClose: 1500,
+      })
 
       setFormData({ title: "", body: "", price: "", image: null });
       setImagePreview(null);
     } catch (error) {
-      console.error('Error creating post:', error.response ? error.response.data : error.message);
+      toast.error("You failed to post new post...", {
+        position: "top-right",
+        autoClose: 1500,
+      })
       setErrors(error.response.data);
       localStorage.removeItem('authUser');
     }
