@@ -7,10 +7,7 @@ import StripeButton from './StripeButton';
 const RightSideBuy = ( {post, authUser} ) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  console.log(post)
-  console.log(user?.stripe_account_id)
-
-
+  console.log(user)
 
   useEffect(() => {
     if (post?.user_id) {

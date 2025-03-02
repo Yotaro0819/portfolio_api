@@ -24,4 +24,28 @@ class PaymentController extends Controller
 
         return response()->json(['orders' => $orders]);
     }
+
+    public function purchases()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $purchases = Payment::where('payer_id', $user->id)
+                            ->where('process_status', 'paid')
+                            ->with('seller:id,name')
+                            ->get();
+
+        return response()->json(['purchases' => $purchases]);
+    }
+
+    public function sales()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $sales = Payment::where('seller_id', $user->id)
+                        ->where('process_status', 'paid')
+                        ->with('payer:id,name')
+                        ->get();
+
+        return response()->json(['sales' => $sales]);
+    }
 }
