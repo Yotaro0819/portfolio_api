@@ -95,8 +95,11 @@ const Profile = () => {
                   )}
                 </div>
               </div>
+              <div className="w-1/2 mx-auto p-3 h-40">
+              <p className="text-xl">{user.bio}</p>
+              </div>
               <div className="profile-contents w-3/4 mx-auto">
-                <div className="border-t border-white mt-20 mx-auto flex justify-center">
+                <div className="border-t border-white mt-10 mx-auto flex justify-center">
                   <button
                     className={`text-3xl mt-10 ${activeTab === 'post' ? 'font-bold' : ''}`}
                     onClick={() => setActiveTab('post')}
