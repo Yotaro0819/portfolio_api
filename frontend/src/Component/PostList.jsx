@@ -40,7 +40,7 @@ const PostList = ({id, imageSize, grid}) => {
       ) 
       :
       (
-        <div className="text-xl text-center">No posts.</div>
+        <div className="text-center text-4xl mr-10">No posts yet.</div>
       )}
     </div>
   )

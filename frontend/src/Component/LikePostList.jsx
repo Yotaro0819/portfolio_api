@@ -20,7 +20,7 @@ const LikePostList = ({id}) => {
   },[])
   return (
     <div className="contrast-less">
-    { likePosts ? 
+    { likePosts && likePosts.length > 0 ? 
     (
       <div className="grid grid-cols-4">
       {likePosts.map((post) => (
