@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('quantity');
             $table->string('amount');
             $table->string('currency');
+            $table->string('post_id');
             $table->string('payer_id');
             $table->string('seller_id');
             $table->string('seller_stripe_account_id');
