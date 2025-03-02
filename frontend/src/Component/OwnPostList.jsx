@@ -20,7 +20,7 @@ const OwnPostList = ({id}) => {
   },[])
   return (
     <div className="contrast-less">
-    { ownPosts ? 
+    { ownPosts && ownPosts.length > 0 ? 
     (
       <div className="grid grid-cols-4">
       {ownPosts.map((post) => (
