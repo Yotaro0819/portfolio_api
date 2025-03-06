@@ -95,7 +95,7 @@ const Profile = () => {
                   )}
                 </div>
               </div>
-              <div className="w-1/2 mx-auto p-3 h-40">
+              <div className="w-1/2 mx-auto p-3 h-24">
               <p className="text-xl">{user.bio}</p>
               </div>
               <div className="profile-contents w-3/4 mx-auto">
