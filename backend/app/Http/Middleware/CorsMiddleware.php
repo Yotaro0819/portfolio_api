@@ -12,7 +12,7 @@ class CorsMiddleware
     {
         $response = $next($request);
 
-        $allowedOrigins = ['http://127.0.0.1:5173', 'http://localhost:5173']; // 許可するオリジン
+        $allowedOrigins = ['http://127.0.0.1:5173', 'http://localhost:5173', 'https://d39hmozy4wec8b.cloudfront.net'];
 
     $origin = $request->headers->get('Origin');
 
@@ -31,7 +31,7 @@ class CorsMiddleware
             return response('', 200)
           ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
           ->header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization, Accept, Origin')
-          ->header('Access-Control-Allow-Origin', '*');
+          ->header('Access-Control-Allow-Origin', 'true');
         }
 
         return $response;

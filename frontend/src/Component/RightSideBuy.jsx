@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios';
 import FollowButton from './FollowButton';
 import StripeButton from './StripeButton';
-import { AppContext } from '../Context/AppContext';
 
 const RightSideBuy = ( {post, authUser} ) => {
   const [user, setUser] = useState(null);
