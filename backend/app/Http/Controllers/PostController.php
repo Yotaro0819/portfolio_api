@@ -15,13 +15,6 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
-        // withCount('リレーション')とするとテーブル名の単数_countという変数名で合計を取得できる
-        // $posts = Post::with('user')->withCount('likes')->where('user_id', '!=', $user->id)->get();
-
-        // $posts->each(function ($post) use ($user) {
-        //     $post->image = asset('storage/'. $post->image);
-        //     $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
-        // });
 
         $posts = Post::with('user')
                 ->withCount('likes')
@@ -75,8 +68,8 @@ public function store(Request $request)
         $fields = $request->all();
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 'public');
-            $fields['image'] = $imagePath;
+            $imagePath = $request->file('image')->store('posts', 's3');
+            $fields['image'] = Storage::disk('s3')->url($imagePath);
         }
 
         $post = Post::create(array_merge($fields, ['user_id' => $user->id, 'owner_id' => $user->id]));
@@ -100,7 +93,7 @@ public function store(Request $request)
         // $post = Post::findOrFail($id);
         $post = Post::with('user')->withCount('likes')->findOrFail($id);
         $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
-        $post->image = asset('storage/'. $post->image);
+        $post->image = $post->image;
 
         return response()->json($post);
     }
@@ -123,20 +116,18 @@ public function store(Request $request)
         $fields = $request->validate([
             'title' => 'required|max:255',
             'body'  => 'required',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
-            // 新しい画像を保存
-            $imagePath = $request->file('image')->store('uploads', 'public');
+            $imagePath = $request->file('image')->store('uploads', 's3');
+            $fields['image'] = Storage::disk('s3')->url($imagePath);
 
-            // 古い画像があれば削除（任意）
             if ($post->image) {
-                Storage::disk('public')->delete($post->image);
+                $oldPath = str_replace(Storage::disk('s3')->url(''), '', $post->image);
+                Storage::disk('s3')->delete($oldPath);
             }
 
-            // 画像パスを `$fields` に追加
-            $fields['image'] = $imagePath;
         }
 
         // データを更新
@@ -170,7 +161,7 @@ public function store(Request $request)
             $my_posts = Post::where('user_id', $user->id)->latest()->limit(6)->get();
 
             $my_posts->each(function ($post) {
-                $post->image = asset('storage/'. $post->image);
+                $post->image = $post->image;
             });
 
             return response()->json($my_posts);
@@ -186,7 +177,7 @@ public function store(Request $request)
             $liked_posts = $user->likedPosts()->latest()->limit(6)->get();
 
             $liked_posts->each(function ($post) {
-                $post->image = asset('storage/'. $post->image);
+                $post->image = $post->image;
             });
 
             return response()->json($liked_posts);
@@ -202,7 +193,7 @@ public function store(Request $request)
             $own_posts = Post::where('owner_id', $user->id)->latest()->limit(6)->get();
 
             $own_posts->each(function($post) {
-                $post->image = asset('storage/'. $post->image);
+                $post->image = $post->image;
             });
 
             return response()->json($own_posts);
