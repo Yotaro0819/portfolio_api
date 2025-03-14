@@ -7,6 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserSeeder extends Seeder
 {
@@ -46,7 +47,7 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'password' => Hash::make('password'),
-                'avatar' =>$avatars[$index],
+                'avatar' => Storage::disk('s3')->url($avatars[$index]),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
