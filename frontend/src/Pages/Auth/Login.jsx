@@ -24,7 +24,7 @@ const Login = () => {
           "Content-type": "application/json",
         }
       });
-
+      console.log("27: ",res.data);
       setAuthUser(res.data.authUser);
       localStorage.setItem('authUser', JSON.stringify(res.data.authUser));
       navigate('/');
@@ -35,33 +35,6 @@ const Login = () => {
         setErrors('failed to connect to server');
       }
     }
-
-  //   const res = await fetch("/api/login", {
-  //     method: "post",
-  //     headers: {
-  //       "Content-type": "application/json",
-  //     },
-  //     body: JSON.stringify(formData),
-  //   });
-
-  //   if (!res.ok) {
-  //   const errorData = await res.text(); 
-  //   setErrors({ general: "ログインに失敗しました。再度試してください。" });
-  //   console.error("Login error:", errorData);
-  //   return;
-  // }
-
-  //   const data = await res.json();
-
-  //   if (data.errors || !res.ok) {
-  //     setErrors(data.errors);
-  //   }else {
-  //     setAuthUser(data.authUser);
-  //     localStorage.setItem('authUser', JSON.stringify(data.authUser))
-
-  //     navigate('/');
-  //   }
-  //   console.log(errors);
 
   }
   
