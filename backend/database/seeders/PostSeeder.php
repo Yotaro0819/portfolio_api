@@ -75,17 +75,14 @@ class PostSeeder extends Seeder
         foreach ($users as $user) {
             for ($i = 0; $i < 10; $i++) {
                 if ($imageIndex >= count($images)) {
-                    $imageIndex = 0; // 画像のリストが尽きたら最初に戻る
+                    $imageIndex = 0;
                 }
 
-                $image = $images[$imageIndex]; // 画像を順番に選択
+                $image = $images[$imageIndex];
                 $imageIndex++;
 
-                // 保存先のパスを設定
-                $destinationPath = "posts/{$image}";
-
-                // 画像をコピー
-                Storage::copy("posts/{$image}", $destinationPath);
+                // 画像のパスを取得 (コピーは不要)
+                $imageUrl = Storage::disk('s3')->url("posts/{$image}");
 
                 // DB に保存
                 Post::create([
@@ -94,7 +91,7 @@ class PostSeeder extends Seeder
                     'body' => "This is a sample post by User {$user->id}.",
                     'owner_id' => $user->id,
                     'price' => rand(100, 10000),
-                    'image' => "posts/{$image}", // 一意なファイル名ではなく、指定されたファイル名を使用
+                    'image' => $imageUrl,
                 ]);
             }
         }

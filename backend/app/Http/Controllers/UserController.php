@@ -18,7 +18,7 @@ class UserController extends Controller
         ->findOrFail($id);
 
         if($user->avatar !== null) {
-        $user->avatar = asset('storage/' . $user->avatar);
+        $user->avatar = $user->avatar;
         }
         $user->isFollowing = Follow::where('follower_id', $authUser->id)->where('following_id', $id)->exists();
 
