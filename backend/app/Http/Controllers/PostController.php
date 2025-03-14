@@ -28,7 +28,7 @@ class PostController extends Controller
                 ->paginate(24);
 
         $posts->getCollection()->transform(function($post) use ($user) {
-            $post->image = asset('storage/'. $post->image);
+            $post->image = $post->image;
             $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
             return $post;
         });
