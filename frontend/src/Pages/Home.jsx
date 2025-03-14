@@ -55,23 +55,23 @@ export default function Home() {
     }
   }, [showProfile]);
 
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const res = await axiosInstance('/api/posts');
-  //       console.log(res.data);
-  //       setAllPosts(res.data.data);
-  //       setLink(res.data.next_page_url);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       setError(error);
-  //       setLoading(false);  
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await axiosInstance('/api/posts');
+        console.log(res.data);
+        setAllPosts(res.data.data);
+        setLink(res.data.next_page_url);
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);  
+      }
+    };
 
-  //   fetchPosts();
-  //   setShowNav(true);
-  // },[]);
+    fetchPosts();
+    setShowNav(true);
+  },[]);
 
   useEffect(() => {
     if(inView && link) {
