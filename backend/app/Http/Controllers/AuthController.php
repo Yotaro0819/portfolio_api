@@ -157,7 +157,7 @@ class AuthController extends Controller
         if($user->avatar == null) {
             return $user->avatar = null;
         }
-        $user->avatar = $user->avatar;
+        $user->avatar = asset('storage/' . $user->avatar);
 
 
         return response()->json($user->avatar);
