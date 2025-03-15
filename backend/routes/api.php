@@ -80,3 +80,7 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
 Route::get('/stripe/success', [StripeController::class, 'success']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::get('/test', function () {
+    return response()->json(['message' => 'Hello, world!']);
+});
