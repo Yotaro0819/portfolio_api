@@ -9,7 +9,7 @@ function getCookie(name) {
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'http://ec2-57-182-149-231.ap-northeast-1.compute.amazonaws.com',
   timeout: 10000,
   withCredentials: true,  // クッキーを送信するため
 });
