@@ -74,51 +74,67 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
+            // 入力バリデーション
             $request->validate([
                 'email' => 'required|email|exists:users,email',
                 'password' => 'required|min:8'
             ]);
 
+            // ユーザーを取得
             $user = User::where('email', $request->email)->first();
 
-            if(!$user || !Hash::check($request->password, $user->password)) {
+            if (!$user) {
+                // ユーザーが存在しない場合
+                \Log::warning('ログイン失敗: ユーザーが見つかりません', ['email' => $request->email]);
                 throw ValidationException::withMessages([
-                    'password' => ['The password do not match our records.'],
+                    'email' => ['The provided email is not registered.'],
                 ]);
             }
 
-            $userName = $user->name;
-            $userId   = $user->id;
-            $avatar   = $user->avatar;
+            // パスワードを確認
+            if (!Hash::check($request->password, $user->password)) {
+                // パスワードが一致しない場合
+                \Log::warning('ログイン失敗: パスワード不一致', ['email' => $request->email]);
+                throw ValidationException::withMessages([
+                    'password' => ['The password does not match our records.'],
+                ]);
+            }
 
-            // noneになってないかだけ確認
-            // $parts = explode('.', $accessToken);
-            // $header = json_decode(base64_decode($parts[0]), true);
-            // \Log::info('JWT Algorithm: ' . ($header['alg'] ?? 'Not found'));
-            // dd($header);
-            $accessToken = JWTAuth::fromUser($user);
-            $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+            // JWTトークンを生成
+            try {
+                $accessToken = JWTAuth::fromUser($user);
+                $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+            } catch (JWTException $e) {
+                \Log::error('JWT生成エラー: ' . $e->getMessage());
+                return response()->json(['error' => 'Could not create token'], 500);
+            }
 
+            // CSRFトークンを生成
             $csrfToken = bin2hex(random_bytes(32));
 
+            // レスポンスを返す
             return Response::json([
                 'message' => 'Logged in successfully',
                 'authUser' => [
-                    'name' => $userName,
-                    'user_id' => $userId,
-                    'avatar' => $avatar],
+                    'name' => $user->name,
+                    'user_id' => $user->id,
+                    'avatar' => $user->avatar,
+                ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', null, false, false)
-            ->cookie('jwt', $accessToken, 60, null, null, false, true)
-            ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true);
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', null, false, false) // CSRFトークン
+            ->cookie('jwt', $accessToken, 60, null, null, false, true) // アクセストークン
+            ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true); // リフレッシュトークン
 
         } catch (ValidationException $e) {
+            // バリデーションエラー
+            \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
+            // その他のエラー
+            \Log::error('ログインエラー: ' . $e->getMessage());
             return response()->json(['error' => 'Unauthorized'], 500);
         }
     }
-
     public function logout()
     {
         $cookieAccess = Cookie::forget('jwt');
@@ -157,7 +173,7 @@ class AuthController extends Controller
         if($user->avatar == null) {
             return $user->avatar = null;
         }
-        $user->avatar = asset('storage/' . $user->avatar);
+        $user->avatar = $user->avatar;
 
 
         return response()->json($user->avatar);
