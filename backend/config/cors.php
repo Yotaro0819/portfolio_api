@@ -3,7 +3,7 @@
 return [
 
 
-    'paths' => ['api/*'],
+    'paths' => ['api/*', 'broadcasting/auth', 'pusher/auth'],
 
     'allowed_methods' => ['*'],
 

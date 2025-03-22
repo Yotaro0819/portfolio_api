@@ -9,6 +9,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PaypalController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PusherController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
@@ -75,6 +76,16 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
 
     //search
     Route::get('/search', [SearchController::class, 'search']);
+
+    Route::get('/pusher-key', function () {
+        return response()->json([
+            'key' => config('broadcasting.connections.pusher.key'),
+            'cluster' => env('PUSHER_APP_CLUSTER'),
+        ]);
+    });
+
+    Route::post('/broadcast', [PusherController::class, 'broadcast']);
+    Route::get('/receive', [PusherController::class, 'receive']);
 });
 
 Route::get('/stripe/success', [StripeController::class, 'success']);
@@ -84,3 +95,5 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/test', function () {
     return response()->json(['message' => 'Hello, world!']);
 });
+
+
