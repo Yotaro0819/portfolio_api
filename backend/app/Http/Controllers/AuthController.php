@@ -61,8 +61,7 @@ class AuthController extends Controller
             return response([
                 'message' => 'Registration successful',
                 'token' => $accessToken
-            ])->withCookie($cookieXsrftoken)
-              ->withCookie($cookieSession)
+            ])
               ->cookie('jwt', $accessToken, 60, null, null, false, true)
               ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
         } catch(ValidationException $e) {
@@ -121,9 +120,9 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', null, false, false) // CSRFトークン
-            ->cookie('jwt', $accessToken, 60, null, null, false, true) // アクセストークン
-            ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true); // リフレッシュトークン
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'd39hmozy4wec8b.cloudfront.net', null, false, true) // CSRFトークン
+            ->cookie('jwt', $accessToken, 60, '/', 'd39hmozy4wec8b.cloudfront.net' , null, true, true, 'None') // アクセストークン
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', 'd39hmozy4wec8b.cloudfront.net', null, true, true, 'None'); // リフレッシュトークン
 
         } catch (ValidationException $e) {
             // バリデーションエラー
@@ -160,7 +159,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15, null,null, false, true);
+            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',null, true, true, 'None');
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }
