@@ -163,6 +163,7 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }
+        return response()->json(['message' => 'something wrong']);
     }
 
     public function getAvatar()
