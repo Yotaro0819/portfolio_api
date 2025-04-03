@@ -25,6 +25,7 @@ export default function Home() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  console.log(authUser);
 
   useEffect(() => {
     if(location.state?.deleted) {
