@@ -6,6 +6,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const { setAuthUser } = useContext(AppContext);
+  const [auth, setAuth] = useState("");
 
 
   const [formData, setFormData] = useState({
@@ -19,7 +20,8 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post('/api/login',formData, {
+      const res = await axios.post('http://127.0.0.1:8000/api/login',formData, {
+        withCredentials:true,
         headers: {
           "Content-type": "application/json",
         }
@@ -27,6 +29,7 @@ const Login = () => {
       console.log("27: ",res.data);
       setAuthUser(res.data.authUser);
       localStorage.setItem('authUser', JSON.stringify(res.data.authUser));
+      localStorage.setItem('authUser', auth);
       navigate('/');
     }catch(error) {
       if(error.response) {
