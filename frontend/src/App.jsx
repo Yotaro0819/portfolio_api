@@ -49,7 +49,8 @@ function App() {
     <ToastContainer position="top-right" autoClose={3000} />
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={authUser ? <Home /> : <Login />} />
+        <Route index element={authUser ? <Home /> : <Home />} />
+        
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/create" element={authUser ? <Create /> : <Login />} />
