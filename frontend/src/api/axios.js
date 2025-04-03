@@ -9,7 +9,7 @@ function getCookie(name) {
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'https://d39hmozy4wec8b.cloudfront.net/api',
+  baseURL: 'https://dsigners.site',
   timeout: 10000,
   withCredentials: true,  // クッキーを送信するため
 });
