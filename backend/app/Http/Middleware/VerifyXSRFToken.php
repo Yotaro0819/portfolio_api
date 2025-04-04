@@ -13,6 +13,7 @@ class VerifyXSRFToken
         $token = $request->header('X-XSRF-TOKEN');
         $csrfCookie = $request->cookie('XSRF-TOKEN');
 
+
         if ($token !== $csrfCookie) {
             // CSRFトークンが一致しない場合のエラーログ
             Log::error('CSRF token mismatch or missing.', [
