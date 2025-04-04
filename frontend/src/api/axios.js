@@ -17,6 +17,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // XSRF-TOKENをクッキーから取得
+    console.log('docuemnt: ',document.cookie);
     const csrfToken = getCookie('XSRF-TOKEN');
     if (csrfToken) {
       // ヘッダーにX-XSRF-TOKENを追加
