@@ -17,13 +17,13 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // XSRF-TOKENをクッキーから取得
-    cookieToken = document.coockie;
-    return cookieToken;
+
     const csrfToken = getCookie('XSRF-TOKEN');
     if (csrfToken) {
       // ヘッダーにX-XSRF-TOKENを追加
       config.headers['X-XSRF-TOKEN'] = csrfToken;
     }
+    console.log('Request Headers:', config.headers); 
     return config;
   },
   (error) => {
