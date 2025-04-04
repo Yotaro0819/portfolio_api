@@ -21,7 +21,7 @@ const Login = () => {
 
     try {
       const res = await axios.post('/api/login',formData, {
-	withCredentials: true,
+	    withCredentials: true,
         headers: {
           "Content-type": "application/json",
         }
@@ -29,7 +29,7 @@ const Login = () => {
 
       console.log("headers:", res.headers);
       console.log("27: ",res.data);
-      setAuthUser(res.data.authUser);
+      setAuthUser('authUser:', res.data.authUser);
       localStorage.setItem('authUser', JSON.Stringify(res.data.authUser));
       navigate('/');
     }catch(error) {
