@@ -53,6 +53,7 @@ axiosInstance.interceptors.response.use(
 
         console.log('New access token:', newAccessToken);
         axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + newAccessToken;
+        console.log(axiosInstance.defaults.headers['Authorization']);
 
         console.log('Retrying original request with new access token...');
         return axiosInstance(originalRequest);
