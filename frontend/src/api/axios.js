@@ -9,7 +9,7 @@ function getCookie(name) {
 }
 
 const axiosInstance = axios.create({
-  baseURL: 'https://d39hmozy4wec8b.cloudfront.net/',
+  baseURL: 'd39hmozy4wec8b.cloudfront.net',
   timeout: 10000,
   withCredentials: true,  // クッキーを送信するため
 });
@@ -30,7 +30,7 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,  // 正常なレスポンスはそのまま返す
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 

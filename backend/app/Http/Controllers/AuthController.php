@@ -61,8 +61,7 @@ class AuthController extends Controller
             return response([
                 'message' => 'Registration successful',
                 'token' => $accessToken
-            ])->withCookie($cookieXsrftoken)
-              ->withCookie($cookieSession)
+            ])
               ->cookie('jwt', $accessToken, 60, null, null, false, true)
               ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
         } catch(ValidationException $e) {
@@ -125,7 +124,6 @@ class AuthController extends Controller
 	    ->cookie('jwt', $accessToken, 60, '/','.d39hmozy4wec8b.cloudfront.net', null, true, true, 'None')
 	    ->cookie('refreshJwt', $refreshToken, 20160, '/','.d39hmozy4wec8b.cloudfront.net', null, true, true, 'None');
 
-
         } catch (ValidationException $e) {
             // バリデーションエラー
             \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
@@ -161,11 +159,11 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15,'/','d39hmozy4wec8b.cloudfront.net', null, true, true, 'None');
+            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',null, true, true, 'None');
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }
-	return response()->json(['message'=> 'something wrong']);
+        return response()->json(['message' => 'something wrong']);
     }
 
     public function getAvatar()
