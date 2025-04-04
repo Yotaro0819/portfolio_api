@@ -12,15 +12,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PostController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $user = JWTAuth::parseToken()->authenticate();
 
         $posts = Post::with('user')
                 ->withCount('likes')
                 ->paginate(24);
-
-        dd($posts);
+        dd($user);
 
         $posts->getCollection()->transform(function($post) use ($user) {
             $post->image = $post->image;
