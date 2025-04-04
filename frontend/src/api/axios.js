@@ -30,7 +30,7 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,  // 正常なレスポンスはそのまま返す
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
@@ -46,8 +46,8 @@ axiosInstance.interceptors.response.use(
         const newAccessToken = refreshResponse.data.newAccessToken;
 
         if (!newAccessToken) {
-          // localStorage.removeItem('authUser');
-          // window.location.href = '/login';
+          localStorage.removeItem('authUser');
+          window.location.href = '/login';
           throw new Error('New access token is undefined');
         }
 
