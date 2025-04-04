@@ -29,8 +29,8 @@ const Login = () => {
 
       console.log("headers:", res.headers);
       console.log("27: ",res.data);
-      setAuthUser('authUser:', res.data.authUser);
-      localStorage.setItem('authUser', JSON.Stringify(res.data.authUser));
+      setAuthUser(res.data.authUser);
+      localStorage.setItem('authUser', JSON.stringify(res.data.authUser));
       navigate('/');
     }catch(error) {
       if(error.response) {
