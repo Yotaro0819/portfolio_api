@@ -20,6 +20,8 @@ class PostController extends Controller
                 ->withCount('likes')
                 ->paginate(24);
 
+        dd($posts);
+
         $posts->getCollection()->transform(function($post) use ($user) {
             $post->image = $post->image;
             $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
