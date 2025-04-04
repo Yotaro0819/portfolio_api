@@ -23,7 +23,6 @@ axiosInstance.interceptors.request.use(
       // ヘッダーにX-XSRF-TOKENを追加
       config.headers['X-XSRF-TOKEN'] = csrfToken;
     }
-    config.headers['Content-Type'] = 'application/json';
     console.log('Request Headers:', config.headers); 
     return config;
   },
@@ -56,7 +55,7 @@ axiosInstance.interceptors.response.use(
 
         console.log('New access token:', newAccessToken);
         axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + newAccessToken;
-        console.log(axiosInstance.defaults.headers['Authorization']);
+        
 
         console.log('Retrying original request with new access token...');
         return axiosInstance(originalRequest);
