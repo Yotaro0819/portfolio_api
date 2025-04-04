@@ -6,13 +6,13 @@
 ## デプロイURL
 https://d39hmozy4wec8b.cloudfront.net
 
-##技術スタック
+## 技術スタック
 
-** フロントエンド: React
-** バックエンド: laravel11
-** 認証: JWT(Tymon/jwt-auth)
-** 決済処理: stripe(stripe/stripe-php)
-** httpクライアント: axios
+* フロントエンド: React
+* バックエンド: laravel11
+* 認証: JWT(Tymon/jwt-auth)
+* 決済処理: stripe(stripe/stripe-php)
+* httpクライアント: axios
 
 ## 主な機能
 JWTを使用したユーザー管理
