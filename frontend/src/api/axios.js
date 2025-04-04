@@ -23,6 +23,7 @@ axiosInstance.interceptors.request.use(
       // ヘッダーにX-XSRF-TOKENを追加
       config.headers['X-XSRF-TOKEN'] = csrfToken;
     }
+    config.headers['Content-Type'] = 'application/json';
     console.log('Request Headers:', config.headers); 
     return config;
   },
