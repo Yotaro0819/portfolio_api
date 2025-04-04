@@ -19,7 +19,6 @@ class PostController extends Controller
         $posts = Post::with('user')
                 ->withCount('likes')
                 ->paginate(24);
-        dd($user);
 
         $posts->getCollection()->transform(function($post) use ($user) {
             $post->image = $post->image;
