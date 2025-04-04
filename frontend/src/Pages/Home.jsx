@@ -25,6 +25,7 @@ export default function Home() {
 
   const location = useLocation();
   const navigate = useNavigate();
+  console.log(authUser);
 
   useEffect(() => {
     if(location.state?.deleted) {
@@ -59,7 +60,7 @@ export default function Home() {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance('/api/posts');
-        console.log(res.data);
+        console.log('allPosts: ',res.data);
         setAllPosts(res.data.data);
         setLink(res.data.next_page_url);
         setLoading(false);

@@ -6,6 +6,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const { setAuthUser } = useContext(AppContext);
+  const [auth, setAuth] = useState("");
 
 
   const [formData, setFormData] = useState({
