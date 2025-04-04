@@ -124,6 +124,7 @@ class AuthController extends Controller
             ->cookie('jwt', $accessToken, 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
             ->cookie('refreshJwt', $refreshToken, 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
 
+
         } catch (ValidationException $e) {
             // バリデーションエラー
             \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
