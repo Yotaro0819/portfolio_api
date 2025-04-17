@@ -8,7 +8,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'https://d39hmozy4wec8b.cloudfront.net',
+    'https://d39hmozy4wec8b.cloudfront.net',
 	'https://dsigners.site',
 	'http://127.0.0.1:5173'
     ],
