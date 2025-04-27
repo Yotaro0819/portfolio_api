@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Follow;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
