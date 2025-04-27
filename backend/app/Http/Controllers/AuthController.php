@@ -50,21 +50,18 @@ class AuthController extends Controller
                 'password' => bcrypt($fields['password']),
             ]);
 
-            // JWTトークンを発行
             $accessToken = JWTAuth::fromUser($user);
             $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
 
-            // 不要なセッションクッキーを削除
             $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
             $cookieSession = Cookie::forget('laravel_session');
 
             return response([
                 'message' => 'Registration successful',
                 'token' => $accessToken
-            ])->withCookie($cookieXsrftoken)
-              ->withCookie($cookieSession)
-              ->cookie('jwt', $accessToken, 60, null, null, false, true)
-              ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
+            ])
+              ->cookie('jwt', $accessToken, 60, null, null, false, false)
+              ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, false);
         } catch(ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }
@@ -74,17 +71,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            // 入力バリデーション
             $request->validate([
                 'email' => 'required|email|exists:users,email',
                 'password' => 'required|min:8'
             ]);
 
-            // ユーザーを取得
             $user = User::where('email', $request->email)->first();
 
             if (!$user) {
-                // ユーザーが存在しない場合
                 \Log::warning('ログイン失敗: ユーザーが見つかりません', ['email' => $request->email]);
                 throw ValidationException::withMessages([
                     'email' => ['The provided email is not registered.'],
@@ -93,7 +87,6 @@ class AuthController extends Controller
 
             // パスワードを確認
             if (!Hash::check($request->password, $user->password)) {
-                // パスワードが一致しない場合
                 \Log::warning('ログイン失敗: パスワード不一致', ['email' => $request->email]);
                 throw ValidationException::withMessages([
                     'password' => ['The password does not match our records.'],
@@ -112,7 +105,6 @@ class AuthController extends Controller
             // CSRFトークンを生成
             $csrfToken = bin2hex(random_bytes(32));
 
-            // レスポンスを返す
             return Response::json([
                 'message' => 'Logged in successfully',
                 'authUser' => [
@@ -121,16 +113,15 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', null, false, false) // CSRFトークン
-            ->cookie('jwt', $accessToken, 60, null, null, false, true) // アクセストークン
-            ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true); // リフレッシュトークン
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', true, false, true, 'None') // CSRFトークン
+            ->cookie('jwt', $accessToken, 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
+
 
         } catch (ValidationException $e) {
-            // バリデーションエラー
             \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            // その他のエラー
             \Log::error('ログインエラー: ' . $e->getMessage());
             return response()->json(['error' => 'Unauthorized'], 500);
         }
@@ -160,10 +151,11 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15, null,null, false, true);
+            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',null, true, true, 'None');
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }
+        return response()->json(['message' => 'something wrong']);
     }
 
     public function getAvatar()

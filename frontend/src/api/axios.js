@@ -17,11 +17,13 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // XSRF-TOKENをクッキーから取得
+
     const csrfToken = getCookie('XSRF-TOKEN');
     if (csrfToken) {
       // ヘッダーにX-XSRF-TOKENを追加
       config.headers['X-XSRF-TOKEN'] = csrfToken;
     }
+    console.log('Request Headers:', config.headers); 
     return config;
   },
   (error) => {
@@ -30,7 +32,7 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,  // 正常なレスポンスはそのまま返す
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
@@ -54,6 +56,7 @@ axiosInstance.interceptors.response.use(
         console.log('New access token:', newAccessToken);
         axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + newAccessToken;
         console.log('authori: ',axiosInstance.defaults.headers['Authorization']);
+
 
         console.log('Retrying original request with new access token...');
         return axiosInstance(originalRequest);
