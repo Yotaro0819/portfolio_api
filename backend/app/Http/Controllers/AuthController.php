@@ -50,11 +50,9 @@ class AuthController extends Controller
                 'password' => bcrypt($fields['password']),
             ]);
 
-            // JWTトークンを発行
             $accessToken = JWTAuth::fromUser($user);
             $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
 
-            // 不要なセッションクッキーを削除
             $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
             $cookieSession = Cookie::forget('laravel_session');
 
@@ -73,17 +71,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            // 入力バリデーション
             $request->validate([
                 'email' => 'required|email|exists:users,email',
                 'password' => 'required|min:8'
             ]);
 
-            // ユーザーを取得
             $user = User::where('email', $request->email)->first();
 
             if (!$user) {
-                // ユーザーが存在しない場合
                 \Log::warning('ログイン失敗: ユーザーが見つかりません', ['email' => $request->email]);
                 throw ValidationException::withMessages([
                     'email' => ['The provided email is not registered.'],
@@ -92,7 +87,6 @@ class AuthController extends Controller
 
             // パスワードを確認
             if (!Hash::check($request->password, $user->password)) {
-                // パスワードが一致しない場合
                 \Log::warning('ログイン失敗: パスワード不一致', ['email' => $request->email]);
                 throw ValidationException::withMessages([
                     'password' => ['The password does not match our records.'],
@@ -111,7 +105,6 @@ class AuthController extends Controller
             // CSRFトークンを生成
             $csrfToken = bin2hex(random_bytes(32));
 
-            // レスポンスを返す
             return Response::json([
                 'message' => 'Logged in successfully',
                 'authUser' => [
@@ -126,11 +119,9 @@ class AuthController extends Controller
 
 
         } catch (ValidationException $e) {
-            // バリデーションエラー
             \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            // その他のエラー
             \Log::error('ログインエラー: ' . $e->getMessage());
             return response()->json(['error' => 'Unauthorized'], 500);
         }
