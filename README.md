@@ -22,3 +22,10 @@ Stripe API(authorize)を用いて販売者・購入者双方の承認が必要�
 無限スクロールの実装(intersection-observer)
 
 
+## ホーム画面
+<img width="1508" alt="スクリーンショット 2025-04-17 午後4 53 18" src="https://github.com/user-attachments/assets/7b76c654-b33e-4cb8-a384-86605ce699b7" />
+
+
+## stripe connect画面
+<img width="1509" alt="スクリーンショット 2025-04-17 午後4 57 45" src="https://github.com/user-attachments/assets/0b3a87fd-b492-4077-9ce8-bb2d4cd8b14d" />
+<img width="1507" alt="スクリーンショット 2025-04-17 午後4 57 54" src="https://github.com/user-attachments/assets/e9543726-0002-4344-9b15-be2babfe13a0" />
