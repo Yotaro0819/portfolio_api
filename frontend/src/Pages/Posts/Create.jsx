@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import '../../styles/Create.css';
+
 import PriceInput from '../../Component/PriceInput.jsx';
 import axiosInstance from '../../api/axios.js';
 import RightSideProfile from '../../Component/RightSideProfile.jsx';

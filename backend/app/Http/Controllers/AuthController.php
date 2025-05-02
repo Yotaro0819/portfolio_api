@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CookieHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,8 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        $options = CookieHelper::getCookieOptions();
+
         try {
             $fields = $request->validate([
                 'name' => 'required|max:255',
@@ -60,8 +63,8 @@ class AuthController extends Controller
                 'message' => 'Registration successful',
                 'token' => $accessToken
             ])
-              ->cookie('jwt', $accessToken, 60, null, null, false, true)
-              ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
+              ->cookie('jwt', $accessToken, 60, '/', $options['domain'] , $options['secure'], true, true, $options['sameSite'])
+              ->cookie('refreshJwt', $refreshToken, 20160, '/', $options['domain'], $options['secure'], true, true, $options['sameSite']);
         } catch(ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }
@@ -70,6 +73,8 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $options = CookieHelper::getCookieOptions();
+
         try {
             $request->validate([
                 'email' => 'required|email|exists:users,email',
@@ -113,9 +118,9 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'd39hmozy4wec8b.cloudfront.net', true, false, true, 'None') // CSRFトークン
-            ->cookie('jwt', $accessToken, 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
-            ->cookie('refreshJwt', $refreshToken, 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', $options['domain'], false, true, 'None') // CSRFトークン
+            ->cookie('jwt', $accessToken, 60, '/', $options['domain'], true, true, 'None') // アクセストークン
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', $options['domain'], true, true, 'None');
 
 
         } catch (ValidationException $e) {
@@ -126,6 +131,7 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 500);
         }
     }
+
     public function logout()
     {
         $cookieAccess = Cookie::forget('jwt');
@@ -140,6 +146,8 @@ class AuthController extends Controller
 
     public function refreshToken(Request $request)
     {
+        $options = CookieHelper::getCookieOptions();
+
         try {
             $refreshToken = $request->cookie('refreshJwt');
 
@@ -151,7 +159,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',null, true, true, 'None');
+            ])->cookie('jwt', $newAccessToken, 15, '/', $options['domain'] , $options['secure'], true, true, $options['sameSite']);
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }
