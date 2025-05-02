@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../Context/AppContext';
-import '../../styles/Profile.css';
+
 import { Link, useParams } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import OwnPostList from '../../Component/OwnPostList';

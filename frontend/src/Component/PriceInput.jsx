@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Create.css';
+
 
 const PriceInput = ({ value, onChange }) => {
   
