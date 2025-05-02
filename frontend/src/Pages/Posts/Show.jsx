@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
-import '../../styles/Show.css';
+
 import RightSideBuy from '../../Component/RightSideBuy';
 import { AppContext } from '../../Context/AppContext';
 import axiosInstance from '../../api/axios';
