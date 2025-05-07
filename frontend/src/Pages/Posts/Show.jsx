@@ -121,7 +121,7 @@ const Show = () => {
                       <LikeButton postId={ post.id } isLiked={ post.isLiked } likeCount={ post.like_count } />
                       <button onClick={() => {openModal2()}}><i class="fa-regular fa-comment ml-3 text-xl"></i></button>
                     </div>
-                    <div className="h-32 overflow-auto bg-gray-600 border rounded">
+                    <div className="h-24 overflow-auto bg-gray-600 border rounded">
                       {allComments && allComments.length > 0 ? (
                         <>
                         {allComments.map((comment) => {
@@ -179,7 +179,7 @@ const Show = () => {
                       placeholder="Type your comment here..."
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
-                      autoFocus // コメントの内容を更新
+                      autoFocus
                     />
                     <div className="button-group">
                       <button type="submit" className="bg-green-500 text-white px-2 mt-4 rounded">

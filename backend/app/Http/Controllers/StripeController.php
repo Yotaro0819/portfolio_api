@@ -114,7 +114,7 @@ class StripeController extends Controller
             'payment_method'  => "Stripe",
         ]);
 
-        return redirect()->away('http://127.0.0.1/payment/success');
+        return redirect()->away('http://127.0.0.1:5173/payment/success');
     }
 
     public function approve($paymentId)
@@ -192,8 +192,8 @@ class StripeController extends Controller
 
         $accountLink = $stripe->accountLinks->create([
             'account' => $account->id,
-            'failure_url' => 'http://127.0.0.1',
-            'success_url' => 'http://127.0.0.1/edit-profile',
+            'failure_url' => 'http://127.0.0.1:5173',
+            'success_url' => 'http://127.0.0.1:5173/edit-profile',
             'type' => 'account_onboarding',
         ]);
 
