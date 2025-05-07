@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-     /**
+    /**
      * Get the identifier that will be stored in the JWT payload.
      *
      * @return mixed
@@ -87,7 +87,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
     }
 
-    // フォローしているユーザーのリレーション
     public function following()
     {
         return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');

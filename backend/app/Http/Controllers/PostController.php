@@ -55,11 +55,11 @@ public function store(Request $request)
         'price' => 'required|numeric|min:0',
     ]);
 
-    // バリデーション失敗時の処理
+
     if ($validator->fails()) {
         return response()->json([
             'error' => 'Validation failed',
-            'messages' => $validator->errors() // 各フィールドごとのエラーメッセージを取得
+            'messages' => $validator->errors()
         ], 422);
     }
 
@@ -83,10 +83,6 @@ public function store(Request $request)
     }
 }
 
-
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
@@ -98,18 +94,14 @@ public function store(Request $request)
         return response()->json($post);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Post $post)
     {
         try {
             Gate::authorize('modify', $post);
         } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
-            // カスタムメッセージを追加
             return response()->json([
                 'error' => 'You do not have permission to modify this post',
-                'message' => $e->getMessage(), // オリジナルのメッセージ
+                'message' => $e->getMessage()
             ], 403);
         }
 

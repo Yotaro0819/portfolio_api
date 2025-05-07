@@ -25,7 +25,7 @@ class ProfileController extends Controller
                 $fileName = time() . '_' . $file->getClientOriginalName();
                 $filePath = $file->storeAs('avatars' , $fileName, 'public');
             } else {
-                return response()->json(['message' => 'No file uploaded'], 400); // ファイルがアップロードされていない場合
+                return response()->json(['message' => 'No file uploaded'], 400);
             }
 
             if ($user->avatar) {

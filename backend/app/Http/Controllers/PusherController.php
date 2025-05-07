@@ -23,14 +23,12 @@ class PusherController extends Controller
 
         $senderId = $request->input('sender_id');
 
-        // メッセージをデータベースに保存
         $chat = Message::create([
             'sender_id' => $senderId,
             'receiver_id' => $request->input('receiver_id'),
             'content' => $request->input('message'),
         ]);
 
-        // Pusher インスタンスを作成
         $pusher = new Pusher(
             config('broadcasting.connections.pusher.key'),
             config('broadcasting.connections.pusher.secret'),
@@ -41,7 +39,6 @@ class PusherController extends Controller
             ]
         );
 
-        // Pusher でイベントを送信
         $pusher->trigger('public', 'chat', [
             'message' => $request->get('message'),
             'sender_id' => $request->get('sender_id'),

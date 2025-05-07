@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\CookieHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,8 +37,6 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $options = CookieHelper::getCookieOptions();
-
         try {
             $fields = $request->validate([
                 'name' => 'required|max:255',
@@ -63,8 +60,8 @@ class AuthController extends Controller
                 'message' => 'Registration successful',
                 'token' => $accessToken
             ])
-              ->cookie('jwt', $accessToken, 60, '/', $options['domain'] , $options['secure'], true, true, $options['sameSite'])
-              ->cookie('refreshJwt', $refreshToken, 20160, '/', $options['domain'], $options['secure'], true, true, $options['sameSite']);
+              ->cookie('jwt', $accessToken, 60, null, null, false, true)
+              ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
         } catch(ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }
@@ -73,8 +70,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $options = CookieHelper::getCookieOptions();
-
         try {
             $request->validate([
                 'email' => 'required|email|exists:users,email',
@@ -84,7 +79,6 @@ class AuthController extends Controller
             $user = User::where('email', $request->email)->first();
 
             if (!$user) {
-                \Log::warning('ログイン失敗: ユーザーが見つかりません', ['email' => $request->email]);
                 throw ValidationException::withMessages([
                     'email' => ['The provided email is not registered.'],
                 ]);
@@ -92,7 +86,6 @@ class AuthController extends Controller
 
             // パスワードを確認
             if (!Hash::check($request->password, $user->password)) {
-                \Log::warning('ログイン失敗: パスワード不一致', ['email' => $request->email]);
                 throw ValidationException::withMessages([
                     'password' => ['The password does not match our records.'],
                 ]);
@@ -103,7 +96,6 @@ class AuthController extends Controller
                 $accessToken = JWTAuth::fromUser($user);
                 $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
             } catch (JWTException $e) {
-                \Log::error('JWT生成エラー: ' . $e->getMessage());
                 return response()->json(['error' => 'Could not create token'], 500);
             }
 
@@ -118,16 +110,14 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', $options['domain'], false, true, 'None') // CSRFトークン
-            ->cookie('jwt', $accessToken, 60, '/', $options['domain'], true, true, 'None') // アクセストークン
-            ->cookie('refreshJwt', $refreshToken, 20160, '/', $options['domain'], true, true, 'None');
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', '127.0.0.1', true, false, true, 'None') // CSRFトークン
+            ->cookie('jwt', $accessToken, 60, '/', '127.0.0.1' , true, true, true, 'None') // アクセストークン
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', '127.0.0.1', true, true, true, 'None'); // リフレッシュトークン
 
 
         } catch (ValidationException $e) {
-            \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            \Log::error('ログインエラー: ' . $e->getMessage());
             return response()->json(['error' => 'Unauthorized'], 500);
         }
     }
@@ -146,8 +136,6 @@ class AuthController extends Controller
 
     public function refreshToken(Request $request)
     {
-        $options = CookieHelper::getCookieOptions();
-
         try {
             $refreshToken = $request->cookie('refreshJwt');
 
@@ -159,7 +147,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15, '/', $options['domain'] , $options['secure'], true, true, $options['sameSite']);
+            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',null, true, true, 'None');
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }

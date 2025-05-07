@@ -15,13 +15,11 @@ class VerifyXSRFToken
 
 
         if ($token !== $csrfCookie) {
-            // CSRFトークンが一致しない場合のエラーログ
             Log::error('CSRF token mismatch or missing.', [
                 'token' => $token,
                 'csrf_cookie' => $csrfCookie
             ]);
 
-            // JSONレスポンスを返す
             return response()->json(['message' => 'CSRF Token mismatch or missing.'], 403);
         }
 
