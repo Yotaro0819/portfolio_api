@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PostService;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
@@ -12,22 +13,17 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class PostController extends Controller
 {
+    protected $postService;
+
+    public function __construct(PostService $postService) {
+        $this->postService = $postService;
+    }
+
     public function index()
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        $posts = Post::with('user')
-                ->withCount('likes')
-                ->paginate(24);
-
-        $posts->getCollection()->transform(function($post) use ($user) {
-            $post->image = $post->image;
-            $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
-            return $post;
-        });
-
-        $isLastPage = !$posts->hasMorePages();
-        $message = $isLastPage ? 'This is the last Page' : null;
+        [$posts, $message] = $this->postService->getPosts($user);
 
         return response()->json([
             'data' => $posts->items(),
@@ -40,48 +36,42 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      */
 
-public function store(Request $request)
-{
-    $user = JWTAuth::parseToken()->authenticate();
-
-    if (!$user) {
-        return response()->json(['error' => 'Unauthorized'], 401);
-    }
-
-    $validator = Validator::make($request->all(), [
-        'title' => 'required|max:255',
-        'body'  => 'required',
-        'image' => 'required|image',
-        'price' => 'required|numeric|min:0',
-    ]);
-
-
-    if ($validator->fails()) {
-        return response()->json([
-            'error' => 'Validation failed',
-            'messages' => $validator->errors()
-        ], 422);
-    }
-
-    try {
-
-        $fields = $request->all();
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 's3');
-            $fields['image'] = Storage::disk('s3')->url($imagePath);
+ public function store(Request $request)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $post = Post::create(array_merge($fields, ['user_id' => $user->id, 'owner_id' => $user->id]));
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'body'  => 'required',
+            'image' => 'required|image',
+            'price' => 'required|numeric|min:0',
+        ]);
 
-        return response()->json($post, 201);
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'Failed to create post',
-            'message' => $e->getMessage(),
-        ], 500);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'messages' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            // バリデーション済みデータを取得
+            $fields = $validator->validated();
+
+            // Service に委譲
+            $post = $this->postService->createPost($fields, $user);
+
+            return response()->json($post, 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to create post',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
-}
 
     public function show($id)
     {

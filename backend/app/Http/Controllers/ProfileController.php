@@ -55,7 +55,6 @@ class ProfileController extends Controller
             'new_password.confirmed' => 'New password and confirmation do not match',
         ]);
 
-        // バリデーション失敗時の処理
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),

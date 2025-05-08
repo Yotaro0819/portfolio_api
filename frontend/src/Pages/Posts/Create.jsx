@@ -20,7 +20,7 @@ const Create = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
 
-  console.log(errors?.messages?.body[0]);
+  // console.log(errors?.messages?.body[0]);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
+use App\Http\Services\AuthService;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,10 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+    protected $authService;
+    public function __construct(AuthService $authService) {
+        $this->authService = $authService;
+    }
 
     public function checkAuth(Request $request)
 {
@@ -35,38 +41,25 @@ class AuthController extends Controller
     }
 }
 
-    public function register(Request $request)
-    {
-        try {
-            $fields = $request->validate([
-                'name' => 'required|max:255',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|confirmed'
-            ]);
+public function register(RegisterRequest $request)
+{
+    $data = $request->validated();
 
-            $user = User::create([
-                'name' => $fields['name'],
-                'email' => $fields['email'],
-                'password' => bcrypt($fields['password']),
-            ]);
+    $result = $this->authService->registerUser($data);
 
-            $accessToken = JWTAuth::fromUser($user);
-            $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+    $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
+    $cookieSession   = Cookie::forget('laravel_session');
 
-            $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
-            $cookieSession = Cookie::forget('laravel_session');
-
-            return response([
-                'message' => 'Registration successful',
-                'token' => $accessToken
-            ])
-              ->cookie('jwt', $accessToken, 60, null, null, false, true)
-              ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, true );
-        } catch(ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], 422);
-        }
-
-    }
+    return response()->json([
+        'message' => 'Registration successful',
+        'user'    => [
+            'name'   => $result['user']->name,
+            'email'  => $result['user']->email,
+            'user_id'=> $result['user']->id,
+        ],
+        'token'   => $result['accessToken'],
+    ], 201);
+}
 
     public function login(Request $request)
     {
@@ -110,9 +103,9 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', '127.0.0.1', true, false, true, 'None') // CSRFトークン
-            ->cookie('jwt', $accessToken, 60, '/', '127.0.0.1' , true, true, true, 'None') // アクセストークン
-            ->cookie('refreshJwt', $refreshToken, 20160, '/', '127.0.0.1', true, true, true, 'None'); // リフレッシュトークン
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', '127.0.0.1', false, false, true, 'Lax') // CSRFトークン
+            ->cookie('jwt', $accessToken, 60, '/', '127.0.0.1' , false, true, true, 'Lax') // アクセストークン
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', '127.0.0.1', false, true, true, 'Lax'); // リフレッシュトークン
 
 
         } catch (ValidationException $e) {

@@ -5,7 +5,6 @@ import { AppContext } from '../../Context/AppContext';
 import dayjs from "dayjs";
 import RightSideProfile from '../../Component/RightSideProfile';
 import Pusher from 'pusher-js';
-import axios from 'axios';
 
 const Show = () => {
   const {authUser} = useContext(AppContext);
@@ -15,7 +14,7 @@ const Show = () => {
   const messageEndRef = useRef(null);
   const [pusherKey, setPusherKey] = useState('');
   const [cluster, setCluster] = useState('');
-  console.log('pusher info: ',pusherKey, cluster)
+
 
   const getMessage = async () => {
     try {
