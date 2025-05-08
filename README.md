@@ -32,8 +32,8 @@ https://d39hmozy4wec8b.cloudfront.net
 <img width="1507" alt="スクリーンショット 2025-04-17 午後4 57 54" src="https://github.com/user-attachments/assets/e9543726-0002-4344-9b15-be2babfe13a0" />
 
 ## エスクロー決済のようなイメージで相互承認が必要になっています
-販売者画面
+販売者画面(購入者がstripeにて購入ボタンを押すとオーソリ状態となり決済が保留状態となります)
 <img width="1511" alt="スクリーンショット 2025-05-09 午前12 03 17" src="https://github.com/user-attachments/assets/0b4eb92e-ed3f-45fd-9638-c42c9e8a5b2f" />
-購入者画面
+購入者画面(販売者がapproveボタンを押すとconfirmとして最終確認ができます)
 <img width="1503" alt="スクリーンショット 2025-05-09 午前12 07 37" src="https://github.com/user-attachments/assets/529eb134-a4b3-4f14-882e-225c9867fb0e" />
 
