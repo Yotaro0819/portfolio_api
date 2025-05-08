@@ -30,23 +30,23 @@ class AuthService
     }
 
     public function loginUser(array $data): array
-{
-    $user = User::where('email', $data['email'])->first();
+    {
+        $user = User::where('email', $data['email'])->first();
 
-    if (!$user || !Hash::check($data['password'], $user->password)) {
-        throw ValidationException::withMessages([
-            'password' => ['The password does not match our records.'],
-        ]);
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => ['The password does not match our records.'],
+            ]);
+        }
+
+        $accessToken  = JWTAuth::fromUser($user);
+        $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+
+        return [
+            'user' => $user,
+            'accessToken' => $accessToken,
+            'refreshToken' => $refreshToken,
+        ];
     }
-
-    $accessToken  = JWTAuth::fromUser($user);
-    $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
-
-    return [
-        'user' => $user,
-        'accessToken' => $accessToken,
-        'refreshToken' => $refreshToken,
-    ];
-}
 
 }
