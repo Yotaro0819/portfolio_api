@@ -9,7 +9,6 @@ function getCookie(name) {
 }
 
 const axiosInstance = axios.create({
-  // baseURL: 'https://d39hmozy4wec8b.cloudfront.net',
   baseURL: 'http://127.0.0.1:8000',
   // baseURL: 'https://dsigners.site',
   timeout: 10000,

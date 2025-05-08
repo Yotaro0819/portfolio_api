@@ -2,29 +2,22 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Comment;
+use App\Http\Services\CommentService;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CommentController extends Controller
 {
+    protected $commentService;
+    public function __construct(CommentService $commentService) {
+        $this->commentService = $commentService;
+    }
+
     public function getComments($id)
     {
-        $comments = Comment::where('post_id', $id)
-                            ->with(['user:id,name,avatar'])
-                            ->get()
-                            ->map(function ($comment) {
-                                if ($comment->user->avatar) {
-                                    $avatar = $comment->user->avatar;
-
-                                    // すでに http から始まるならそのまま、それ以外ならフルパスに変換
-                                    if (!str_starts_with($avatar, 'http')) {
-                                        $comment->user->avatar = asset('storage/' . ltrim($avatar, '/'));
-                                    }
-                                }
-                                return $comment;
-                            });
-
+        $comments = $this->commentService->getComments($id);
         return response()->json($comments);
     }
 
@@ -52,7 +45,6 @@ class CommentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'failed to post your comment'], 500);
         }
-
 
     }
 }

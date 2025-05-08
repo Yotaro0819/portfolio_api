@@ -11,6 +11,7 @@ import { useInView } from "react-intersection-observer";
 import Masonry from "masonry-layout";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import imagesLoaded from 'imagesloaded';
 
 export default function Home() {
   const { authUser, setShowNav } = useContext(AppContext);
@@ -49,12 +50,14 @@ export default function Home() {
   }, [allPosts]);
 
   useEffect(() => {
-    if (masonryRef.current) {
-      setTimeout(() => {
-        masonryRef.current.layout();
-      }, 100); // 遅延させてレイアウトを再計算
+    if (gridRef.current && allPosts.length > 0) {
+      imagesLoaded(gridRef.current, () => {
+        if (masonryRef.current) {
+          masonryRef.current.layout();
+        }
+      });
     }
-  }, [showProfile]);
+  }, [allPosts, showProfile]);
 
   useEffect(() => {
     const fetchPosts = async () => {
