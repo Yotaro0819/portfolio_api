@@ -45,9 +45,7 @@ class FollowService
                 return [
                     'id' => $follow->follower->id,
                     'name' => $follow->follower->name,
-                    'avatar' => $follow->follower->avatar
-                        ? asset('storage/' . $follow->follower->avatar)
-                        : null,
+                    'avatar' => $follow->follower->avatar ? asset($follow->follower->avatar) : null,
                     'isFollowing' => Follow::where('follower_id', $authUser->id)
                         ->where('following_id', $follow->follower->id)
                         ->exists(),
@@ -63,16 +61,16 @@ class FollowService
         $authUser = JWTAuth::parseToken()->authenticate();
 
         $followings = Follow::where('follower_id', $user->id)
-        ->with('following:id,name,avatar')
-        ->get()
-        ->map(function ($follow) use ($authUser) {
-            return [
-                'id' => $follow->following->id,
-                'name' => $follow->following->name,
-                'avatar' => $follow->following->avatar ? asset('storage/'. $follow->following->avatar) : null,
-                'isFollowing' => Follow::where('follower_id', $authUser->id)
-                                        ->where('following_id', $follow->following->id)
-                                        ->exists(),
+            ->with('following:id,name,avatar')
+            ->get()
+            ->map(function ($follow) use ($authUser) {
+                return [
+                    'id' => $follow->following->id,
+                    'name' => $follow->following->name,
+                    'avatar' => $follow->following->avatar ? asset($follow->following->avatar) : null,
+                    'isFollowing' => Follow::where('follower_id', $authUser->id)
+                                ->where('following_id', $follow->following->id)
+                                ->exists(),
             ];
         });
         return $followings;
