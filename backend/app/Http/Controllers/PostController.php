@@ -32,10 +32,6 @@ class PostController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-
     public function store(Request $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
@@ -58,10 +54,8 @@ class PostController extends Controller
         }
 
         try {
-            // バリデーション済みデータを取得
             $fields = $validator->validated();
 
-            // Service に委譲
             $post = $this->postService->createPost($fields, $user);
 
             return response()->json($post, 201);
@@ -76,7 +70,6 @@ class PostController extends Controller
     public function show($id)
     {
         $user = JWTAuth::parseToken()->authenticate();
-        // $post = Post::findOrFail($id);
         $post = Post::with('user')->withCount('likes')->findOrFail($id);
         $post->isLiked = $user ? $post->likes()->where('user_id', $user->id)->exists() : false;
         $post->image = $post->image;
@@ -88,7 +81,7 @@ class PostController extends Controller
     {
         try {
             Gate::authorize('modify', $post);
-        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'error' => 'You do not have permission to modify this post',
                 'message' => $e->getMessage()
@@ -111,11 +104,8 @@ class PostController extends Controller
             }
 
         }
-
-        // データを更新
         $post->update($fields);
 
-        // 成功した場合のレスポンスを返す
         return response()->json([
             'message' => 'Post updated successfully!',
             'post' => $post
