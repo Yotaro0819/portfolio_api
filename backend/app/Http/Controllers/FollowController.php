@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\FollowService;
-use App\Models\Follow;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FollowController extends Controller
 {
@@ -16,10 +12,10 @@ class FollowController extends Controller
     }
 
     public function fetchFollowers($id)
-    {
-        $followers = $this->followService->getFollowers($id);
-        return response()->json($followers);
-    }
+        {
+            $followers = $this->followService->getFollowers($id);
+            return response()->json($followers);
+        }
 
     public function fetchFollowing($id)
     {
@@ -27,19 +23,10 @@ class FollowController extends Controller
         return response()->json($followings);
     }
 
-    public function countFollows(Request $request, $id)
+    public function countFollows($id)
     {
-        $jwt = $request->cookie('jwt');
-
-        if (!$jwt) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        $user = User::findOrFail($id);
-
-        $followerCount = $user->followers()->count();
-        $followingCount = $user->following()->count();
-        return response()->json(['followerCount' => $followerCount, 'followingCount' => $followingCount]);
+        $counts = $this->followService->countFollows($id);
+        return response()->json($counts);
 
     }
 

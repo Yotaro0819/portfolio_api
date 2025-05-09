@@ -75,4 +75,14 @@ class FollowService
         });
         return $followings;
     }
+
+    public function countFollows($userId)
+    {
+        $user = User::findOrFail($userId);
+
+        return [
+            'followerCount' => $user->followers()->count(),
+            'followingCount' => $user->following()->count(),
+        ];
+    }
 }

@@ -2,30 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\LikeService;
 use App\Models\Like;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LikeController extends Controller
 {
+    protected $likeService;
+    public function __construct(LikeService $likeService) {
+        $this->likeService = $likeService;
+    }
+
     public function store($postId)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        $like = new Like();
-        $like->user_id = $user->id;
-        $like->post_id = $postId;
-
-        $like->save();
-
-        return response()->json(['message' => 'liked']);
+        $result = $this->likeService->likePost($postId);
+        return response()->json($result);
     }
 
     public function delete($postId)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        Like::where('post_id', $postId)
-                ->where('user_id', $user->id)
-                ->delete();
-
-        return response()->json(['message' => 'unliked']);
+        $result = $this->likeService->unlikePost($postId);
+        return response()->json($result);
     }
 }

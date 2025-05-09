@@ -7,7 +7,6 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Services\AuthService;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;

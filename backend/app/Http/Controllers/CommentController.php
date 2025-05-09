@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Http\Services\CommentService;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+
 
 class CommentController extends Controller
 {
