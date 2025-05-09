@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class CommentController extends Controller
 {
     protected $commentService;
+
     public function __construct(CommentService $commentService) {
         $this->commentService = $commentService;
     }
@@ -28,23 +29,12 @@ class CommentController extends Controller
             'comment' => 'required|string|max:500',
         ]);
 
-        try {
-            $user = JWTAuth::parseToken()->authenticate();
-            $userId = $user->id;
-            $postId = $request->post_id;
-            $comment = $request->comment;
+        $success = $this->commentService->createComment($request->only('post_id', 'comment'));
 
-            Comment::create([
-                'user_id' => $userId,
-                'post_id' => $postId,
-                'body' => $comment,
-            ]);
-
-            return  response()->json(['message' => 'Comment added successfully'], 201);
-
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'failed to post your comment'], 500);
+        if ($success) {
+            return response()->json(['message' => 'Comment added successfully'], 201);
+        } else {
+            return response()->json(['message' => 'Failed to post your comment'], 500);
         }
-
     }
 }

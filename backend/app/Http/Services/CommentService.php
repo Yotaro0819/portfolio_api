@@ -2,7 +2,8 @@
 namespace App\Http\Services;
 
 use App\Models\Comment;
-use Illuminate\http\Request;
+use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CommentService
 {
@@ -25,28 +26,19 @@ class CommentService
         return $comments;
     }
 
-    public function storeComment(Request $request)
+    public function createComment($data)
     {
-        $validated = $request->validate([
-            'post_id' => 'required|exists:posts,id',
-            'comment' => 'required|string|max:500',
-        ]);
-
-        $user = auth()->user();
-        $userId = $user->id;
-        $postId = $validated['post_id'];
-        $commentBody = $validated['comment'];
-
         try {
-            // コメントを保存
-            $comment = Comment::create([
-                'user_id' => $userId,
-                'post_id' => $postId,
-                'body' => $commentBody,
+            $user = JWTAuth::parseToken()->authenticate();
+            Comment::create([
+                'user_id' => $user->id,
+                'post_id' => $data['post_id'],
+                'body' => $data['comment'],
             ]);
-            return $comment;
+            return true;
         } catch (\Exception $e) {
-            throw new \Exception('Failed to add comment');
+            Log::error('Failed to create comment: ' . $e->getMessage());
+            return false;
         }
     }
 }
