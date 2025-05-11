@@ -2,6 +2,7 @@
 namespace App\Http\Services;
 
 use App\Models\Payment;
+use App\Models\Post;
 use App\Models\User;
 use Stripe\StripeClient;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -94,5 +95,38 @@ class StripeService
         ]);
         // return ['redirect_url' => 'https://d39hmozy4wec8b.cloudfront.net/payment/success'];
         return ['redirect_url' => 'http://127.0.0.1:5173/payment/success'];
+    }
+
+    public function captureOrder($paymentId)
+    {
+        $payment = Payment::where('payment_id', $paymentId)->first();
+        if (!$payment) {
+            throw new \Exception('Payment not found');
+        }
+
+        $intent = $this->stripe->paymentIntents->capture($paymentId);
+
+        $payment->update([
+            'payment_status' => $intent->status,
+            'process_status' => 'paid'
+        ]);
+        return response()->json(['message' => 'Capture is successful']);
+    }
+
+    public function cancelOrder($paymentId)
+    {
+        $payment = Payment::where('payment_id', $paymentId)->first();
+        if(!$payment) {
+            throw new \Exception('Payment not found');
+        }
+
+        $post = Post::find($payment->post_id);
+
+        $this->stripe->paymentIntents->cancel($paymentId);
+
+        $payment->update(['process_status' => 'canceled']);
+        $post->update(['owner_id' => $payment->seller_id]);
+
+        return 'The order has been canceled';
     }
 }

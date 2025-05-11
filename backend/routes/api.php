@@ -56,6 +56,11 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
     Route::delete('/like/{id}', [LikeController::class, 'delete']);
     Route::post('/like/{id}', [LikeController::class, 'store']);
 
+    //payments
+    Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
+    Route::get('/get-purchases', [PaymentController::class, 'purchases']);
+    Route::get('/get-sales', [PaymentController::class, 'sales']);
+
     // follows
     Route::get('/fetch-followers/{id}', [FollowController::class, 'fetchFollowers']);
     Route::get('/fetch-following/{id}', [FollowController::class, 'fetchFollowing']);

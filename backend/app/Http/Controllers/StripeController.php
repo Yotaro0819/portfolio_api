@@ -10,12 +10,13 @@ use Illuminate\Http\Request;
 use Stripe\StripeClient;
 
 class StripeController extends Controller
-    {
-        protected $stripeService;
-        public function __construct(StripeService $stripeService) {
-            $this->stripeService = $stripeService;
-        }
-        public function createOrder(Request $request, $id)
+{
+    protected $stripeService;
+    public function __construct(StripeService $stripeService) {
+        $this->stripeService = $stripeService;
+    }
+
+    public function createOrder(Request $request, $id)
     {
         $request->validate([
             'title' => 'required|string',
@@ -32,9 +33,9 @@ class StripeController extends Controller
         return response()->json(['checkout_url' => $result['checkout_url']]);
     }
 
-    public function success(Request $request, StripeService $stripeService)
+    public function success(Request $request)
     {
-        $result = $stripeService->handleSuccessCallback($request->session_id);
+        $result = $this->stripeService->handleSuccessCallback($request->session_id);
 
         if (isset($result['error'])) {
             return response()->json(['message' => $result['error']], $result['status']);
