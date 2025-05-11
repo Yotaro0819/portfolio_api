@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Follow;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -17,7 +18,7 @@ class UserController extends Controller
         ->findOrFail($id);
 
         if($user->avatar !== null) {
-        $user->avatar = $user->avatar;
+        $user->avatar = $user->avatar ? Storage::disk('s3')->url($user->avatar) : null;
         }
         $user->isFollowing = Follow::where('follower_id', $authUser->id)->where('following_id', $id)->exists();
 

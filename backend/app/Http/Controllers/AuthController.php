@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -132,7 +133,7 @@ class AuthController extends Controller
         if($user->avatar == null) {
             return $user->avatar = null;
         }
-        $user->avatar = $user->avatar;
+        $user->avatar = $user->avatar ? Storage::disk('s3')->url($user->avatar) : null;;
 
 
         return response()->json($user->avatar);

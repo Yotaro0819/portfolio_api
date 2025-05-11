@@ -42,10 +42,6 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
 
-    //payments
-    Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
-    Route::get('/get-purchases', [PaymentController::class, 'purchases']);
-    Route::get('/get-sales', [PaymentController::class, 'sales']);
 
     // comments
     Route::get('/comments/{id}', [CommentController::class, 'getComments']);

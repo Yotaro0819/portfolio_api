@@ -32,7 +32,7 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance(`/api/user-info/${user_id}`);
-        console.log(res.data);
+        console.log('user data: ',res.data);
         setUser(res.data);
       } catch (error) {
         console.error('failed fetching user data: ', error);

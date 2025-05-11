@@ -23,13 +23,14 @@ class ProfileController extends Controller
             if($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('avatars' , $fileName, 'public');
+                $filePath = $file->storeAs('avatars' , $fileName, 's3');
+
             } else {
                 return response()->json(['message' => 'No file uploaded'], 400);
             }
 
             if ($user->avatar) {
-                Storage::disk('public')->delete($user->avatar);
+                Storage::disk('s3')->delete($user->avatar);
             }
 
             $user->avatar = $filePath;

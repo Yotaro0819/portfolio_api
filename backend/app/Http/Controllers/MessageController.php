@@ -14,14 +14,11 @@ class MessageController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
-        // フォローしている人（following）とフォローされている人（followers）のIDを取得
         $followingUsers = Follow::where('follower_id', $user->id)->pluck('following_id');
         $followerUsers = Follow::where('following_id', $user->id)->pluck('follower_id');
 
-        // フォロー関係にある全ユーザー（重複を除く）
         $allRelatedUsers = $followingUsers->merge($followerUsers)->unique();
 
-        // ユーザー情報を取得
         $users = User::whereIn('id', $allRelatedUsers)
                     ->select('id', 'name')
                     ->get();

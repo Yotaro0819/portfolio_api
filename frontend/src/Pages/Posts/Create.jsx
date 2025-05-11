@@ -54,6 +54,7 @@ const Create = () => {
       const res = await axiosInstance.post('/api/posts', data, {
         withCredentials: true,
       });
+      console.log('response: ',res.data);
       toast.success("You posted new post!", {
         position: "top-right",
         autoClose: 1500,

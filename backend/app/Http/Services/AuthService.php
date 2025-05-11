@@ -9,12 +9,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
-    /**
-     * 新規ユーザー登録＋JWT発行
-     *
-     * @param  array  $data  validated data
-     * @return array  ['user'=>User, 'accessToken'=>string, 'refreshToken'=>string]
-     */
     public function registerUser(array $data): array
     {
         $user = User::create([
