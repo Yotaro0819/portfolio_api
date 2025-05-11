@@ -18,7 +18,7 @@ class UserController extends Controller
         ->findOrFail($id);
 
         if($user->avatar !== null) {
-        $user->avatar = $user->avatar ? Storage::disk('s3')->url($user->avatar) : null;
+        $user->avatar = $user->avatar;
         }
         $user->isFollowing = Follow::where('follower_id', $authUser->id)->where('following_id', $id)->exists();
 

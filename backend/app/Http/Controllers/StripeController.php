@@ -56,47 +56,17 @@ class StripeController extends Controller
 
     public function captureOrder($paymentId)
     {
-        $stripe = new StripeClient(config('stripe.stripe_sk'));
-
-        try {
-            $payment = Payment::where('payment_id', $paymentId)->first();
-
-            if(!$payment) return response()->json(['message' => 'The order not found']);
-
-            $intent = $stripe->paymentIntents->capture($paymentId);
-            $payment->update([
-                'payment_status' => $intent->status,
-                'process_status' => 'paid'
-            ]);
-
-            return response()->json(['message' => 'Capture is successful']);
-        } catch(\Exception $e) {
-            return response()->json(['message' => 'Failed to capture']);
-        }
+        $result = $this->stripeService->captureOrder($paymentId);
+        return response()->json(['message' => $result]);
     }
 
     public function cancelOrder($paymentId)
     {
-        $stripe = new StripeClient(config('stripe.stripe_sk'));
-
         try {
-            $payment = Payment::where('payment_id', $paymentId)->first();
-            if (!$payment) {
-                return response()->json(['message' => 'Payment not found'], 404);
-            }
-            $post = Post::where('id', $payment->post_id);
-
-
-            $paymentIntentId = $payment->payment_id;
-
-            $stripe->paymentIntents->cancel($paymentIntentId);
-
-            $payment->update(['process_status' => 'canceled']);
-            $post->update(['owner_id' => $payment->seller_id]);
-
-            return response()->json(['message' => 'The order has been canceled']);
+            $message = $this->stripeService->cancelOrder($paymentId);
+            return response()->json(['message' => $message]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to cancel order', 'error' => $e->getMessage()], 500);
+            return response()->json(['error' => $e->getMessage()], 404);
         }
     }
 

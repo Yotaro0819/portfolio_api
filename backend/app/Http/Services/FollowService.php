@@ -8,16 +8,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FollowService
 {
+    protected $user;
+    public function __construct()
+    {
+        $this->user = JWTAuth::parseToken()->authenticate();
+    }
+
     public function followUser($followedUserId)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        if (Follow::where('follower_id', $user->id)->where('following_id', $followedUserId)->exists()) {
+        if (Follow::where('follower_id', $this->user->id)->where('following_id', $followedUserId)->exists()) {
             return ['success' => false, 'message' => 'already following this user'];
         }
 
         Follow::create([
-            'follower_id' => $user->id,
+            'follower_id' => $this->user->id,
             'following_id' => $followedUserId,
         ]);
 
@@ -26,9 +30,7 @@ class FollowService
 
     public function unfollowUser($followedUserId)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        Follow::where('follower_id', $user->id)->where('following_id', $followedUserId)->delete();
+        Follow::where('follower_id', $this->user->id)->where('following_id', $followedUserId)->delete();
 
         return ['success' => true, 'message' => 'successfully unfollow this user'];
     }
@@ -36,7 +38,7 @@ class FollowService
     public function getFollowers($userId)
     {
         $user = User::findOrFail($userId);
-        $authUser = JWTAuth::parseToken()->authenticate();
+        $authUser = $this->user;
 
         $followers = Follow::where('following_id', $user->id)
             ->with('follower:id,name,avatar')
@@ -58,7 +60,7 @@ class FollowService
     {
         $user = User::findOrFail($userId);
 
-        $authUser = JWTAuth::parseToken()->authenticate();
+        $authUser = $this->user;
 
         $followings = Follow::where('follower_id', $user->id)
             ->with('following:id,name,avatar')
