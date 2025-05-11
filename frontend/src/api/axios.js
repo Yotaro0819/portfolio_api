@@ -10,7 +10,8 @@ function getCookie(name) {
 
 const axiosInstance = axios.create({
   // baseURL: 'https://d39hmozy4wec8b.cloudfront.net',
-  baseURL: 'http://127.0.0.1:8000',
+  // baseURL: 'http://127.0.0.1:8000',
+  baseURL: 'https://dsigners.site',
 
   timeout: 10000,
   withCredentials: true,  // クッキーを送信するため
@@ -50,8 +51,8 @@ axiosInstance.interceptors.response.use(
         const newAccessToken = refreshResponse.data.newAccessToken;
 
         if (!newAccessToken) {
-          localStorage.removeItem('authUser');
-          window.location.href = '/login';
+          // localStorage.removeItem('authUser');
+          // window.location.href = '/login';
           throw new Error('New access token is undefined');
         }
 
