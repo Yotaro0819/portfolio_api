@@ -79,12 +79,12 @@ class AuthController extends Controller
                     'avatar' => $result['user']->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', '127.0.0.1', false, false, true, 'Lax')
-            ->cookie('jwt', $result['accessToken'], 60, '/', '127.0.0.1', false, true, true, 'Lax')
-            ->cookie('refreshJwt', $result['refreshToken'], 20160, '/', '127.0.0.1', false, true, true, 'Lax');
-            // ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'd39hmozy4wec8b.cloudfront.net', true, false, true, 'None') // CSRFトークン
-            // ->cookie('jwt', $result['accessToken'], 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
-            // ->cookie('refreshJwt', $result['accessToken'], 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
+            // ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', '127.0.0.1', false, false, true, 'Lax')
+            // ->cookie('jwt', $result['accessToken'], 60, '/', '127.0.0.1', false, true, true, 'Lax')
+            // ->cookie('refreshJwt', $result['refreshToken'], 20160, '/', '127.0.0.1', false, true, true, 'Lax');
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'd39hmozy4wec8b.cloudfront.net', true, false, true, 'None') // CSRFトークン
+            ->cookie('jwt', $result['accessToken'], 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
+            ->cookie('refreshJwt', $result['accessToken'], 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
             // ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'dsigners.site', true, false, true, 'None') // CSRFトークン
             // ->cookie('jwt', $result['accessToken'], 60, '/', 'dsigners.site' , true, true, true, 'None') // アクセストークン
             // ->cookie('refreshJwt', $result['accessToken'], 20160, '/', 'dsigners.site', true, true, true, 'None'); // リフレッシュトークン
