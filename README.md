@@ -9,9 +9,9 @@ https://d39hmozy4wec8b.cloudfront.net
 ## 技術スタック
 
 * フロントエンド: React
-* バックエンド: laravel11
+* バックエンド: Laravel11
 * 認証: JWT(Tymon/jwt-auth)
-* 決済処理: stripe(stripe/stripe-php)
+* 決済処理: Stripe(stripe/stripe-php)
 * httpクライアント: axios
 
 ## 主な機能
