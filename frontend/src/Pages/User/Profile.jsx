@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../Context/AppContext';
-import '../../styles/Profile.css';
+
 import { Link, useParams } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import OwnPostList from '../../Component/OwnPostList';
@@ -32,7 +32,7 @@ const Profile = () => {
     const fetchUser = async () => {
       try {
         const res = await axiosInstance(`/api/user-info/${user_id}`);
-        console.log(res.data);
+        console.log('user data: ',res.data);
         setUser(res.data);
       } catch (error) {
         console.error('failed fetching user data: ', error);

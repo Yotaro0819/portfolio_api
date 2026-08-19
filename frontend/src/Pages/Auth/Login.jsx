@@ -6,6 +6,7 @@ import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
   const { setAuthUser } = useContext(AppContext);
+  const [auth, setAuth] = useState("");
 
 
 
@@ -79,8 +80,15 @@ const Login = () => {
             <p>&nbsp;</p>
           )}
         </div>
-
+        <div>
+          <p>以下ゲスト用アカウントになります。
+          </p>
+          <p>email: johndoe@example.com</p>
+          <p>password: password</p>
+          </div>
         <div className="flex items-center space-x-4">
+          
+         
 
         <button className="bg-blue-500 text-white py-2 px-4 rounded transition transform hover:bg-blue-600 hover:scale-90">
           Login

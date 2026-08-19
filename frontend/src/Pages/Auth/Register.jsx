@@ -18,7 +18,6 @@ const Register = () => {
     setShowNav(false);
 
     return () => {
-      // クリーンアップ時に元に戻す
       setShowNav(true);
     };
   }, [setShowNav]);
@@ -31,7 +30,8 @@ const Register = () => {
     const res = await fetch('/api/register', {
       method: 'post',
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify(formData),
     });
