@@ -14,15 +14,19 @@ class MessageController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
 
+        // フォローしている人（following）とフォローされている人（followers）のIDを取得
         $followingUsers = Follow::where('follower_id', $user->id)->pluck('following_id');
         $followerUsers = Follow::where('following_id', $user->id)->pluck('follower_id');
 
+        // フォロー関係にある全ユーザー（重複を除く）
         $allRelatedUsers = $followingUsers->merge($followerUsers)->unique();
 
+        // ユーザー情報を取得
         $users = User::whereIn('id', $allRelatedUsers)
                     ->select('id', 'name')
                     ->get();
 
+        // 最新メッセージを取得
         $latestMessages = Message::where(function ($query) use ($user, $allRelatedUsers) {
                                     $query->whereIn('sender_id', $allRelatedUsers)
                                         ->where('receiver_id', $user->id)
@@ -41,6 +45,7 @@ class MessageController extends Controller
                                     return $messages->first();
                                 });
 
+        // ユーザー一覧に、それぞれの最新メッセージを結びつける
         $result = $users->map(function ($user) use ($latestMessages) {
             return [
                 'id' => $user->id,

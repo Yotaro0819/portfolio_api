@@ -39,9 +39,7 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
 
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-
 
     // comments
     Route::get('/comments/{id}', [CommentController::class, 'getComments']);
@@ -87,6 +85,10 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
 
     Route::post('/broadcast', [PusherController::class, 'broadcast']);
     Route::get('/receive', [PusherController::class, 'receive']);
+});
+
+Route::middleware([CorsMiddleware::class])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::get('/stripe/success', [StripeController::class, 'success']);

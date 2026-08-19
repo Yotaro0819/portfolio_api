@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-
+import '../../styles/Create.css';
 import PriceInput from '../../Component/PriceInput.jsx';
 import axiosInstance from '../../api/axios.js';
 import RightSideProfile from '../../Component/RightSideProfile.jsx';
@@ -20,7 +20,7 @@ const Create = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
 
-  // console.log(errors?.messages?.body[0]);
+  console.log(errors?.messages?.body[0]);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -54,7 +54,6 @@ const Create = () => {
       const res = await axiosInstance.post('/api/posts', data, {
         withCredentials: true,
       });
-      console.log('response: ',res.data);
       toast.success("You posted new post!", {
         position: "top-right",
         autoClose: 1500,

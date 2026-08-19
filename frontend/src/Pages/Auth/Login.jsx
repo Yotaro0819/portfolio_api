@@ -9,6 +9,7 @@ const Login = () => {
   const [auth, setAuth] = useState("");
 
 
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,6 +32,7 @@ const Login = () => {
       console.log("27: ",res.data);
       setAuthUser(res.data.authUser);
       localStorage.setItem('authUser', JSON.stringify(res.data.authUser));
+
       navigate('/');
     }catch(error) {
       if(error.response) {

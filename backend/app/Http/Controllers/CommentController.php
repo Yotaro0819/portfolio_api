@@ -2,23 +2,30 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Comment;
-use App\Http\Services\CommentService;
+use App\Models\Post;
 use Illuminate\Http\Request;
-
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CommentController extends Controller
 {
-    protected $commentService;
-
-    public function __construct(CommentService $commentService) {
-        $this->commentService = $commentService;
-    }
-
     public function getComments($id)
     {
-        $comments = $this->commentService->getComments($id);
+        $comments = Comment::where('post_id', $id)
+                            ->with(['user:id,name,avatar'])
+                            ->get()
+                            ->map(function ($comment) {
+                                if ($comment->user->avatar) {
+                                    $avatar = $comment->user->avatar;
+
+                                    // すでに http から始まるならそのまま、それ以外ならフルパスに変換
+                                    if (!str_starts_with($avatar, 'http')) {
+                                        $comment->user->avatar = asset('storage/' . ltrim($avatar, '/'));
+                                    }
+                                }
+                                return $comment;
+                            });
+
         return response()->json($comments);
     }
 
@@ -29,12 +36,24 @@ class CommentController extends Controller
             'comment' => 'required|string|max:500',
         ]);
 
-        $success = $this->commentService->createComment($request->only('post_id', 'comment'));
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            $userId = $user->id;
+            $postId = $request->post_id;
+            $comment = $request->comment;
 
-        if ($success) {
-            return response()->json(['message' => 'Comment added successfully'], 201);
-        } else {
-            return response()->json(['message' => 'Failed to post your comment'], 500);
+            Comment::create([
+                'user_id' => $userId,
+                'post_id' => $postId,
+                'body' => $comment,
+            ]);
+
+            return  response()->json(['message' => 'Comment added successfully'], 201);
+
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'failed to post your comment'], 500);
         }
+
+
     }
 }

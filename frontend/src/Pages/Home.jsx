@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-
+import '../styles/Home.css';
 import { AppContext } from '../Context/AppContext';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../api/axios.js';
@@ -11,7 +11,6 @@ import { useInView } from "react-intersection-observer";
 import Masonry from "masonry-layout";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import imagesLoaded from 'imagesloaded';
 
 export default function Home() {
   const { authUser, setShowNav } = useContext(AppContext);
@@ -26,7 +25,6 @@ export default function Home() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(authUser);
 
   useEffect(() => {
     if(location.state?.deleted) {
@@ -50,20 +48,18 @@ export default function Home() {
   }, [allPosts]);
 
   useEffect(() => {
-    if (gridRef.current && allPosts.length > 0) {
-      imagesLoaded(gridRef.current, () => {
-        if (masonryRef.current) {
-          masonryRef.current.layout();
-        }
-      });
+    if (masonryRef.current) {
+      setTimeout(() => {
+        masonryRef.current.layout();
+      }, 100); // 遅延させてレイアウトを再計算
     }
-  }, [allPosts, showProfile]);
+  }, [showProfile]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await axiosInstance('/api/posts');
-        console.log('allPosts: ',res.data);
+        console.log(res.data);
         setAllPosts(res.data.data);
         setLink(res.data.next_page_url);
         setLoading(false);

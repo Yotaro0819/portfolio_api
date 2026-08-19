@@ -2,111 +2,136 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
-use App\Http\Services\AuthService;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
-    protected $authService;
-    public function __construct(AuthService $authService) {
-        $this->authService = $authService;
-    }
 
     public function checkAuth(Request $request)
+{
+    try {
+        $jwt = $request->cookie('jwt');  // CookieからJWTを取得
+
+        if (!$jwt) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+
+        $userId = JWTAuth::parseToken()->authenticate()->id;
+
+        $authUser = User::find($userId);
+
+        return response()->json(['message' => 'authorize']);
+    } catch (JWTException $e) {
+        return response()->json(['error' => 'Unauthenticated'], 401);
+    }
+}
+
+    public function register(Request $request)
     {
         try {
-            $jwt = $request->cookie('jwt');  // CookieからJWTを取得
+            $fields = $request->validate([
+                'name' => 'required|max:255',
+                'email' => 'required|email|unique:users',
+                'password' => 'required|confirmed'
+            ]);
 
-            if (!$jwt) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+            $user = User::create([
+                'name' => $fields['name'],
+                'email' => $fields['email'],
+                'password' => bcrypt($fields['password']),
+            ]);
+
+            $accessToken = JWTAuth::fromUser($user);
+            $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+
+            $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
+            $cookieSession = Cookie::forget('laravel_session');
+
+            return response([
+                'message' => 'Registration successful',
+                'token' => $accessToken
+            ])
+              ->cookie('jwt', $accessToken, 60, null, null, false, false)
+              ->cookie('refreshJwt', $refreshToken, 20160, null, null, false, false);
+        } catch(ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        }
+
+    }
+
+    public function login(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email|exists:users,email',
+                'password' => 'required|min:8'
+            ]);
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                \Log::warning('ログイン失敗: ユーザーが見つかりません', ['email' => $request->email]);
+                throw ValidationException::withMessages([
+                    'email' => ['The provided email is not registered.'],
+                ]);
             }
 
+            if (!Hash::check($request->password, $user->password)) {
+                \Log::warning('ログイン失敗: パスワード不一致', ['email' => $request->email]);
+                throw ValidationException::withMessages([
+                    'password' => ['The password does not match our records.'],
+                ]);
+            }
 
-            $userId = JWTAuth::parseToken()->authenticate()->id;
-
-            $authUser = User::find($userId);
-
-            return response()->json(['message' => 'authorize']);
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
-    }
-
-    public function register(RegisterRequest $request)
-    {
-        $data = $request->validated();
-
-        $result = $this->authService->registerUser($data);
-
-        $cookieXsrftoken = Cookie::forget('XSRF-TOKEN');
-        $cookieSession   = Cookie::forget('laravel_session');
-
-        return response()->json([
-            'message' => 'Registration successful',
-            'user'    => [
-                'name'   => $result['user']->name,
-                'email'  => $result['user']->email,
-                'user_id'=> $result['user']->id,
-            ],
-            'token'   => $result['accessToken'],
-        ], 201);
-    }
-
-    public function login(LoginRequest $request)
-    {
-        try {
-            $data = $request->validated();
-
-            $result = $this->authService->loginUser($data);
+            try {
+                $accessToken = JWTAuth::fromUser($user);
+                $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
+            } catch (JWTException $e) {
+                \Log::error('JWT生成エラー: ' . $e->getMessage());
+                return response()->json(['error' => 'Could not create token'], 500);
+            }
 
             $csrfToken = bin2hex(random_bytes(32));
+            $cookieDomain = app()->environment('local') ? null : parse_url(config('app.url'), PHP_URL_HOST);
 
-            return response()->json([
+            return Response::json([
                 'message' => 'Logged in successfully',
                 'authUser' => [
-                    'name' => $result['user']->name,
-                    'user_id' => $result['user']->id,
-                    'avatar' => $result['user']->avatar,
+                    'name' => $user->name,
+                    'user_id' => $user->id,
+                    'avatar' => $user->avatar,
                 ]
             ])
-            // ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', '127.0.0.1', false, false, true, 'Lax')
-            // ->cookie('jwt', $result['accessToken'], 60, '/', '127.0.0.1', false, true, true, 'Lax')
-            // ->cookie('refreshJwt', $result['refreshToken'], 20160, '/', '127.0.0.1', false, true, true, 'Lax');
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'd39hmozy4wec8b.cloudfront.net', true, false, true, 'None') // CSRFトークン
-            ->cookie('jwt', $result['accessToken'], 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
-            ->cookie('refreshJwt', $result['accessToken'], 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
-            // ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', 'dsigners.site', true, false, true, 'None') // CSRFトークン
-            // ->cookie('jwt', $result['accessToken'], 60, '/', 'dsigners.site' , true, true, true, 'None') // アクセストークン
-            // ->cookie('refreshJwt', $result['accessToken'], 20160, '/', 'dsigners.site', true, true, true, 'None'); // リフレッシュトークン
-
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', $cookieDomain, false, false, false, app()->environment('local') ? 'Lax' : 'None')
+            ->cookie('jwt', $accessToken, 60, '/', $cookieDomain, false, true, false, app()->environment('local') ? 'Lax' : 'None')
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', $cookieDomain, false, true, false, app()->environment('local') ? 'Lax' : 'None');
 
         } catch (ValidationException $e) {
+            \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
+            \Log::error('ログインエラー: ' . $e->getMessage());
             return response()->json(['error' => 'Unauthorized'], 500);
         }
     }
 
     public function logout()
     {
-        $cookieAccess = Cookie::forget('jwt');
-        $cookieRefresh = Cookie::forget('refreshJwt');
+        $response = response()->json(['message' => 'success']);
 
-        return response([
-            'message' => 'success',
-        ])
-        ->withCookie($cookieAccess)
-        ->withCookie($cookieRefresh);
+        return $response
+            ->withCookie(Cookie::forget('jwt'))
+            ->withCookie(Cookie::forget('refreshJwt'))
+            ->withCookie(Cookie::forget('XSRF-TOKEN'));
     }
 
     public function refreshToken(Request $request)
@@ -119,10 +144,11 @@ class AuthController extends Controller
             }
 
             $newAccessToken = JWTAuth::setToken($refreshToken)->refresh();
+            $cookieDomain = app()->environment('local') ? null : parse_url(config('app.url'), PHP_URL_HOST);
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',true, true, true, 'None');
+            ])->cookie('jwt', $newAccessToken, 15, '/', $cookieDomain, false, true, false, app()->environment('local') ? 'Lax' : 'None');
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }

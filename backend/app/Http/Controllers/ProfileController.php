@@ -23,14 +23,13 @@ class ProfileController extends Controller
             if($request->hasFile('avatar')) {
                 $file = $request->file('avatar');
                 $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('avatars' , $fileName, 's3');
-
+                $filePath = $file->storeAs('avatars' , $fileName, 'public');
             } else {
-                return response()->json(['message' => 'No file uploaded'], 400);
+                return response()->json(['message' => 'No file uploaded'], 400); // ファイルがアップロードされていない場合
             }
 
             if ($user->avatar) {
-                Storage::disk('s3')->delete($user->avatar);
+                Storage::disk('public')->delete($user->avatar);
             }
 
             $user->avatar = $filePath;
@@ -56,6 +55,7 @@ class ProfileController extends Controller
             'new_password.confirmed' => 'New password and confirmation do not match',
         ]);
 
+        // バリデーション失敗時の処理
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),

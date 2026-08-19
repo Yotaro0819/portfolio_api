@@ -9,10 +9,7 @@ function getCookie(name) {
 }
 
 const axiosInstance = axios.create({
-  // baseURL: 'https://d39hmozy4wec8b.cloudfront.net',
   baseURL: 'http://127.0.0.1:8000',
-  // baseURL: 'https://dsigners.site',
-
   timeout: 10000,
   withCredentials: true,  // クッキーを送信するため
 });
@@ -58,8 +55,8 @@ axiosInstance.interceptors.response.use(
 
         console.log('New access token:', newAccessToken);
         axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + newAccessToken;
-        console.log(axiosInstance.defaults.headers['Authorization']);
-        
+        console.log('authori: ',axiosInstance.defaults.headers['Authorization']);
+
 
         console.log('Retrying original request with new access token...');
         return axiosInstance(originalRequest);
