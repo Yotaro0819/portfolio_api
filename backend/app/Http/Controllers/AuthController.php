@@ -85,7 +85,6 @@ class AuthController extends Controller
                 ]);
             }
 
-            // パスワードを確認
             if (!Hash::check($request->password, $user->password)) {
                 \Log::warning('ログイン失敗: パスワード不一致', ['email' => $request->email]);
                 throw ValidationException::withMessages([
@@ -93,7 +92,6 @@ class AuthController extends Controller
                 ]);
             }
 
-            // JWTトークンを生成
             try {
                 $accessToken = JWTAuth::fromUser($user);
                 $refreshToken = JWTAuth::claims(['refresh' => true])->fromUser($user);
@@ -102,8 +100,8 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Could not create token'], 500);
             }
 
-            // CSRFトークンを生成
             $csrfToken = bin2hex(random_bytes(32));
+            $cookieDomain = app()->environment('local') ? null : parse_url(config('app.url'), PHP_URL_HOST);
 
             return Response::json([
                 'message' => 'Logged in successfully',
@@ -113,10 +111,9 @@ class AuthController extends Controller
                     'avatar' => $user->avatar,
                 ]
             ])
-            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', true, false, true, 'None') // CSRFトークン
-            ->cookie('jwt', $accessToken, 60, '/', 'd39hmozy4wec8b.cloudfront.net' , true, true, true, 'None') // アクセストークン
-            ->cookie('refreshJwt', $refreshToken, 20160, '/', 'd39hmozy4wec8b.cloudfront.net', true, true, true, 'None'); // リフレッシュトークン
-
+            ->cookie('XSRF-TOKEN', $csrfToken, 120, '/', $cookieDomain, false, false, false, app()->environment('local') ? 'Lax' : 'None')
+            ->cookie('jwt', $accessToken, 60, '/', $cookieDomain, false, true, false, app()->environment('local') ? 'Lax' : 'None')
+            ->cookie('refreshJwt', $refreshToken, 20160, '/', $cookieDomain, false, true, false, app()->environment('local') ? 'Lax' : 'None');
 
         } catch (ValidationException $e) {
             \Log::error('ログインバリデーションエラー: ' . json_encode($e->errors()));
@@ -126,16 +123,15 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 500);
         }
     }
+
     public function logout()
     {
-        $cookieAccess = Cookie::forget('jwt');
-        $cookieRefresh = Cookie::forget('refreshJwt');
+        $response = response()->json(['message' => 'success']);
 
-        return response([
-            'message' => 'success',
-        ])
-        ->withCookie($cookieAccess)
-        ->withCookie($cookieRefresh);
+        return $response
+            ->withCookie(Cookie::forget('jwt'))
+            ->withCookie(Cookie::forget('refreshJwt'))
+            ->withCookie(Cookie::forget('XSRF-TOKEN'));
     }
 
     public function refreshToken(Request $request)
@@ -148,10 +144,11 @@ class AuthController extends Controller
             }
 
             $newAccessToken = JWTAuth::setToken($refreshToken)->refresh();
+            $cookieDomain = app()->environment('local') ? null : parse_url(config('app.url'), PHP_URL_HOST);
 
             return response()->json([
                 'message' => 'Token refreshed'
-            ])->cookie('jwt', $newAccessToken, 15, '/', 'd39hmozy4wec8b.cloudfront.net',null, true, true, 'None');
+            ])->cookie('jwt', $newAccessToken, 15, '/', $cookieDomain, false, true, false, app()->environment('local') ? 'Lax' : 'None');
         } catch (JWTException $e) {
             return response()->json(['error' => 'Invalid refresh token'], 403);
         }

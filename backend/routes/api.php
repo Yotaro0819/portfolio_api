@@ -39,13 +39,7 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
 
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
     Route::get('/get-avatar', [AuthController::class, 'getAvatar']);
-    Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
-
-    //payments
-    Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
-    Route::get('/get-purchases', [PaymentController::class, 'purchases']);
-    Route::get('/get-sales', [PaymentController::class, 'sales']);
 
     // comments
     Route::get('/comments/{id}', [CommentController::class, 'getComments']);
@@ -59,6 +53,11 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
     // likes
     Route::delete('/like/{id}', [LikeController::class, 'delete']);
     Route::post('/like/{id}', [LikeController::class, 'store']);
+
+    //payments
+    Route::get('/get-orders', [PaymentController::class, 'ongoingOrders']);
+    Route::get('/get-purchases', [PaymentController::class, 'purchases']);
+    Route::get('/get-sales', [PaymentController::class, 'sales']);
 
     // follows
     Route::get('/fetch-followers/{id}', [FollowController::class, 'fetchFollowers']);
@@ -86,6 +85,10 @@ Route::middleware([ CorsMiddleware::class, VerifyXSRFToken::class, AuthenticateJ
 
     Route::post('/broadcast', [PusherController::class, 'broadcast']);
     Route::get('/receive', [PusherController::class, 'receive']);
+});
+
+Route::middleware([CorsMiddleware::class])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 Route::get('/stripe/success', [StripeController::class, 'success']);
