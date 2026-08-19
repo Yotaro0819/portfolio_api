@@ -7,7 +7,6 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class UserSeeder extends Seeder
 {
@@ -16,18 +15,7 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $avatars = [
-            'avatars/avatar1.jpeg',
-            'avatars/avatar2.jpeg',
-            'avatars/avatar3.jpeg',
-            'avatars/avatar4.jpeg',
-            'avatars/avatar5.jpeg',
-            'avatars/avatar6.jpeg',
-            'avatars/avatar7.jpeg',
-            'avatars/avatar8.jpeg',
-            'avatars/avatar9.jpeg',
-            'avatars/avatar10.jpeg',
-        ];
+        DB::table('users')->delete();
 
         $users = [
             ['name' => 'Johndoe', 'email' => 'johndoe@example.com'],
@@ -42,12 +30,12 @@ class UserSeeder extends Seeder
             ['name' => 'Jack', 'email' => 'jack@example.com'],
         ];
 
-        foreach ($users as $index => $user) {
+        foreach ($users as $user) {
             DB::table('users')->insert([
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'password' => Hash::make('password'),
-                'avatar' => Storage::disk('s3')->url($avatars[$index]),
+                'avatar' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

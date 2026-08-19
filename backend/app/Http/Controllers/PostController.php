@@ -68,8 +68,8 @@ public function store(Request $request)
         $fields = $request->all();
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('posts', 's3');
-            $fields['image'] = Storage::disk('s3')->url($imagePath);
+            $imagePath = $request->file('image')->store('posts', 'public');
+            $fields['image'] = Storage::disk('public')->url($imagePath);
         }
 
         $post = Post::create(array_merge($fields, ['user_id' => $user->id, 'owner_id' => $user->id]));
@@ -82,7 +82,6 @@ public function store(Request $request)
         ], 500);
     }
 }
-
 
     /**
      * Display the specified resource.
@@ -120,12 +119,12 @@ public function store(Request $request)
         ]);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads', 's3');
-            $fields['image'] = Storage::disk('s3')->url($imagePath);
+            $imagePath = $request->file('image')->store('uploads', 'public');
+            $fields['image'] = Storage::disk('public')->url($imagePath);
 
             if ($post->image) {
-                $oldPath = str_replace(Storage::disk('s3')->url(''), '', $post->image);
-                Storage::disk('s3')->delete($oldPath);
+                $oldPath = str_replace(Storage::disk('public')->url(''), '', $post->image);
+                Storage::disk('public')->delete($oldPath);
             }
 
         }

@@ -25,8 +25,8 @@ class PostService {
         public function createPost(array $fields, $user)
         {
             if (isset($fields['image']) && $fields['image'] instanceof UploadedFile) {
-                $path = $fields['image']->store('posts', 's3');
-                $fields['image'] = Storage::disk('s3')->url($path);
+                $path = $fields['image']->store('posts', 'public');
+                $fields['image'] = Storage::disk('public')->url($path);
             }
 
             return Post::create(array_merge(
